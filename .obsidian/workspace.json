@@ -11,10 +11,14 @@
             "id": "7dec3cd614164685",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "content/posts/AI 时代的软件去中心化与本地化：一场由第一性原理驱动的“权力回摆”.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "AI 时代的软件去中心化与本地化：一场由第一性原理驱动的“权力回摆”"
             }
           }
         ]
@@ -74,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 577.5
   },
   "right": {
     "id": "a2e9f2ff6d5105e5",
@@ -181,9 +185,12 @@
   },
   "active": "7dec3cd614164685",
   "lastOpenFiles": [
-    "content/posts/AI 时代的软件去中心化与本地化：一场由第一性原理驱动的“权力回摆”.md",
-    "content/posts/资本周期-塔勒布.md",
+    "content/posts/读《寻乌调查》.md",
     "content/posts/地产的两种死法：当我们在谈论中国楼市时，我们在谈论东京还是拉斯维加斯？.md",
+    "content/posts/煤化工产业研究初探(1)：宏观与常识问题清单.md",
+    "content/posts/资本周期-塔勒布.md",
+    "content/posts/AI 时代的软件去中心化与本地化：一场由第一性原理驱动的“权力回摆”.md",
+    "2026-01-08.md",
     "public/posts/地产的两种死法当我们在谈论中国楼市时我们在谈论东京还是拉斯维加斯/index.html",
     "public/posts/地产的两种死法当我们在谈论中国楼市时我们在谈论东京还是拉斯维加斯",
     "content/posts/化工行业回顾：在绝望中寻找不对称性.md",
