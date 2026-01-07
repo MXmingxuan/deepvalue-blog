@@ -1,10 +1,31 @@
 {{ define "main" }}
-<article class="posts-list">
-    {{ range .Pages.ByDate.Reverse }}
-    <div class="post-item">
-        <time class="post-date">{{ .Date.Format "02 Jan, 2006" }}</time>
-        <a class="post-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
-    </div>
-    {{ end }}
-</article>
+<div class="blog-layout" style="display: flex; gap: 3rem;">
+    <aside class="sidebar"
+        style="flex-shrink: 0; width: 120px; padding-right: 1.5rem; border-right: 1px solid #e5e7eb;">
+        <h3
+            style="font-size: 0.875rem; font-weight: 600; color: #6b7280; text-transform: uppercase; margin-bottom: 1rem;">
+            Categories</h3>
+        <ul class="category-list" style="list-style: none; padding: 0; margin: 0;">
+            {{ $categories := .Site.Taxonomies.categories }}
+            {{ with index $categories "投资" }}
+            <li style="margin-bottom: 0.75rem;"><a href="/categories/投资/">投资 ({{ len .Pages }})</a></li>
+            {{ end }}
+            {{ with index $categories "ai" }}
+            <li style="margin-bottom: 0.75rem;"><a href="/categories/ai/">AI ({{ len .Pages }})</a></li>
+            {{ end }}
+            {{ with index $categories "生活" }}
+            <li style="margin-bottom: 0.75rem;"><a href="/categories/生活/">生活 ({{ len .Pages }})</a></li>
+            {{ end }}
+        </ul>
+    </aside>
+
+    <article class="posts-list" style="flex: 1;">
+        {{ range .Pages.ByDate.Reverse }}
+        <div class="post-item">
+            <time class="post-date">{{ .Date.Format "02 Jan, 2006" }}</time>
+            <a class="post-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </div>
+        {{ end }}
+    </article>
+</div>
 {{ end }}

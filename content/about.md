@@ -40,9 +40,9 @@ menu:
 
 如果您有任何问题或想法，欢迎通过以下方式联系我：
 
--  Twitter: [@mingxuan808](https://x.com/mingxuan808)
+-  𝕏: [@mingxuan808](https://x.com/mingxuan808)
 -  GitHub: [MXmingxuan](https://github.com/MXmingxuan)
--  邮箱: your-email@example.com
+-  mail: mingxuans@foxmail.com
 
 ## 免责声明
 
