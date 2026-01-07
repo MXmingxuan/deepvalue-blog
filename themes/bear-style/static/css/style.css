@@ -54,10 +54,10 @@ header {
 }
 
 header h1 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Cinzel', Georgia, serif;
     font-size: 1.75rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     margin-bottom: 0.5rem;
 }
 
