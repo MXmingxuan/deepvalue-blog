@@ -1,60 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on DeepValue</title>
+    <title>标签 on Deep Value</title>
     <link>http://localhost:1313/tags/</link>
-    <description>Recent content in Tags on DeepValue</description>
+    <description>Recent content in 标签 on Deep Value</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>中国楼市</title>
-      <link>http://localhost:1313/tags/%E4%B8%AD%E5%9B%BD%E6%A5%BC%E5%B8%82/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/%E4%B8%AD%E5%9B%BD%E6%A5%BC%E5%B8%82/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>估值</title>
-      <link>http://localhost:1313/tags/%E4%BC%B0%E5%80%BC/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/%E4%BC%B0%E5%80%BC/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>化工</title>
-      <link>http://localhost:1313/tags/%E5%8C%96%E5%B7%A5/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/%E5%8C%96%E5%B7%A5/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>房地产</title>
-      <link>http://localhost:1313/tags/%E6%88%BF%E5%9C%B0%E4%BA%A7/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/%E6%88%BF%E5%9C%B0%E4%BA%A7/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>欧洲市场</title>
-      <link>http://localhost:1313/tags/%E6%AC%A7%E6%B4%B2%E5%B8%82%E5%9C%BA/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/%E6%AC%A7%E6%B4%B2%E5%B8%82%E5%9C%BA/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>资本周期</title>
-      <link>http://localhost:1313/tags/%E8%B5%84%E6%9C%AC%E5%91%A8%E6%9C%9F/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/%E8%B5%84%E6%9C%AC%E5%91%A8%E6%9C%9F/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>马拉松资本</title>
-      <link>http://localhost:1313/tags/%E9%A9%AC%E6%8B%89%E6%9D%BE%E8%B5%84%E6%9C%AC/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/%E9%A9%AC%E6%8B%89%E6%9D%BE%E8%B5%84%E6%9C%AC/</guid>
-      <description></description>
-    </item>
   </channel>
 </rss>
