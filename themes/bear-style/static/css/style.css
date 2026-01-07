@@ -321,3 +321,89 @@ footer {
         font-size: 1.5rem;
     }
 }
+
+/* Table of Contents Sidebar */
+.post-layout {
+    display: flex;
+    gap: 3rem;
+    position: relative;
+    max-width: 1200px; /* Increased width to accommodate sidebar */
+    margin: 0 auto;
+}
+
+.toc-sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    display: none; /* Hidden by default on small screens */
+}
+
+/* Show sidebar on larger screens */
+@media (min-width: 1000px) {
+    .toc-sidebar {
+        display: block;
+    }
+    
+    /* Update body max-width to allow wider layout */
+    body {
+        max-width: 1200px;
+        padding: 3rem 2rem;
+    }
+}
+
+.toc-sticky {
+    position: sticky;
+    top: 2rem;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.toc-sidebar h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.toc-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-sidebar nav ul ul {
+    padding-left: 1rem;
+    margin-top: 0.25rem;
+}
+
+.toc-sidebar nav li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.toc-sidebar nav a {
+    color: var(--text-light);
+    text-decoration: none;
+    transition: color 0.2s;
+    display: block;
+}
+
+.toc-sidebar nav a:hover {
+    color: var(--link);
+}
+
+.post-content {
+    flex: 1;
+    min-width: 0; /* Prevents overflow issues */
+    max-width: 800px; /* Keep the reading width optimal */
+    margin: 0 auto;   /* Center the content if sidebar is hidden (handled by flex but good fallback) */
+}
+
+/* Ensure images don't break layout */
+.post-content img {
+    max-width: 100%;
+    height: auto;
+}

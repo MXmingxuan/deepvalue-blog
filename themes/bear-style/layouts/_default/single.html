@@ -1,16 +1,23 @@
 {{ define "main" }}
-<article class="post">
-    <header class="post-header">
-        <h1 class="post-title">{{ .Title }}</h1>
-        <time class="post-date">{{ .Date.Format "02 Jan, 2006" }}</time>
-    </header>
+<div class="post-layout">
+    <aside class="toc-sidebar">
+        <div class="toc-sticky">
+            <h3>Catalog</h3>
+            {{ .TableOfContents }}
+        </div>
+    </aside>
+    
+    <article class="post-content">
+        <header class="post-header">
+            <h1 class="post-title">{{ .Title }}</h1>
+            <time class="post-date">{{ .Date.Format "02 Jan, 2006" }}</time>
+        </header>
 
-    <div class="post-content">
         {{ .Content }}
-    </div>
 
-    <footer class="post-footer">
-        <a href="/posts/">← Back to posts</a>
-    </footer>
-</article>
+        <footer class="post-footer">
+            <a href="/posts/">← Back to posts</a>
+        </footer>
+    </article>
+</div>
 {{ end }}
