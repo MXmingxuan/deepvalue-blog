@@ -327,14 +327,16 @@ footer {
     display: flex;
     gap: 3rem;
     position: relative;
-    max-width: 1200px; /* Increased width to accommodate sidebar */
+    max-width: 1200px;
+    /* Increased width to accommodate sidebar */
     margin: 0 auto;
 }
 
 .toc-sidebar {
     width: 240px;
     flex-shrink: 0;
-    display: none; /* Hidden by default on small screens */
+    display: none;
+    /* Hidden by default on small screens */
 }
 
 /* Show sidebar on larger screens */
@@ -342,9 +344,9 @@ footer {
     .toc-sidebar {
         display: block;
     }
-    
+
     /* Update body max-width to allow wider layout */
-    body {
+    body.wide-layout {
         max-width: 1200px;
         padding: 3rem 2rem;
     }
@@ -397,9 +399,12 @@ footer {
 
 .post-content {
     flex: 1;
-    min-width: 0; /* Prevents overflow issues */
-    max-width: 800px; /* Keep the reading width optimal */
-    margin: 0 auto;   /* Center the content if sidebar is hidden (handled by flex but good fallback) */
+    min-width: 0;
+    /* Prevents overflow issues */
+    max-width: 800px;
+    /* Keep the reading width optimal */
+    margin: 0 auto;
+    /* Center the content if sidebar is hidden (handled by flex but good fallback) */
 }
 
 /* Ensure images don't break layout */
