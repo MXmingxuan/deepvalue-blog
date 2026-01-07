@@ -1,4 +1,19 @@
 {{ define "main" }}
+<section class="hero"
+    style="position: relative; background-image: url('/images/hero-bg.png'); background-size: cover; background-position: center; padding: 6rem 2rem; margin: -1rem -1.5rem 3rem; border-radius: 0;">
+    <div class="hero-overlay"
+        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4);"></div>
+    <div class="hero-content"
+        style="position: relative; z-index: 1; max-width: 800px; margin: 0 auto; text-align: left;">
+        <h2
+            style="font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 400; color: #fff; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+            {{ .Site.Title }}</h2>
+        <p
+            style="font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; color: rgba(255,255,255,0.9); line-height: 1.4; text-shadow: 0 1px 3px rgba(0,0,0,0.3);">
+            {{ .Site.Params.description }}</p>
+    </div>
+</section>
+
 <article class="home">
     {{ .Content }}
 </article>

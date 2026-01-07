@@ -2,6 +2,7 @@
  * Inspired by Bear Blog (bearblog.dev)
  */
 
+/* Base */
 :root {
     --bg: #fff;
     --text: #1a1a1a;
@@ -21,10 +22,9 @@
     padding: 0;
 }
 
-/* Base */
-html {
-    font-size: 16px;
-    -webkit-font-smoothing: antialiased;
+html,
+body {
+    height: 100%;
 }
 
 body {
@@ -38,6 +38,14 @@ body {
     margin: 0 auto;
     padding: 3rem 1.5rem;
 }
+
+/* Normal Header (for other pages) */
+header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+/* Reusing existing header styles for non-home pages... */
 
 /* Links */
 a {
