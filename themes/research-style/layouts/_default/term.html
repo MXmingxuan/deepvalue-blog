@@ -1,0 +1,52 @@
+{{ define "main" }}
+<section class="py-16 bg-white min-h-[60vh]">
+    <div class="container mx-auto px-6 max-w-4xl">
+
+        <header class="mb-16 text-center">
+            <div class="inline-block mb-3 text-xs font-bold tracking-widest text-stone-500 uppercase">
+                {{ .Data.Singular }}
+            </div>
+            <h1 class="font-serif text-4xl md:text-5xl text-stone-900 mb-6">{{ .Title }}</h1>
+            <div class="w-16 h-1 bg-nobel-gold mx-auto"></div>
+        </header>
+
+        <div class="space-y-12">
+            {{ range .Paginator.Pages }}
+            <article class="group flex flex-col md:flex-row gap-6 md:items-baseline border-b border-stone-100 pb-12 last:border-0">
+                <div class="md:w-32 flex-shrink-0 text-sm font-bold text-stone-400 uppercase tracking-wider">
+                    {{ .Date.Format "Jan 2, 2006" }}
+                </div>
+                <div>
+                    <a href="{{ .RelPermalink }}">
+                        <h2 class="font-serif text-2xl md:text-3xl text-stone-900 mb-3 group-hover:text-nobel-gold transition-colors leading-tight">
+                            {{ .Title }}
+                        </h2>
+                    </a>
+                    <p class="text-stone-600 leading-relaxed mb-4 font-light">
+                        {{ .Summary | truncate 180 }}
+                    </p>
+                    {{ if .Params.categories }}
+                    <div class="flex gap-2 mb-3">
+                        {{ range first 2 .Params.categories }}
+                        <span class="text-xs px-2 py-1 bg-stone-100 text-stone-500 rounded-full">{{ . }}</span>
+                        {{ end }}
+                    </div>
+                    {{ end }}
+                    <a href="{{ .RelPermalink }}" class="text-xs font-bold text-nobel-gold uppercase tracking-widest hover:text-stone-900 transition-colors">Read More</a>
+                </div>
+            </article>
+            {{ end }}
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-16 flex justify-center gap-4">
+            {{ if .Paginator.HasPrev }}
+            <a href="{{ .Paginator.Prev.URL }}" class="px-6 py-2 border border-stone-200 text-stone-600 hover:border-nobel-gold hover:text-nobel-gold transition-colors text-sm font-medium uppercase tracking-wider rounded-full">Previous</a>
+            {{ end }}
+            {{ if .Paginator.HasNext }}
+            <a href="{{ .Paginator.Next.URL }}" class="px-6 py-2 border border-stone-200 text-stone-600 hover:border-nobel-gold hover:text-nobel-gold transition-colors text-sm font-medium uppercase tracking-wider rounded-full">Next</a>
+            {{ end }}
+        </div>
+    </div>
+</section>
+{{ end }}

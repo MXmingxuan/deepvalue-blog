@@ -1,0 +1,25 @@
+{{ define "main" }}
+<section class="py-16 bg-white min-h-[60vh]">
+    <div class="container mx-auto px-6 max-w-4xl">
+
+        <header class="mb-16 text-center">
+            <div class="inline-block mb-3 text-xs font-bold tracking-widest text-stone-500 uppercase">
+                {{ .Data.Singular | pluralize }}
+            </div>
+            <h1 class="font-serif text-4xl md:text-5xl text-stone-900 mb-6">
+                {{ if eq .Data.Singular "category" }}Categories{{ else }}Tags{{ end }}
+            </h1>
+            <div class="w-16 h-1 bg-nobel-gold mx-auto"></div>
+        </header>
+
+        <div class="flex flex-wrap justify-center gap-4">
+            {{ range .Data.Terms.Alphabetical }}
+            <a href="{{ .Page.RelPermalink }}" class="group px-6 py-3 border border-stone-200 rounded-lg hover:border-nobel-gold hover:bg-nobel-gold/5 transition-all">
+                <span class="font-serif text-lg text-stone-800 group-hover:text-nobel-gold transition-colors">{{ .Page.Title }}</span>
+                <span class="ml-2 text-xs text-stone-400 bg-stone-100 px-2 py-1 rounded-full group-hover:bg-nobel-gold group-hover:text-white transition-colors">{{ .Count }}</span>
+            </a>
+            {{ end }}
+        </div>
+    </div>
+</section>
+{{ end }}

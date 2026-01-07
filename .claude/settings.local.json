@@ -4,7 +4,11 @@
       "Bash(hugo server:*)",
       "Bash(chmod:*)",
       "Bash(./test-taxonomies.sh:*)",
-      "Bash(where:*)"
+      "Bash(where:*)",
+      "WebFetch(domain:mcpservers.org)",
+      "Bash(npx skills-installer install:*)",
+      "Bash(npx hugo:*)",
+      "Bash(dir:*)"
     ]
   }
 }

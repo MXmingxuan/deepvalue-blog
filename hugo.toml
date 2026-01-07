@@ -2,7 +2,7 @@ baseURL = "https://deepvalue.space/"
 languageCode = "en-us"
 title = "DEEP VALUE"
 description = "mingxuan's blog"
-theme = ["book"]
+theme = ["research-style"]
 
 # 分类配置
 [taxonomies]
