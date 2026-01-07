@@ -5,10 +5,21 @@ Blog by mingxuan song, exploring investing and AI. Started January 2026.
 
 ## About Me
 
-专注于投资和AI应用
+Hi, I'm Mingxuan Song.
 
-- **投资理念**：资本周期、量化方法
-- **关注领域**：能源、化工、科技
+From Private Markets to Public Equities. With 3 years of experience in primary market industrial investment (PE/VC), I now focus on identifying asymmetric opportunities in the stock market.
+
+Why "Deep Value"? The name stems from my roots in the Graham-and-Doddsville school of deep undervaluation. However, my framework has evolved to include:
+
+Capital Cycle Analysis (Marathon Asset Management style)
+
+Special Situations (Early Buffett arbitrage/control)
+
+Growth & Tech (The Gorilla Game strategy & Crypto)
+
+Quantitative Factors (Bridging fundamental analysis with quant methods)
+
+AI-Augmented Investor. I leverage AI daily to scale my research capabilities and accelerate personal growth. I also use AI coding tools to build custom utilities for my investment workflow.
 
 ## Contact
 
