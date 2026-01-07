@@ -1,0 +1,9 @@
+name = "Bear Style"
+license = "MIT"
+description = "A minimalist Hugo theme inspired by Bear Blog"
+homepage = "https://deepvalue.space/"
+min_version = "0.80.0"
+tags = ["blog", "minimal", "simple"]
+
+[author]
+  name = "mingxuan"

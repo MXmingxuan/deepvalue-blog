@@ -1,8 +1,8 @@
 baseURL = "https://deepvalue.space/"
 languageCode = "en-us"
-title = "DEEP VALUE"
+title = "DeepValue"
 description = "mingxuan's blog"
-theme = ["research-style"]
+theme = ["bear-style"]
 
 # 分类配置
 [taxonomies]
@@ -12,7 +12,13 @@ theme = ["research-style"]
 [params]
   mainSections = ["posts"]
   description = "Searching for Asymmetry in Markets"
-  # Legacy search config from book theme (optional to keep or remove)
-  BookSearch = true
-  BookDateFormat = "2006-01-02"
-  BookSearchConfig = '{"threshold": 0.2, "distance": 100, "includeScore": true, "keys": ["title", "content", "tags", "categories"]}'
+
+[menu]
+  [[menu.main]]
+    name = "About Me"
+    url = "/about/"
+    weight = 1
+  [[menu.main]]
+    name = "Blog"
+    url = "/posts/"
+    weight = 2

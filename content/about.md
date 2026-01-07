@@ -6,8 +6,6 @@ menu:
     weight: 10
 ---
 
-# About Me
-
 欢迎来到 DEEP VALUE 博客！
 
 ## 关于我
@@ -42,9 +40,9 @@ menu:
 
 如果您有任何问题或想法，欢迎通过以下方式联系我：
 
-- 📧 邮箱：[your-email@example.com]
-- 🐦 推特：[@your_twitter_handle]
-- 💼 领英：[Your LinkedIn Profile]
+-  Twitter: [@mingxuan808](https://x.com/mingxuan808)
+-  GitHub: [MXmingxuan](https://github.com/MXmingxuan)
+-  邮箱: your-email@example.com
 
 ## 免责声明
 

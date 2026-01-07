@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="{{ or .Site.Language.LanguageCode .Site.Language.Lang }}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}</title>
+    <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" href="/index.xml">
+</head>
+
+<body>
+    <header>
+        <h1><a href="/">{{ .Site.Title | lower }}</a></h1>
+        <nav>
+            {{ range .Site.Menus.main }}
+            <a href="{{ .URL }}">{{ .Name }}</a>
+            {{ end }}
+        </nav>
+    </header>
+
+    <main>
+        {{ block "main" . }}{{ end }}
+    </main>
+
+    <footer>
+        <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a></p>
+    </footer>
+</body>
+
+</html>
