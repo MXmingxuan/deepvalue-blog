@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "6f2de74d2896c104",
+        "id": "5f41d48393d7e894",
         "type": "tabs",
         "children": [
           {
-            "id": "44ca587c95b956d3",
+            "id": "b09c1b4f913a38dc",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/用寻乌调查的方法研究煤化工.md",
+                "file": "notes/煤制烯烃关键问题.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "用寻乌调查的方法研究煤化工"
+              "title": "煤制烯烃关键问题"
             }
           }
         ]
@@ -184,17 +184,17 @@
       "bases:创建新数据库": false
     }
   },
-  "active": "44ca587c95b956d3",
+  "active": "b09c1b4f913a38dc",
   "lastOpenFiles": [
+    "notes/煤制烯烃研究.md",
+    "notes/煤制烯烃关键问题.md",
+    "notes/用寻乌调查的方法研究煤化工.md",
     "notes/如何判断煤制烯烃项目成本.md",
     "notes/国内煤制烯烃公司清单.md",
-    "content/posts/assets/煤制烯烃关键问题.md",
-    "notes/用寻乌调查的方法研究煤化工.md",
-    "content/posts/assets/煤制烯烃研究.md",
     "content/posts/煤化工产业研究（1）：宏观与常识问题清单.md",
+    "content/posts/煤化工常识.md",
     "notes/README.md",
     "notes",
-    "content/posts/煤化工常识.md",
     "content/posts/assets/Pasted image 20260108143147.png",
     "content/posts/assets/Pasted image 20260108143045.png",
     "content/posts/assets/Pasted image 20260108134616.png",
