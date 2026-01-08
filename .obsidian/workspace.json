@@ -13,12 +13,32 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/煤化工产业研究（1）：宏观与常识问题清单.md",
+                "file": "notes/用寻乌调查的方法研究煤化工.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "煤化工产业研究（1）：宏观与常识问题清单"
+              "title": "用寻乌调查的方法研究煤化工"
+            }
+          }
+        ]
+      },
+      {
+        "id": "fcdc30202868f975",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "39c412e99d4e1618",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "content/posts/assets/煤制烯烃研究.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "煤制烯烃研究"
             }
           }
         ]
@@ -78,7 +98,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 214.5
+    "width": 214.5,
+    "collapsed": true
   },
   "right": {
     "id": "a2e9f2ff6d5105e5",
@@ -156,13 +177,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "content/posts/煤化工产业研究（1）：宏观与常识问题清单.md",
+                "file": "notes/用寻乌调查的方法研究煤化工.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "煤化工产业研究（1）：宏观与常识问题清单 的大纲"
+              "title": "用寻乌调查的方法研究煤化工 的大纲"
             }
           }
         ],
@@ -170,7 +191,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -185,8 +207,12 @@
   },
   "active": "7dec3cd614164685",
   "lastOpenFiles": [
-    "content/posts/煤化工常识.md",
+    "content/posts/assets/煤制烯烃研究.md",
+    "notes/用寻乌调查的方法研究煤化工.md",
     "content/posts/煤化工产业研究（1）：宏观与常识问题清单.md",
+    "notes/README.md",
+    "notes",
+    "content/posts/煤化工常识.md",
     "content/posts/assets/Pasted image 20260108143147.png",
     "content/posts/assets/Pasted image 20260108143045.png",
     "content/posts/assets/Pasted image 20260108134616.png",
