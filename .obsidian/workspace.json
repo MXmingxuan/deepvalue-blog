@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/投资框架资料清单.md",
+                "file": "notes/20260111-思考投资工作与加密领域机会.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "投资框架资料清单"
+              "title": "20260111-思考投资工作与加密领域机会"
             }
           }
         ]
@@ -78,8 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 214.5,
-    "collapsed": true
+    "width": 214.5
   },
   "right": {
     "id": "a2e9f2ff6d5105e5",
@@ -187,9 +186,10 @@
   },
   "active": "166333cc28ac209f",
   "lastOpenFiles": [
+    "notes/煤制烯烃（MTO&CTO）投资观点卡（更新：2026-01-09）.md",
+    "notes/20260111-思考投资工作与加密领域机会.md",
     "notes/胡猛投资框架整理.md",
     "notes/投资框架资料清单.md",
-    "notes/煤制烯烃（MTO&CTO）投资观点卡（更新：2026-01-09）.md",
     "notes/煤制烯烃基础.md",
     "notes/煤制烯烃关键问题.md",
     "notes/煤制烯烃研究.md",
@@ -226,7 +226,6 @@
     "content/posts/assets/Pasted image 20251214145356.png",
     "content/posts/assets/Pasted image 20251214143400.png",
     "content/posts/Pasted image 20251214143400.png",
-    "Pasted image 20251214143117.png",
-    "content/posts/马拉松全球投资评论第38卷.md"
+    "Pasted image 20251214143117.png"
   ]
 }
