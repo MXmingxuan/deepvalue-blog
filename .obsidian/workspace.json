@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/用寻乌调查的方法研究煤化工.md",
+                "file": "notes/投资框架资料清单.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "用寻乌调查的方法研究煤化工"
+              "title": "投资框架资料清单"
             }
           }
         ]
@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 214.5
+    "width": 214.5,
+    "collapsed": true
   },
   "right": {
     "id": "a2e9f2ff6d5105e5",
@@ -186,21 +187,24 @@
   },
   "active": "166333cc28ac209f",
   "lastOpenFiles": [
-    "notes/为什么一直拖延写不出报告.md",
-    "notes/如何判断煤制烯烃项目成本.md",
-    "notes/煤制烯烃研究.md",
-    "notes/煤制烯烃投资观点卡-Manus.md",
+    "notes/胡猛投资框架整理.md",
+    "notes/投资框架资料清单.md",
+    "notes/煤制烯烃（MTO&CTO）投资观点卡（更新：2026-01-09）.md",
+    "notes/煤制烯烃基础.md",
     "notes/煤制烯烃关键问题.md",
+    "notes/煤制烯烃研究.md",
+    "content/posts/煤化工常识.md",
     "notes/煤制烯烃产业分析报告.md",
     "notes/国内煤制烯烃公司清单.md",
-    "notes/煤制烯烃（MTO&CTO）投资观点卡（更新：2026-01-09）.md",
     "notes/用寻乌调查的方法研究煤化工.md",
+    "notes/为什么一直拖延写不出报告.md",
+    "notes/如何判断煤制烯烃项目成本.md",
+    "notes/煤制烯烃投资观点卡-Manus.md",
     "content/posts/assets/煤制烯烃关键问题.md",
     "content/posts/assets/煤制烯烃研究.md",
     "content/posts/煤化工产业研究（1）：宏观与常识问题清单.md",
     "notes/README.md",
     "notes",
-    "content/posts/煤化工常识.md",
     "content/posts/assets/Pasted image 20260108143147.png",
     "content/posts/assets/Pasted image 20260108143045.png",
     "content/posts/assets/Pasted image 20260108134616.png",
@@ -223,8 +227,6 @@
     "content/posts/assets/Pasted image 20251214143400.png",
     "content/posts/Pasted image 20251214143400.png",
     "Pasted image 20251214143117.png",
-    "content/posts/马拉松全球投资评论第38卷.md",
-    "content/posts/论文解读Factor Performance 2010-2019 -A Lost Decade.md",
-    "content/posts/q-factor解密：为什么像CEO一样思考，才能真正理解股票市场.md"
+    "content/posts/马拉松全球投资评论第38卷.md"
   ]
 }
