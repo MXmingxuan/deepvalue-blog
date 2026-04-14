@@ -12,7 +12,7 @@ const { title, description } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description || '宋明璇的博客'} />
+    <meta name="description" content={description || 'Deep Value'} />
     <title>{title}</title>
   </head>
   <body>
@@ -45,9 +45,9 @@ const { title, description } = Astro.props;
     --color-border: #2a2a2a;
     --color-primary: #ffffff;
     --color-text: #e0e0e0;
-    --color-text-dim: #999999;
+    --color-text-dim: #808080;
     --color-accent: #22c55e;
-    --color-accent-dim: #16a34a;
+    --color-accent-dim: #166534;
     --font-mono: "SF Mono", "Fira Code", "Consolas", monospace;
     --font-sans: "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
   }
@@ -61,7 +61,7 @@ const { title, description } = Astro.props;
   body {
     font-family: var(--font-sans);
     font-size: 17px;
-    line-height: 1.7;
+    line-height: 1.75;
     color: var(--color-text);
     background: var(--color-bg);
     min-height: 100vh;
@@ -76,22 +76,35 @@ const { title, description } = Astro.props;
   header {
     max-width: 800px;
     margin: 0 auto;
-    padding: 32px 24px 24px;
-    border-bottom: 1px solid var(--color-border);
+    padding: 40px 24px 32px;
   }
 
   nav a {
-    margin-right: 24px;
-    color: var(--color-text);
+    position: relative;
+    margin-right: 28px;
+    color: var(--color-text-dim);
     text-decoration: none;
     font-size: 16px;
     font-family: var(--font-mono);
     letter-spacing: 0.02em;
-    transition: color 0.15s;
+    transition: color 0.15s ease;
+  }
+
+  nav a::before {
+    content: '→';
+    position: absolute;
+    left: -18px;
+    opacity: 0;
+    color: var(--color-accent);
+    transition: opacity 0.15s ease;
   }
 
   nav a:hover {
-    color: var(--color-accent);
+    color: var(--color-primary);
+  }
+
+  nav a:hover::before {
+    opacity: 1;
   }
 
   nav a:last-child {
@@ -100,8 +113,8 @@ const { title, description } = Astro.props;
 
   footer {
     max-width: 800px;
-    margin: 80px auto 0;
-    padding: 32px 24px;
+    margin: 96px auto 0;
+    padding: 40px 24px;
     border-top: 1px solid var(--color-border);
     text-align: center;
   }
@@ -120,7 +133,7 @@ const { title, description } = Astro.props;
     text-decoration: none;
     font-size: 13px;
     font-family: var(--font-mono);
-    transition: color 0.15s;
+    transition: color 0.15s ease;
   }
 
   .footer-links a:hover {
@@ -148,23 +161,19 @@ const { title, description } = Astro.props;
   }
 
   h2 {
-    font-size: 1rem;
+    font-size: 0.75rem;
     font-weight: 500;
-    color: var(--color-text);
+    color: var(--color-accent-dim);
     margin-bottom: 1rem;
     font-family: var(--font-mono);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
   }
 
   a {
     color: var(--color-accent);
     text-decoration: none;
-    transition: color 0.15s;
-  }
-
-  a:hover {
-    color: var(--color-accent-dim);
+    transition: color 0.15s ease;
   }
 
   @media (max-width: 768px) {
@@ -173,7 +182,7 @@ const { title, description } = Astro.props;
     }
 
     header {
-      padding: 24px 16px 20px;
+      padding: 32px 16px 24px;
     }
 
     h1 {
