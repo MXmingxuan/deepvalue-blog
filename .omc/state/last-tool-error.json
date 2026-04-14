@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd D:/github/deepvalue-blog/themes && git clone https://github.com/nanxiaobei/hugo-paper.git paper 2>&1\",\"description\":\"Install Paper theme\"}",
+  "error": "Exit code 128\nCloning into 'paper'...\nfatal: unable to access 'https://github.com/nanxiaobei/hugo-paper.git/': Recv failure: Connection was reset",
+  "timestamp": "2026-04-14T10:24:13.839Z",
+  "retry_count": 1
+}
