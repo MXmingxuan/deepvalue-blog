@@ -9,7 +9,10 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
 ---
 
 <Base title="博客 - 宋明璇" description="投资分析、AI 与分析思维">
-  <h1 class="page-title">博客</h1>
+  <section class="page-header">
+    <h1>博客</h1>
+    <p class="page-desc">关于投资、AI 与分析思维</p>
+  </section>
 
   <div class="blog-layout">
     <aside class="sidebar">
@@ -76,20 +79,32 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
 </script>
 
 <style>
-  .page-title {
+  .page-header {
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--color-border);
     margin-bottom: 48px;
+  }
+
+  .page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+  }
+
+  .page-desc {
+    color: var(--color-text-light);
+    font-size: 1rem;
   }
 
   .blog-layout {
     display: flex;
-    gap: 64px;
+    gap: 48px;
     align-items: flex-start;
   }
 
   .sidebar {
-    min-width: 100px;
+    min-width: 80px;
     position: sticky;
-    top: 24px;
+    top: 32px;
   }
 
   .sidebar-title {
@@ -97,14 +112,14 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--color-text-secondary);
-    margin-bottom: 16px;
+    color: var(--color-text-light);
+    margin-bottom: 12px;
   }
 
   .tag-list {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
   }
 
   .tag-btn {
@@ -112,7 +127,7 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
     border: none;
     padding: 6px 0;
     font-size: 14px;
-    color: var(--color-text-secondary);
+    color: var(--color-text-light);
     cursor: pointer;
     text-align: left;
     transition: color 0.2s;
@@ -148,7 +163,7 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
 
   .post-title {
     display: block;
-    font-size: 1.1rem;
+    font-size: 1.125rem;
     font-weight: 600;
     color: var(--color-primary);
     margin-bottom: 8px;
@@ -157,6 +172,7 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
 
   .post-title:hover {
     color: var(--color-accent);
+    text-decoration: none;
   }
 
   .post-meta {
@@ -167,7 +183,7 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
   }
 
   .post-date {
-    color: var(--color-text-secondary);
+    color: var(--color-text-light);
     font-size: 0.875rem;
   }
 
@@ -177,17 +193,16 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
   }
 
   .tag {
-    display: inline-block;
-    padding: 4px 10px;
-    background: var(--color-surface);
-    color: var(--color-text-secondary);
     font-size: 0.75rem;
-    border-radius: 6px;
+    color: var(--color-text-light);
+    background: #f3f4f6;
+    padding: 3px 8px;
+    border-radius: 4px;
   }
 
   .no-posts {
     display: none;
-    color: var(--color-text-secondary);
+    color: var(--color-text-light);
     padding: 24px 0;
   }
 
@@ -205,13 +220,13 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
     .tag-list {
       flex-direction: row;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
     }
 
     .tag-btn {
-      background: var(--color-surface);
-      padding: 4px 12px;
-      border-radius: 6px;
+      background: #f3f4f6;
+      padding: 4px 10px;
+      border-radius: 4px;
     }
 
     .tag-btn.active {

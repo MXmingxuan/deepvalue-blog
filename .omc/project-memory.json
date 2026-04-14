@@ -187,20 +187,20 @@
   "hotPaths": [
     {
       "path": "src\\layouts\\Base.astro",
-      "accessCount": 16,
-      "lastAccessed": 1776180410939,
+      "accessCount": 17,
+      "lastAccessed": 1776180723514,
       "type": "file"
     },
     {
       "path": "src\\pages\\index.astro",
-      "accessCount": 11,
-      "lastAccessed": 1776180436835,
+      "accessCount": 12,
+      "lastAccessed": 1776180743201,
       "type": "file"
     },
     {
       "path": "src\\pages\\blog\\index.astro",
-      "accessCount": 10,
-      "lastAccessed": 1776180477243,
+      "accessCount": 11,
+      "lastAccessed": 1776180787970,
       "type": "file"
     },
     {
@@ -228,15 +228,15 @@
       "type": "file"
     },
     {
-      "path": "hugo.yaml",
-      "accessCount": 4,
-      "lastAccessed": 1776169341382,
+      "path": "src\\pages\\blog\\[slug].astro",
+      "accessCount": 5,
+      "lastAccessed": 1776180788644,
       "type": "file"
     },
     {
-      "path": "src\\pages\\blog\\[slug].astro",
+      "path": "hugo.yaml",
       "accessCount": 4,
-      "lastAccessed": 1776180477934,
+      "lastAccessed": 1776169341382,
       "type": "file"
     },
     {
@@ -249,6 +249,12 @@
       "path": "CLAUDE.md",
       "accessCount": 3,
       "lastAccessed": 1776170622297,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\projects\\index.astro",
+      "accessCount": 3,
+      "lastAccessed": 1776180788306,
       "type": "file"
     },
     {
@@ -273,12 +279,6 @@
       "path": "src\\content\\schemas.ts",
       "accessCount": 2,
       "lastAccessed": 1776170124562,
-      "type": "file"
-    },
-    {
-      "path": "src\\pages\\projects\\index.astro",
-      "accessCount": 2,
-      "lastAccessed": 1776180477593,
       "type": "file"
     },
     {

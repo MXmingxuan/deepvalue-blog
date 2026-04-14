@@ -35,13 +35,13 @@ const { Content } = await render(post);
   </article>
 
   <div class="back-link">
-    <a href="/blog">← 返回博客列表</a>
+    <a href="/blog">← 返回</a>
   </div>
 </Base>
 
 <style>
   .blog-post {
-    max-width: 720px;
+    padding: 64px 0 48px;
   }
 
   .post-header {
@@ -67,8 +67,8 @@ const { Content } = await render(post);
   }
 
   .post-date {
-    color: var(--color-text-secondary);
-    font-size: 0.9rem;
+    color: var(--color-text-light);
+    font-size: 0.875rem;
   }
 
   .post-tags {
@@ -77,18 +77,16 @@ const { Content } = await render(post);
   }
 
   .tag {
-    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+    background: #f3f4f6;
     padding: 4px 10px;
-    background: var(--color-surface);
-    color: var(--color-text-secondary);
-    font-size: 0.8rem;
-    border-radius: 6px;
+    border-radius: 4px;
   }
 
   .post-content {
     font-size: 1.0625rem;
-    line-height: 1.8;
-    color: var(--color-text);
+    line-height: 1.85;
   }
 
   .post-content p {
@@ -124,13 +122,13 @@ const { Content } = await render(post);
   }
 
   .back-link a {
-    font-size: 0.9rem;
+    font-size: 0.9375rem;
     font-weight: 500;
     color: var(--color-accent);
   }
 
   .back-link a:hover {
-    color: var(--color-accent-hover);
+    text-decoration: underline;
   }
 
   @media (max-width: 768px) {
