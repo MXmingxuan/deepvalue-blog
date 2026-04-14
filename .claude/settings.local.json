@@ -41,7 +41,14 @@
       "Bash(rm -f hugo.yaml hugo.toml)",
       "Bash(mkdir -p content/posts)",
       "Bash(cp ../deepvalue-blog-backup/*.md content/posts/)",
-      "Bash(./scripts/sync.sh \"重置博客，使用 Docura 主题\")"
+      "Bash(./scripts/sync.sh \"重置博客，使用 Docura 主题\")",
+      "Bash(npm create:*)",
+      "Bash(mv dark-disk/* dark-disk/.[!.]* .)",
+      "Bash(rmdir dark-disk:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(rm -rf public)",
+      "Bash(cp -r dist public)"
     ]
   }
 }

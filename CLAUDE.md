@@ -4,68 +4,51 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 # DEEP VALUE Blog
 
-Hugo-based personal blog focused on investment analysis, AI, and analytical thinking. Content is primarily Chinese.
+Astro-based personal blog focused on investment analysis, AI, and analytical thinking. Content is primarily Chinese.
 
 ## Commands
 
 ```bash
-# Development server with drafts
-hugo server -D
+# Development server
+npm run dev
 
 # Build static site
-hugo
+npm run build
 
-# Publish article from Obsidian markdown source
-./scripts/publish.sh <markdown文件路径> [--slug <自定义别名>] [--date <YYYY-MM-DD>]
-
-# Git sync (add, commit, push)
-./scripts/sync.sh "提交信息"
+# Sync to GitHub Pages
+npm run sync
 ```
 
 ## Architecture
 
-### Configuration
-- `hugo.yaml` - Primary config (complete site configuration including params, menus, hero section, about, projects, contact)
-- `hugo.toml` - Secondary config (older, uses `bear-style` theme)
-- Both exist; `hugo.yaml` is the active configuration
+### Project Structure
+- `src/content/blog/` - Blog posts (Markdown)
+- `src/content.config.ts` - Content collection schema
+- `src/layouts/Base.astro` - Base layout
+- `src/pages/` - Astro pages
+- `public/` - Static files for GitHub Pages
+- `dist/` - Build output
 
-### Theme
-- `themes/hugo-profile` - Main theme (configured in `hugo.yaml`)
-- `themes/bear-style` - Custom minimal theme inspired by Bear Blog
-
-### Content Structure
-- `content/posts/` - Published blog posts
-- `content/blogs/` - Source/blog drafts (mirrors posts/)
-- `content/about.md` - About page
-- `content/contact.md` - Contact page
-- `content/projects/_index.md` - Projects page
-- `static/images/` - Post images organized by slug
-
-### Publish Workflow
-1. Write in Obsidian with wiki-links (`![[image.png]]`)
-2. Run `publish.sh` to:
-   - Convert wiki-links to standard markdown
-   - Copy images to `static/images/<slug>/`
-   - Generate frontmatter (title, date)
-   - Output to `content/posts/<slug>.md`
-
-### Taxonomy
-- Categories: `/categories/`, `/categories/<name>/`
-- Tags: `/tags/`, `/tags/<name>/`
-
-Frontmatter format:
-```yaml
----
-title: "文章标题"
-date: 2024-01-01T00:00:00+08:00
-categories: ["分类1"]
-tags: ["标签1"]
----
+### Content Schema
+```typescript
+{
+  title: string;
+  date: Date;
+  description?: string;
+  tags?: string[];
+  categories?: string[];
+}
 ```
 
-## Notes
+### Key Routes
+- `/` - Homepage with recent posts
+- `/blog` - Blog list
+- `/blog/[slug]` - Individual posts
 
+## Deployment
+Site deploys to GitHub Pages. Push to main triggers automatic build.
+
+## Notes
 - Site: https://deepvalue.space/
 - Author: 宋明轩 (mingxuan)
-- Chinese content with English configuration
-- `sync.sh` auto-generates commit timestamp if no message provided
+- Chinese content with simple styling

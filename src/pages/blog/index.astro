@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Base title="博客 - 宋明轩" description="投资分析、AI 与分析思维">
+  <h1>博客</h1>
+  <ul>
+    {sortedPosts.map(post => (
+      <li>
+        <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+        <span style="color: #666; font-size: 0.9rem;">
+          — {post.data.date.toLocaleDateString('zh-CN')}
+        </span>
+      </li>
+    ))}
+  </ul>
+</Base>

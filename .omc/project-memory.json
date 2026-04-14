@@ -205,8 +205,8 @@
     },
     {
       "path": "CLAUDE.md",
-      "accessCount": 2,
-      "lastAccessed": 1776153199058,
+      "accessCount": 3,
+      "lastAccessed": 1776170622297,
       "type": "file"
     },
     {
@@ -228,6 +228,36 @@
       "type": "file"
     },
     {
+      "path": "src\\content\\schemas.ts",
+      "accessCount": 2,
+      "lastAccessed": 1776170124562,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\index.astro",
+      "accessCount": 2,
+      "lastAccessed": 1776170160710,
+      "type": "file"
+    },
+    {
+      "path": "src\\content.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1776170286257,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\blog\\[slug].astro",
+      "accessCount": 2,
+      "lastAccessed": 1776170396251,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 2,
+      "lastAccessed": 1776170612418,
+      "type": "file"
+    },
+    {
       "path": "scripts\\sync.sh",
       "accessCount": 1,
       "lastAccessed": 1776153154928,
@@ -243,6 +273,48 @@
       "path": "scripts\\publish.sh",
       "accessCount": 1,
       "lastAccessed": 1776153176683,
+      "type": "file"
+    },
+    {
+      "path": "C:\\Users\\mingxuan\\.claude\\plans\\greedy-booping-spark.md",
+      "accessCount": 1,
+      "lastAccessed": 1776169563118,
+      "type": "file"
+    },
+    {
+      "path": "astro.config.mjs",
+      "accessCount": 1,
+      "lastAccessed": 1776170063858,
+      "type": "file"
+    },
+    {
+      "path": "src\\layouts\\Base.astro",
+      "accessCount": 1,
+      "lastAccessed": 1776170139912,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\blog\\index.astro",
+      "accessCount": 1,
+      "lastAccessed": 1776170148118,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\blog\\[...slug].astro",
+      "accessCount": 1,
+      "lastAccessed": 1776170168602,
+      "type": "file"
+    },
+    {
+      "path": "src\\content\\blog\\读《寻乌调查》.md",
+      "accessCount": 1,
+      "lastAccessed": 1776170187554,
+      "type": "file"
+    },
+    {
+      "path": "src\\content\\config.ts",
+      "accessCount": 1,
+      "lastAccessed": 1776170229391,
       "type": "file"
     }
   ],
