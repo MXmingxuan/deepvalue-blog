@@ -20,7 +20,10 @@
       "Bash(hugo version:*)",
       "Bash(hugo)",
       "Bash(./scripts/sync.sh \"更新：添加frontmatter并重建静态文件\")",
-      "Bash(./scripts/sync.sh \"切换到 Paper 主题，清理旧主题\")"
+      "Bash(./scripts/sync.sh \"切换到 Paper 主题，清理旧主题\")",
+      "Bash(rm -rf themes/paper)",
+      "Bash(sed -i 's/theme: paper/theme: book/' hugo.yaml)",
+      "Bash(./scripts/sync.sh \"切换到 Hugo Book 主题\")"
     ]
   }
 }
