@@ -8,7 +8,14 @@
       "WebFetch(domain:mcpservers.org)",
       "Bash(npx skills-installer install:*)",
       "Bash(npx hugo:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(hugo --dryRun)",
+      "Bash(bash scripts/publish-chat.sh \"content/ai-conversations/ChatGPT-津巴布韦锂矿出口动态.md\")",
+      "Bash(perl -pe 's/^ChatGPT-//')",
+      "Bash(perl -pe 's/^ChatGPT-//; s/[^a-zA-Z0-9_\\\\-]/-/g')",
+      "Bash(bash scripts/publish-drafts.sh)",
+      "Bash(ls content/drafts/*.md)",
+      "Bash(./scripts/sync.sh \"发布：每日事件驱动观察20260414：特种电子布\")"
     ]
   }
 }

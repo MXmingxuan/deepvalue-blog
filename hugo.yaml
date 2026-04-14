@@ -1,0 +1,209 @@
+baseURL: "https://deepvalue.space/"
+languageCode: "zh-CN"
+title: "宋明轩"
+theme: hugo-profile
+
+outputs:
+  home:
+    - "HTML"
+    - "RSS"
+    - "JSON"
+  page:
+    - "HTML"
+    - "RSS"
+
+enableRobotsTXT: true
+enableEmoji: true
+
+# 分类法
+taxonomies:
+  category: categories
+  tag: tags
+
+pagination:
+  pagerSize: 10
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+params:
+  title: "宋明轩"
+  description: "投资人 · 建设者 · 思考者"
+  favicon: "/favicon.ico"
+  animate: true
+
+  # 导航栏
+  navbar:
+    align: ms-auto
+    brandName: "宋明轩"
+    disableSearch: false
+    searchPlaceholder: "搜索"
+    stickyNavBar:
+      enable: true
+      showOnScrollUp: true
+
+  # Hero 区域
+  hero:
+    enable: true
+    intro: "你好，我是"
+    title: "宋明轩"
+    subtitle: "投资人 · 建设者 · 思考者"
+    content: "3 年一级市场投资经验（PE/VC），现专注于二级市场股票投资中的非对称机会。结合 AI 与量化方法构建投资优势。"
+    button:
+      enable: true
+      name: "联系我"
+      url: "#contact"
+      download: false
+      newPage: false
+    socialLinks:
+      fontAwesomeIcons:
+        - icon: fab fa-x-twitter
+          url: https://x.com/mingxuan808
+        - icon: fab fa-github
+          url: https://github.com/MXmingxuan
+        - icon: fas fa-envelope
+          url: mailto:mingxuans@foxmail.com
+
+  # 关于我
+  about:
+    enable: true
+    title: "关于我"
+    content: |-
+      我是宋明轩——一名从一级市场（PE/VC）转向二级市场股票投资的投资者，专注于寻找市场中的非对称机会。
+
+      我的方法论从纯粹深度价值演进为复合框架，结合资本周期分析、特殊机会投资与量化因子方法。我日常使用 AI 来放大研究能力，并用 AI 编程助手自建工具优化投资工作流。
+    skills:
+      enable: true
+      title: "我使用的工具与方法："
+      items:
+        - "深度价值投资"
+        - "资本周期分析"
+        - "AI 增强研究"
+        - "Python / 数据分析"
+        - "行业研究"
+        - "公司估值"
+
+  # 工作经历
+  experience:
+    enable: true
+    title: "经历"
+    items:
+      - company: "二级市场投资"
+        companyUrl: ""
+        jobs:
+          - name: "独立投资人"
+            date: "2024 - 至今"
+            content: "专注于股票市场中被错误定价的资产，采用多框架复合分析方法。"
+
+      - company: "一级市场投资"
+        companyUrl: ""
+        jobs:
+          - name: "产业投资（PE/VC）"
+            date: "3 年经验"
+            content: "从事一级市场产业投资，积累了对产业周期、供需关系的深度理解。"
+
+  # 项目展示
+  projects:
+    enable: true
+    title: "精选项目"
+    items:
+      - title: "化工行业研究"
+        content: "在绝望中寻找不对称性——化工周期底部的时间价值分析"
+        image: "/images/hero.svg"
+        badges:
+          - "行业研究"
+          - "化工"
+        links:
+          - icon: fas fa-book-open
+            url: /posts/化工行业回顾：在绝望中寻找不对称性/
+
+      - title: "AI 工具链"
+        content: "AI 时代的软件去中心化与本地化——一场由第一性原理驱动的权力回摆"
+        image: "/images/hero.svg"
+        badges:
+          - "AI"
+          - "技术思考"
+        links:
+          - icon: fas fa-book-open
+            url: /posts/AI%20时代的软件去中心化与本地化：一场由第一性原理驱动的"权力回摆"/
+
+      - title: "方法论研究"
+        content: "读《寻乌调查》——从经典调研方法中汲取投资启示"
+        image: "/images/hero.svg"
+        badges:
+          - "读书笔记"
+          - "方法论"
+        links:
+          - icon: fas fa-book-open
+            url: /posts/读《寻乌调查》/
+
+  # 联系
+  contact:
+    enable: true
+    title: "联系我"
+    content: "我的收件箱始终开放。无论你有投资想法、合作机会，或只是想打个招呼，我都会尽力回复！"
+    btnName: "发送邮件"
+    btnLink: mailto:mingxuans@foxmail.com
+
+  # 页脚
+  footer:
+    recentPosts:
+      path: "blogs"
+      count: 3
+      title: "最新文章"
+      enable: true
+      disableFeaturedImage: false
+    socialNetworks:
+      github: https://github.com/MXmingxuan
+      twitter: https://x.com/mingxuan808
+
+  # 列表页
+  listPages:
+    disableFeaturedImage: false
+
+  # 单页
+  singlePages:
+    socialShare: true
+    readTime:
+      enable: true
+      content: "分钟阅读"
+    scrollprogress:
+      enable: true
+    tags:
+      openInNewTab: true
+
+  datesFormat:
+    article: "2006年1月2日"
+    articleList: "2006年1月2日"
+    articleRecent: "2006年1月2日"
+
+# 菜单
+Menus:
+  main:
+    - identifier: about
+      name: 关于
+      title: 关于我
+      url: /#about
+      weight: 1
+    - identifier: experience
+      name: 经历
+      title: 工作经历
+      url: /#experience
+      weight: 2
+    - identifier: projects
+      name: 项目
+      title: 精选项目
+      url: /#projects
+      weight: 3
+    - identifier: blog
+      name: 博客
+      title: 博客文章
+      url: /blogs/
+      weight: 4
+    - identifier: contact
+      name: 联系
+      title: 联系方式
+      url: /#contact
+      weight: 5

@@ -15,10 +15,22 @@ theme = ["bear-style"]
 
 [menu]
   [[menu.main]]
-    name = "Home"
+    name = "首页"
     url = "/"
     weight = 1
   [[menu.main]]
-    name = "Blog"
-    url = "/posts/"
+    name = "关于"
+    url = "/about/"
     weight = 2
+  [[menu.main]]
+    name = "项目"
+    url = "/projects/"
+    weight = 3
+  [[menu.main]]
+    name = "博客"
+    url = "/posts/"
+    weight = 4
+  [[menu.main]]
+    name = "联系"
+    url = "/contact/"
+    weight = 5

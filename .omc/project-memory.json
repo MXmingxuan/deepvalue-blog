@@ -1,0 +1,244 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1776153130497,
+  "projectRoot": "D:\\github\\deepvalue-blog",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "assets",
+      "bin",
+      "public",
+      "scripts",
+      "static"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "archetypes": {
+      "path": "archetypes",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1776153130483,
+      "keyFiles": [
+        "default.md"
+      ]
+    },
+    "assets": {
+      "path": "assets",
+      "purpose": "Static assets",
+      "fileCount": 1,
+      "lastAccessed": 1776153130484,
+      "keyFiles": [
+        "_custom.scss"
+      ]
+    },
+    "bin": {
+      "path": "bin",
+      "purpose": "Executable scripts",
+      "fileCount": 3,
+      "lastAccessed": 1776153130484,
+      "keyFiles": [
+        "hugo.exe",
+        "LICENSE",
+        "README.md"
+      ]
+    },
+    "content": {
+      "path": "content",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1776153130484,
+      "keyFiles": [
+        "about.md",
+        "contact.md",
+        "search.md",
+        "_index.md"
+      ]
+    },
+    "layouts": {
+      "path": "layouts",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1776153130485,
+      "keyFiles": []
+    },
+    "notes": {
+      "path": "notes",
+      "purpose": null,
+      "fileCount": 16,
+      "lastAccessed": 1776153130485,
+      "keyFiles": [
+        "20260111-思考投资工作与加密领域机会.md",
+        "README.md",
+        "为什么一直拖延写不出报告.md",
+        "周期行业分析框架.md",
+        "国内煤制烯烃公司清单.md"
+      ]
+    },
+    "public": {
+      "path": "public",
+      "purpose": "Public files",
+      "fileCount": 18,
+      "lastAccessed": 1776153130485,
+      "keyFiles": [
+        "404.html",
+        "book.min.b3d8fe8be9e02b729ac017148cfef768901958a61b06dfacc5c048b3c52050e5.css",
+        "en.search-data.min.4af150c75488d95d2b5b0323b652b01566fcd908a6ce9a11b3829d790de2f955.json",
+        "en.search-data.min.73c7880b82e1baa42a85f7c779dac75ca51c6fb6be4d4f1c7ca3500390fc2910.json",
+        "en.search-data.min.cb7c09872bb6d789d337723832ec3cafe5d47f1256a7a5bd90fe93d969aa197e.json"
+      ]
+    },
+    "research-visualization": {
+      "path": "research-visualization",
+      "purpose": null,
+      "fileCount": 12,
+      "lastAccessed": 1776153130485,
+      "keyFiles": [
+        "App.tsx",
+        "GEMINI.md",
+        "index.css",
+        "index.html",
+        "index.tsx"
+      ]
+    },
+    "resources": {
+      "path": "resources",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1776153130486,
+      "keyFiles": []
+    },
+    "scripts": {
+      "path": "scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 2,
+      "lastAccessed": 1776153130486,
+      "keyFiles": [
+        "publish.sh",
+        "sync.sh"
+      ]
+    },
+    "static": {
+      "path": "static",
+      "purpose": "Static files",
+      "fileCount": 0,
+      "lastAccessed": 1776153130486,
+      "keyFiles": []
+    },
+    "themes": {
+      "path": "themes",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1776153130486,
+      "keyFiles": []
+    },
+    "public\\assets": {
+      "path": "public\\assets",
+      "purpose": "Static assets",
+      "fileCount": 0,
+      "lastAccessed": 1776153130487,
+      "keyFiles": []
+    },
+    "public\\docs": {
+      "path": "public\\docs",
+      "purpose": "Documentation",
+      "fileCount": 2,
+      "lastAccessed": 1776153130487,
+      "keyFiles": [
+        "index.html",
+        "index.xml"
+      ]
+    },
+    "research-visualization\\components": {
+      "path": "research-visualization\\components",
+      "purpose": "UI components",
+      "fileCount": 2,
+      "lastAccessed": 1776153130488,
+      "keyFiles": [
+        "Diagrams.tsx",
+        "QuantumScene.tsx"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "scripts\\publish-chat.sh",
+      "accessCount": 8,
+      "lastAccessed": 1776154164697,
+      "type": "file"
+    },
+    {
+      "path": "hugo.toml",
+      "accessCount": 3,
+      "lastAccessed": 1776153150372,
+      "type": "file"
+    },
+    {
+      "path": "CLAUDE.md",
+      "accessCount": 2,
+      "lastAccessed": 1776153199058,
+      "type": "file"
+    },
+    {
+      "path": "content\\ai-conversations\\津巴布韦锂矿出口动态.md",
+      "accessCount": 2,
+      "lastAccessed": 1776154155087,
+      "type": "file"
+    },
+    {
+      "path": "scripts\\publish-drafts.sh",
+      "accessCount": 2,
+      "lastAccessed": 1776159417895,
+      "type": "file"
+    },
+    {
+      "path": "scripts\\sync.sh",
+      "accessCount": 1,
+      "lastAccessed": 1776153154928,
+      "type": "file"
+    },
+    {
+      "path": "themes\\bear-style\\theme.toml",
+      "accessCount": 1,
+      "lastAccessed": 1776153160829,
+      "type": "file"
+    },
+    {
+      "path": "hugo.yaml",
+      "accessCount": 1,
+      "lastAccessed": 1776153167571,
+      "type": "file"
+    },
+    {
+      "path": "scripts\\publish.sh",
+      "accessCount": 1,
+      "lastAccessed": 1776153176683,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

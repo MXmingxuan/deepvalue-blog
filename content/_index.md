@@ -1,29 +1,44 @@
 ---
-title: "Deep Value"
+title: "Mingxuan Song"
 ---
-Blog by mingxuan song, exploring investing and AI. Started January 2026.
 
-## About Me
+## 投资人 · 建设者 · 思考者
 
-Hi, I'm Mingxuan Song.
+3 年一级市场投资经验（PE/VC），现专注于二级市场股票投资中的非对称机会。结合 AI 与量化方法构建投资优势。
 
-From Private Markets to Public Equities. With 3 years of experience in primary market industrial investment (PE/VC), I now focus on identifying asymmetric opportunities in the stock market.
+---
 
-Why "Deep Value"? The name stems from my roots in the Graham-and-Doddsville school of deep undervaluation. However, my framework has evolved to include:
+### 经历
 
-Capital Cycle Analysis (Marathon Asset Management style)
+- **一级市场投资** — 3 年 PE/VC 产业投资经验
+- **二级市场研究** — 深度价值投资 + 资本周期分析框架
+- **AI 增强工作流** — 自建工具链，用 AI 放大研究能力
 
-Special Situations (Early Buffett arbitrage/control)
+### 关注领域
 
-Growth & Tech (The Gorilla Game strategy & Crypto)
+- **深度价值** — 格雷厄姆学派，寻找被低估的资产
+- **资本周期** — Marathon 风格的供需与产能周期分析
+- **特殊机会** — 早期巴菲特式套利与控制型投资
+- **成长与科技** — 大猩猩游戏策略、加密货币与新兴技术
 
-Quantitative Factors (Bridging fundamental analysis with quant methods)
+### 我做什么
 
-AI-Augmented Investor. I leverage AI daily to scale my research capabilities and accelerate personal growth. I also use AI coding tools to build custom utilities for my investment workflow.
+- 投资研究框架与分析模型
+- AI 驱动的市场分析工具
+- 行业深度研究（能源、化工、科技）
 
-## Contact
+---
 
-- 𝕏: [@mingxuan808](https://x.com/mingxuan808)
-- GitHub: [MXmingxuan](https://github.com/MXmingxuan)
-- mail: mingxuans@foxmail.com
-- Subscribe: [RSS feed](/index.xml)
+### 精选文章
+
+- [化工行业回顾：在绝望中寻找不对称性](/posts/化工行业回顾：在绝望中寻找不对称性/) — 化工周期底部的时间价值
+- [AI 时代的软件去中心化与本地化](/posts/AI%20时代的软件去中心化与本地化：一场由第一性原理驱动的"权力回摆"/) — AI 工具链思考
+- [读《寻乌调查》](/posts/读《寻乌调查》/) — 方法论启示
+
+[查看全部文章 →](/posts/)
+
+---
+
+### 联系我
+
+[𝕏 Twitter](https://x.com/mingxuan808) · [GitHub](https://github.com/MXmingxuan) · [Email](mailto:mingxuans@foxmail.com)
