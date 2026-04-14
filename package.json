@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "sync": "npm run build && rmdir /s /q public 2>/dev/null && xcopy /s /e dist\\* public\\ /i /y"
+    "sync": "npm run build && rm -rf public && cp -r dist public"
   },
   "dependencies": {
     "astro": "^6.1.6"
