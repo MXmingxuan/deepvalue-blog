@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd D:/github/deepvalue-blog && ls -la | grep -E \\\"vercel|netlify\\\" && cat package.json\",\"description\":\"Check for Vercel config\"}",
-  "error": "Exit code 1",
-  "timestamp": "2026-04-14T12:46:34.205Z",
-  "retry_count": 1
+  "tool_input_preview": "{\"command\":\"cd D:/github/deepvalue-blog && rmdir /s /q public 2>nul; xcopy /s /e dist\\\\\\\\* public\\\\\\\\ /i /y 2>&1 && git add -A && git commit -m \\\"Sync\\\" && git push 2>&1\",\"timeout\":60000,\"description\"...",
+  "error": "Exit code 4\n��Ч�Ĳ�������",
+  "timestamp": "2026-04-14T13:31:05.292Z",
+  "retry_count": 2
 }
