@@ -48,7 +48,8 @@
       "Bash(npm install:*)",
       "Bash(npm run:*)",
       "Bash(rm -rf public)",
-      "Bash(cp -r dist public)"
+      "Bash(cp -r dist public)",
+      "Bash(curl -s http://localhost:4321/blog/)"
     ]
   }
 }

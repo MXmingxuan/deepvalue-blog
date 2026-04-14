@@ -11,7 +11,7 @@ const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.get
   <ul>
     {sortedPosts.map(post => (
       <li>
-        <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+        <a href={`/blog/${post.id}`}>{post.data.title}</a>
         <span style="color: #666; font-size: 0.9rem;">
           — {post.data.date.toLocaleDateString('zh-CN')}
         </span>
