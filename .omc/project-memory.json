@@ -187,8 +187,8 @@
   "hotPaths": [
     {
       "path": "src\\pages\\index.astro",
-      "accessCount": 29,
-      "lastAccessed": 1776183806234,
+      "accessCount": 32,
+      "lastAccessed": 1776184195667,
       "type": "file"
     },
     {
@@ -216,6 +216,12 @@
       "type": "file"
     },
     {
+      "path": "src\\pages\\projects\\index.astro",
+      "accessCount": 8,
+      "lastAccessed": 1776184195320,
+      "type": "file"
+    },
+    {
       "path": "src\\pages\\blog\\[slug].astro",
       "accessCount": 6,
       "lastAccessed": 1776181286854,
@@ -231,12 +237,6 @@
       "path": "src\\content.config.ts",
       "accessCount": 5,
       "lastAccessed": 1776178335808,
-      "type": "file"
-    },
-    {
-      "path": "src\\pages\\projects\\index.astro",
-      "accessCount": 5,
-      "lastAccessed": 1776183377225,
       "type": "file"
     },
     {
