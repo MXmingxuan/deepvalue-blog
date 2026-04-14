@@ -193,14 +193,14 @@
     },
     {
       "path": "src\\pages\\index.astro",
-      "accessCount": 23,
-      "lastAccessed": 1776183277907,
+      "accessCount": 24,
+      "lastAccessed": 1776183376880,
       "type": "file"
     },
     {
       "path": "src\\pages\\blog\\index.astro",
-      "accessCount": 15,
-      "lastAccessed": 1776183278833,
+      "accessCount": 18,
+      "lastAccessed": 1776183387990,
       "type": "file"
     },
     {
@@ -234,15 +234,15 @@
       "type": "file"
     },
     {
-      "path": "hugo.yaml",
-      "accessCount": 4,
-      "lastAccessed": 1776169341382,
+      "path": "src\\pages\\projects\\index.astro",
+      "accessCount": 5,
+      "lastAccessed": 1776183377225,
       "type": "file"
     },
     {
-      "path": "src\\pages\\projects\\index.astro",
+      "path": "hugo.yaml",
       "accessCount": 4,
-      "lastAccessed": 1776181286531,
+      "lastAccessed": 1776169341382,
       "type": "file"
     },
     {
