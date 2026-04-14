@@ -2,10 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>标签 on Deep Value</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>https://deepvalue.space/tags/</link>
     <description>Recent content in 标签 on Deep Value</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Apr 2026 00:00:00 +0800</lastBuildDate>
+    <atom:link href="https://deepvalue.space/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AI</title>
+      <link>https://deepvalue.space/tags/ai/</link>
+      <pubDate>Tue, 14 Apr 2026 00:00:00 +0800</pubDate>
+      <guid>https://deepvalue.space/tags/ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>特种电子布</title>
+      <link>https://deepvalue.space/tags/%E7%89%B9%E7%A7%8D%E7%94%B5%E5%AD%90%E5%B8%83/</link>
+      <pubDate>Tue, 14 Apr 2026 00:00:00 +0800</pubDate>
+      <guid>https://deepvalue.space/tags/%E7%89%B9%E7%A7%8D%E7%94%B5%E5%AD%90%E5%B8%83/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>电子材料</title>
+      <link>https://deepvalue.space/tags/%E7%94%B5%E5%AD%90%E6%9D%90%E6%96%99/</link>
+      <pubDate>Tue, 14 Apr 2026 00:00:00 +0800</pubDate>
+      <guid>https://deepvalue.space/tags/%E7%94%B5%E5%AD%90%E6%9D%90%E6%96%99/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>

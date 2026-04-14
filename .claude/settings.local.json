@@ -15,7 +15,11 @@
       "Bash(perl -pe 's/^ChatGPT-//; s/[^a-zA-Z0-9_\\\\-]/-/g')",
       "Bash(bash scripts/publish-drafts.sh)",
       "Bash(ls content/drafts/*.md)",
-      "Bash(./scripts/sync.sh \"发布：每日事件驱动观察20260414：特种电子布\")"
+      "Bash(./scripts/sync.sh \"发布：每日事件驱动观察20260414：特种电子布\")",
+      "Bash(scoop install:*)",
+      "Bash(hugo version:*)",
+      "Bash(hugo)",
+      "Bash(./scripts/sync.sh \"更新：添加frontmatter并重建静态文件\")"
     ]
   }
 }
