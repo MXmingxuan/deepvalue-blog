@@ -12,6 +12,7 @@ const projects = await getCollection('projects');
 
 <Base title="宋明璇" description="AI & Trading">
   <section class="hero">
+    <p class="label">// ABOUT</p>
     <h1 class="name">宋明璇</h1>
     <p class="tagline">AI & Trading</p>
     <p class="bio">
@@ -21,15 +22,20 @@ const projects = await getCollection('projects');
   </section>
 
   <section class="section">
-    <h2 class="section-label">项目</h2>
-    <div class="project-list">
+    <p class="label">// PROJECTS</p>
+    <div class="list">
       {projects.map(project => (
-        <article class="project-item">
-          <h3 class="project-title">{project.data.title}</h3>
-          <p class="project-desc">{project.data.description}</p>
+        <article class="item">
+          <div class="item-header">
+            <span class="item-title">{project.data.title}</span>
+            {project.data.status && (
+              <span class="status">{project.data.status}</span>
+            )}
+          </div>
+          <p class="item-desc">{project.data.description}</p>
           {project.data.tech && (
-            <div class="project-tags">
-              {project.data.tech.slice(0, 3).map(t => <span class="tag">{t}</span>)}
+            <div class="tags">
+              {project.data.tech.slice(0, 4).map(t => <span class="tag">{t}</span>)}
             </div>
           )}
         </article>
@@ -38,169 +44,160 @@ const projects = await getCollection('projects');
   </section>
 
   <section class="section">
-    <h2 class="section-label">最近文章</h2>
-    <div class="post-list">
+    <p class="label">// RECENT POSTS</p>
+    <div class="list">
       {recentPosts.map(post => (
-        <article class="post-item">
-          <a href={`/blog/${post.id}`} class="post-title">{post.data.title}</a>
-          <div class="post-meta">
+        <article class="item">
+          <a href={`/blog/${post.id}`} class="item-title link">{post.data.title}</a>
+          <div class="item-meta">
             {post.data.tags && post.data.tags.slice(0, 2).map(tag => (
               <span class="tag">{tag}</span>
             ))}
-            <span class="post-date">{post.data.date.toLocaleDateString('zh-CN')}</span>
+            <span class="date">{post.data.date.toLocaleDateString('zh-CN')}</span>
           </div>
         </article>
       ))}
     </div>
-    <a href="/blog" class="more">查看全部文章 →</a>
+    <a href="/blog" class="more">→ 查看全部文章</a>
   </section>
 </Base>
 
 <style>
   .hero {
-    padding: 80px 0 96px;
+    padding: 64px 0 72px;
+  }
+
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    margin-bottom: 16px;
+    letter-spacing: 0.05em;
   }
 
   .name {
-    font-size: 3.5rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    margin-bottom: 16px;
-    color: var(--color-primary);
-  }
-
-  .tagline {
-    font-size: 1.5rem;
-    color: var(--color-accent);
-    font-weight: 500;
-    margin-bottom: 24px;
-  }
-
-  .bio {
-    font-size: 1.125rem;
-    color: var(--color-text);
-    line-height: 1.8;
-    max-width: 540px;
-  }
-
-  .section {
-    padding: 64px 0;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .section-label {
-    font-size: 0.8125rem;
+    font-size: 3rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-text-light);
-    margin-bottom: 32px;
-  }
-
-  .project-list {
-    display: grid;
-    gap: 0;
-  }
-
-  .project-item {
-    padding: 28px 0;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .project-item:first-child {
-    padding-top: 0;
-  }
-
-  .project-title {
-    font-size: 1.375rem;
-    font-weight: 600;
-    color: var(--color-primary);
+    letter-spacing: -0.02em;
     margin-bottom: 8px;
   }
 
-  .project-desc {
+  .tagline {
+    font-family: var(--font-mono);
     font-size: 1rem;
-    color: var(--color-text-light);
-    line-height: 1.6;
-    margin-bottom: 12px;
+    color: var(--color-accent);
+    margin-bottom: 20px;
   }
 
-  .project-tags {
-    display: flex;
-    gap: 8px;
+  .bio {
+    font-size: 1rem;
+    color: var(--color-text);
+    line-height: 1.8;
   }
 
-  .tag {
-    font-size: 0.75rem;
-    color: var(--color-text-light);
-    background: #f3f4f6;
-    padding: 4px 10px;
-    border-radius: 4px;
+  .section {
+    padding: 48px 0;
+    border-top: 1px solid var(--color-border);
   }
 
-  .post-list {
+  .list {
     display: grid;
     gap: 0;
   }
 
-  .post-item {
-    padding: 24px 0;
+  .item {
+    padding: 20px 0;
     border-bottom: 1px solid var(--color-border);
   }
 
-  .post-item:first-child {
+  .item:first-child {
     padding-top: 0;
   }
 
-  .post-title {
-    display: block;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--color-primary);
-    margin-bottom: 10px;
-    transition: color 0.2s;
-  }
-
-  .post-title:hover {
-    color: var(--color-accent);
-    text-decoration: none;
-  }
-
-  .post-meta {
+  .item-header {
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .item-title {
+    font-size: 1.0625rem;
+    font-weight: 500;
+    color: var(--color-primary);
+  }
+
+  .item-title.link {
+    display: block;
+    transition: color 0.15s;
+  }
+
+  .item-title.link:hover {
+    color: var(--color-accent);
+  }
+
+  .status {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--color-bg);
+    background: var(--color-accent);
+    padding: 2px 6px;
+    border-radius: 2px;
+  }
+
+  .item-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-dim);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .item-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tags {
+    display: flex;
+    gap: 6px;
     flex-wrap: wrap;
   }
 
-  .post-date {
-    font-size: 0.875rem;
-    color: var(--color-text-light);
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--color-text-dim);
+    background: var(--color-surface);
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+
+  .date {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-dim);
   }
 
   .more {
     display: inline-block;
-    margin-top: 32px;
-    font-size: 0.9375rem;
-    font-weight: 500;
+    margin-top: 24px;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
     color: var(--color-accent);
   }
 
   .more:hover {
-    text-decoration: underline;
+    color: var(--color-accent-dim);
   }
 
   @media (max-width: 768px) {
     .hero {
-      padding: 48px 0 64px;
+      padding: 40px 0 48px;
     }
 
     .name {
-      font-size: 2.5rem;
-    }
-
-    .section {
-      padding: 48px 0;
+      font-size: 2rem;
     }
   }
 </style>
