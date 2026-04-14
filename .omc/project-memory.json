@@ -186,15 +186,15 @@
   },
   "hotPaths": [
     {
-      "path": "src\\layouts\\Base.astro",
-      "accessCount": 25,
-      "lastAccessed": 1776183277560,
+      "path": "src\\pages\\index.astro",
+      "accessCount": 29,
+      "lastAccessed": 1776183806234,
       "type": "file"
     },
     {
-      "path": "src\\pages\\index.astro",
+      "path": "src\\layouts\\Base.astro",
       "accessCount": 25,
-      "lastAccessed": 1776183743284,
+      "lastAccessed": 1776183277560,
       "type": "file"
     },
     {
