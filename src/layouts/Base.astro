@@ -42,13 +42,14 @@ const { title, description } = Astro.props;
 
 <style>
   :root {
-    --color-primary: #1a1a2e;
-    --color-accent: #0070f3;
-    --color-bg: #fafafa;
+    --color-primary: #2E86AB;
+    --color-accent: #0077B6;
+    --color-gold: #C9A962;
+    --color-bg: #faf8f5;
     --color-text: #333;
     --color-text-light: #666;
-    --color-border: #e5e5e5;
-    --font-sans: "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --color-border: #d4c5b0;
+    --font-sans: "PingFang SC", "Microsoft YaHei", Georgia, "Times New Roman", serif;
   }
 
   body {
@@ -84,7 +85,7 @@ const { title, description } = Astro.props;
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--color-accent);
+    background: var(--color-gold);
     transition: width 0.3s ease;
   }
 
@@ -154,6 +155,30 @@ const { title, description } = Astro.props;
 
   a:hover {
     color: var(--color-accent);
+  }
+
+  /* Greek key pattern divider */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3rem 0;
+    opacity: 0.6;
+  }
+
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--color-gold), transparent);
+  }
+
+  .section-divider svg {
+    margin: 0 1rem;
+    width: 40px;
+    height: 40px;
+    fill: var(--color-gold);
   }
 
   @media (max-width: 768px) {

@@ -187,8 +187,14 @@
   "hotPaths": [
     {
       "path": "src\\layouts\\Base.astro",
-      "accessCount": 13,
-      "lastAccessed": 1776178500014,
+      "accessCount": 15,
+      "lastAccessed": 1776179595748,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\index.astro",
+      "accessCount": 10,
+      "lastAccessed": 1776179633162,
       "type": "file"
     },
     {
@@ -204,12 +210,6 @@
       "type": "file"
     },
     {
-      "path": "src\\pages\\index.astro",
-      "accessCount": 8,
-      "lastAccessed": 1776178392293,
-      "type": "file"
-    },
-    {
       "path": "package.json",
       "accessCount": 5,
       "lastAccessed": 1776175063976,
@@ -222,15 +222,15 @@
       "type": "file"
     },
     {
-      "path": "hugo.yaml",
-      "accessCount": 4,
-      "lastAccessed": 1776169341382,
+      "path": "C:\\Users\\mingxuan\\.claude\\plans\\greedy-booping-spark.md",
+      "accessCount": 5,
+      "lastAccessed": 1776179510443,
       "type": "file"
     },
     {
-      "path": "C:\\Users\\mingxuan\\.claude\\plans\\greedy-booping-spark.md",
+      "path": "hugo.yaml",
       "accessCount": 4,
-      "lastAccessed": 1776176720177,
+      "lastAccessed": 1776169341382,
       "type": "file"
     },
     {

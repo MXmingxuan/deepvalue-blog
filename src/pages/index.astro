@@ -21,6 +21,13 @@ const projects = await getCollection('projects');
     </p>
   </section>
 
+  <!-- Greek key divider -->
+  <div class="greek-divider">
+    <svg viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,10 L10,10 L10,5 L20,5 L20,10 L30,10 L30,5 L40,5 L40,10 L50,10 L50,5 L60,5 L60,10 L70,10 L70,5 L80,5 L80,10 L90,10 L90,5 L100,5" fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+  </div>
+
   <section class="recent-projects">
     <h2 class="section-title">项目</h2>
     <div class="project-grid">
@@ -34,6 +41,13 @@ const projects = await getCollection('projects');
     <a href="/projects" class="view-more">查看全部项目 →</a>
   </section>
 
+  <!-- Greek key divider -->
+  <div class="greek-divider">
+    <svg viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,10 L10,10 L10,5 L20,5 L20,10 L30,10 L30,5 L40,5 L40,10 L50,10 L50,5 L60,5 L60,10 L70,10 L70,5 L80,5 L80,10 L90,10 L90,5 L100,5" fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+  </div>
+
   <section class="recent-posts">
     <h2 class="section-title">最新文章</h2>
     <ul class="post-list">
@@ -46,6 +60,21 @@ const projects = await getCollection('projects');
     </ul>
     <a href="/blog" class="view-more">查看更多文章 →</a>
   </section>
+
+  <!--
+  如需添加图片，使用以下方式：
+  1. 将图片放入 src/assets/ 目录
+  2. 使用 Image 组件：
+
+  ---
+  import { Image } from 'astro:assets';
+  import myImage from '../assets/my-image.jpg';
+  ---
+
+  <div class="hero-image">
+    <Image src={myImage} alt="描述" width={800} />
+  </div>
+  -->
 </Base>
 
 <style>
@@ -76,8 +105,20 @@ const projects = await getCollection('projects');
     font-size: 1.05rem;
   }
 
+  .greek-divider {
+    display: flex;
+    justify-content: center;
+    margin: 2.5rem 0;
+    color: var(--color-gold);
+  }
+
+  .greek-divider svg {
+    width: 120px;
+    height: 24px;
+  }
+
   .recent-projects {
-    margin-top: 3rem;
+    margin-top: 2rem;
   }
 
   .section-title {
@@ -85,7 +126,7 @@ const projects = await getCollection('projects');
     color: var(--color-primary);
     margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--color-accent);
+    border-bottom: 2px solid var(--color-gold);
     display: inline-block;
   }
 
@@ -101,6 +142,7 @@ const projects = await getCollection('projects');
     border-radius: 8px;
     padding: 1.2rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid var(--color-border);
   }
 
   .project-card .project-title {
@@ -118,7 +160,7 @@ const projects = await getCollection('projects');
   }
 
   .recent-posts {
-    margin-top: 3rem;
+    margin-top: 2rem;
   }
 
   .post-list {
@@ -160,6 +202,18 @@ const projects = await getCollection('projects');
 
   .view-more:hover {
     text-decoration: underline;
+  }
+
+  /* For hero images */
+  .hero-image {
+    margin: 2rem 0;
+    text-align: center;
+  }
+
+  .hero-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
   }
 
   @media (max-width: 768px) {
