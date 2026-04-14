@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd D:/github/deepvalue-blog && rmdir /s /q public 2>nul; xcopy /s /e dist\\\\\\\\* public\\\\\\\\ /i /y 2>&1 && git add -A && git commit -m \\\"Sync\\\" && git push 2>&1\",\"timeout\":60000,\"description\"...",
-  "error": "Exit code 4\n��Ч�Ĳ�������",
-  "timestamp": "2026-04-14T13:31:05.292Z",
-  "retry_count": 2
+  "tool_input_preview": "{\"command\":\"head -10 \\\"src/content/blog/AI 时代的软件去中心化与本地化：一场由第一性原理驱动的\\\"权力回摆\\\".md\\\"\",\"description\":\"Read blog post frontmatter\"}",
+  "error": "Exit code 1\nhead: cannot open 'src/content/blog/AI 时代的软件去中心化与本地化：一场由第一性原理驱动的权力回摆.md' for reading: No such file or directory",
+  "timestamp": "2026-04-14T14:02:04.115Z",
+  "retry_count": 1
 }

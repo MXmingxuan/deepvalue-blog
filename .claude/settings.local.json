@@ -50,7 +50,10 @@
       "Bash(rm -rf public)",
       "Bash(cp -r dist public)",
       "Bash(curl -s http://localhost:4321/blog/)",
-      "Bash(npm pkg:*)"
+      "Bash(npm pkg:*)",
+      "Bash(rmdir /s /q public)",
+      "Bash(rmdir /s /q dist)",
+      "Bash(xcopy /s /e /i dist public)"
     ]
   }
 }

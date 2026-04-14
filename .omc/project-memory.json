@@ -198,6 +198,18 @@
       "type": "file"
     },
     {
+      "path": "src\\pages\\blog\\index.astro",
+      "accessCount": 7,
+      "lastAccessed": 1776175742710,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 5,
+      "lastAccessed": 1776175063976,
+      "type": "file"
+    },
+    {
       "path": "hugo.yaml",
       "accessCount": 4,
       "lastAccessed": 1776169341382,
@@ -219,6 +231,18 @@
       "path": "CLAUDE.md",
       "accessCount": 3,
       "lastAccessed": 1776170622297,
+      "type": "file"
+    },
+    {
+      "path": "C:\\Users\\mingxuan\\.claude\\plans\\greedy-booping-spark.md",
+      "accessCount": 3,
+      "lastAccessed": 1776174916902,
+      "type": "file"
+    },
+    {
+      "path": "src\\content.config.ts",
+      "accessCount": 3,
+      "lastAccessed": 1776175310613,
       "type": "file"
     },
     {
@@ -246,27 +270,9 @@
       "type": "file"
     },
     {
-      "path": "src\\content.config.ts",
-      "accessCount": 2,
-      "lastAccessed": 1776170286257,
-      "type": "file"
-    },
-    {
       "path": "src\\pages\\blog\\[slug].astro",
       "accessCount": 2,
       "lastAccessed": 1776170396251,
-      "type": "file"
-    },
-    {
-      "path": "package.json",
-      "accessCount": 2,
-      "lastAccessed": 1776170612418,
-      "type": "file"
-    },
-    {
-      "path": "src\\pages\\blog\\index.astro",
-      "accessCount": 2,
-      "lastAccessed": 1776171064267,
       "type": "file"
     },
     {
@@ -285,12 +291,6 @@
       "path": "scripts\\publish.sh",
       "accessCount": 1,
       "lastAccessed": 1776153176683,
-      "type": "file"
-    },
-    {
-      "path": "C:\\Users\\mingxuan\\.claude\\plans\\greedy-booping-spark.md",
-      "accessCount": 1,
-      "lastAccessed": 1776169563118,
       "type": "file"
     },
     {
