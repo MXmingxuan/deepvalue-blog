@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd D:/github/deepvalue-blog && rmdir /s /q public 2>nul && xcopy /s /e /i dist public\",\"description\":\"Delete public and copy dist\"}",
-  "error": "Exit code 1",
-  "timestamp": "2026-04-14T15:01:37.745Z",
-  "retry_count": 1
+  "tool_input_preview": "{\"command\":\"cd D:/github/deepvalue-blog && git push origin main\",\"description\":\"Retry push\"}",
+  "error": "Exit code 1\nerror: RPC failed; curl 56 schannel: server closed abruptly (missing close_notify)\nsend-pack: unexpected disconnect while reading sideband packet\nfatal: the remote end hung up unexpectedly\nEverything up-to-date",
+  "timestamp": "2026-04-14T16:00:34.197Z",
+  "retry_count": 3
 }
