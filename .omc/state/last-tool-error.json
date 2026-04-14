@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd D:/github/deepvalue-blog && mv src/pages/blog/\\\\[...slug\\\\].astro src/pages/blog/\\\\[slug\\\\].astro && npm run build 2>&1\",\"timeout\":60000,\"description\":\"Fix route conflict and rebuild\"}",
-  "error": "Exit code 1\n\n> dark-disk@0.0.1 build\n> astro build\n\n\u001b[2m20:39:37\u001b[22m \u001b[34m[content]\u001b[39m Syncing content\n\u001b[2m20:39:37\u001b[22m \u001b[34m[content]\u001b[39m Synced content\n\u001b[2m20:39:37\u001b[22m \u001b[34m[types]\u001b[39m Generated \u001b[2m300ms\u001b[22m\n\u001b[2m20:39:37\u001b[22m \u001b[34m[build]\u001b[39m output: \u001b[34m\"static\"\u001b[39m\n\u001b[2m20:39:37\u001b[22m \u001b[34m[build]\u001b[39m mode: \u001b[34m\"static\"\u001b[39m\n\u001b[2m20:39:37\u001b[22m \u001b[34m[build]\u001b[39m directory: \u001b[34mD:\\github\\deepvalue-blog\\dist\\\u001b[39m\n\u001b[2m20:39:37\u001b[22m \u001b[34m[build]\u001b[39m Collecting build info...\n\u001b[2m20:...",
-  "timestamp": "2026-04-14T12:39:38.424Z",
+  "tool_input_preview": "{\"command\":\"cd D:/github/deepvalue-blog && ls -la | grep -E \\\"vercel|netlify\\\" && cat package.json\",\"description\":\"Check for Vercel config\"}",
+  "error": "Exit code 1",
+  "timestamp": "2026-04-14T12:46:34.205Z",
   "retry_count": 1
 }

@@ -198,6 +198,12 @@
       "type": "file"
     },
     {
+      "path": "src\\pages\\index.astro",
+      "accessCount": 4,
+      "lastAccessed": 1776171063913,
+      "type": "file"
+    },
+    {
       "path": "hugo.toml",
       "accessCount": 3,
       "lastAccessed": 1776153150372,
@@ -207,6 +213,12 @@
       "path": "CLAUDE.md",
       "accessCount": 3,
       "lastAccessed": 1776170622297,
+      "type": "file"
+    },
+    {
+      "path": "src\\layouts\\Base.astro",
+      "accessCount": 3,
+      "lastAccessed": 1776171057803,
       "type": "file"
     },
     {
@@ -234,12 +246,6 @@
       "type": "file"
     },
     {
-      "path": "src\\pages\\index.astro",
-      "accessCount": 2,
-      "lastAccessed": 1776170160710,
-      "type": "file"
-    },
-    {
       "path": "src\\content.config.ts",
       "accessCount": 2,
       "lastAccessed": 1776170286257,
@@ -255,6 +261,12 @@
       "path": "package.json",
       "accessCount": 2,
       "lastAccessed": 1776170612418,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\blog\\index.astro",
+      "accessCount": 2,
+      "lastAccessed": 1776171064267,
       "type": "file"
     },
     {
@@ -288,18 +300,6 @@
       "type": "file"
     },
     {
-      "path": "src\\layouts\\Base.astro",
-      "accessCount": 1,
-      "lastAccessed": 1776170139912,
-      "type": "file"
-    },
-    {
-      "path": "src\\pages\\blog\\index.astro",
-      "accessCount": 1,
-      "lastAccessed": 1776170148118,
-      "type": "file"
-    },
-    {
       "path": "src\\pages\\blog\\[...slug].astro",
       "accessCount": 1,
       "lastAccessed": 1776170168602,
@@ -315,6 +315,12 @@
       "path": "src\\content\\config.ts",
       "accessCount": 1,
       "lastAccessed": 1776170229391,
+      "type": "file"
+    },
+    {
+      "path": "vercel.json",
+      "accessCount": 1,
+      "lastAccessed": 1776170867589,
       "type": "file"
     }
   ],

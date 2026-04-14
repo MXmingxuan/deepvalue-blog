@@ -6,7 +6,7 @@ const posts = await getCollection('blog');
 const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
-<Base title="博客 - 宋明轩" description="投资分析、AI 与分析思维">
+<Base title="博客 - 宋明璇" description="投资分析、AI 与分析思维">
   <h1>博客</h1>
   <ul>
     {sortedPosts.map(post => (
