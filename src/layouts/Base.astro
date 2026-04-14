@@ -14,8 +14,6 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description || '宋明璇的博客'} />
     <title>{title}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   </head>
   <body>
     <header>
@@ -42,64 +40,62 @@ const { title, description } = Astro.props;
 
 <style>
   :root {
-    --color-primary: #2E86AB;
-    --color-accent: #0077B6;
-    --color-gold: #C9A962;
-    --color-bg: #faf8f5;
-    --color-text: #333;
-    --color-text-light: #666;
-    --color-border: #d4c5b0;
-    --font-sans: "PingFang SC", "Microsoft YaHei", Georgia, "Times New Roman", serif;
+    --color-primary: #0f172a;
+    --color-accent: #14B8A6;
+    --color-accent-hover: #0d9488;
+    --color-bg: #ffffff;
+    --color-surface: #f8fafc;
+    --color-text: #334155;
+    --color-text-secondary: #64748b;
+    --color-border: #e2e8f0;
+    --font-sans: "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+    --radius: 12px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
   body {
     font-family: var(--font-sans);
-    font-size: 17px;
+    font-size: 16px;
     line-height: 1.7;
     color: var(--color-text);
     background: var(--color-bg);
-    max-width: 900px;
+    max-width: 960px;
     margin: 0 auto;
-    padding: 3rem 2rem;
+    padding: 0 24px;
   }
 
   header {
-    padding-bottom: 1.5rem;
-    margin-bottom: 3rem;
-    border-bottom: 2px solid var(--color-primary);
+    padding: 32px 0;
+    margin-bottom: 48px;
   }
 
   nav a {
-    margin-right: 2rem;
-    color: var(--color-primary);
+    margin-right: 32px;
+    color: var(--color-text);
     text-decoration: none;
+    font-size: 15px;
     font-weight: 500;
-    font-size: 1.1rem;
-    position: relative;
-  }
-
-  nav a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--color-gold);
-    transition: width 0.3s ease;
+    transition: color 0.2s;
   }
 
   nav a:hover {
     color: var(--color-accent);
   }
 
-  nav a:hover::after {
-    width: 100%;
+  nav a:last-child {
+    margin-right: 0;
   }
 
   footer {
-    margin-top: 4rem;
-    padding-top: 2rem;
+    margin-top: 80px;
+    padding: 32px 0;
     border-top: 1px solid var(--color-border);
     text-align: center;
   }
@@ -108,14 +104,15 @@ const { title, description } = Astro.props;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
+    gap: 24px;
+    margin-bottom: 16px;
     flex-wrap: wrap;
   }
 
   .footer-links a {
-    color: var(--color-text-light);
+    color: var(--color-text-secondary);
     text-decoration: none;
+    font-size: 14px;
     transition: color 0.2s;
   }
 
@@ -123,71 +120,53 @@ const { title, description } = Astro.props;
     color: var(--color-accent);
   }
 
-  .email {
-    color: var(--color-text-light);
-  }
-
-  .wechat {
-    color: var(--color-text-light);
+  .email, .wechat {
+    color: var(--color-text-secondary);
+    font-size: 14px;
   }
 
   .copyright {
-    color: var(--color-text-light);
-    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    font-size: 13px;
   }
 
   h1 {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     color: var(--color-primary);
     margin-bottom: 0.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: var(--color-primary);
-    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
   }
 
   a {
-    color: var(--color-primary);
+    color: var(--color-accent);
     text-decoration: none;
+    transition: color 0.2s;
   }
 
   a:hover {
-    color: var(--color-accent);
-  }
-
-  /* Greek key pattern divider */
-  .section-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 3rem 0;
-    opacity: 0.6;
-  }
-
-  .section-divider::before,
-  .section-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--color-gold), transparent);
-  }
-
-  .section-divider svg {
-    margin: 0 1rem;
-    width: 40px;
-    height: 40px;
-    fill: var(--color-gold);
+    color: var(--color-accent-hover);
   }
 
   @media (max-width: 768px) {
     body {
-      padding: 1.5rem 1rem;
+      padding: 0 16px;
+    }
+
+    header {
+      padding: 24px 0;
+      margin-bottom: 32px;
     }
 
     h1 {
-      font-size: 1.8rem;
+      font-size: 2rem;
     }
   }
 </style>

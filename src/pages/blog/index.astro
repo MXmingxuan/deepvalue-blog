@@ -5,37 +5,25 @@ import { getCollection } from 'astro:content';
 const posts = await getCollection('blog');
 const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-// Extract all unique tags
 const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort();
 ---
 
 <Base title="博客 - 宋明璇" description="投资分析、AI 与分析思维">
-  <div class="blog-container">
-    <!-- Sidebar with tags -->
+  <h1 class="page-title">博客</h1>
+
+  <div class="blog-layout">
     <aside class="sidebar">
       <h3 class="sidebar-title">标签</h3>
-      <div id="tag-filter" class="tag-cloud">
-        <button
-          data-tag="all"
-          class="tag-btn active"
-        >
-          全部
-        </button>
+      <div class="tag-list">
+        <button data-tag="all" class="tag-btn active">全部</button>
         {allTags.map(tag => (
-          <button
-            data-tag={tag}
-            class="tag-btn"
-          >
-            {tag}
-          </button>
+          <button data-tag={tag} class="tag-btn">{tag}</button>
         ))}
       </div>
     </aside>
 
-    <!-- Main content -->
     <main class="content">
-      <h1 class="page-title">博客</h1>
-      <ul id="post-list" class="post-list">
+      <ul class="post-list" id="post-list">
         {sortedPosts.map(post => (
           <li class="post-item" data-tags={JSON.stringify(post.data.tags || [])}>
             <a href={`/blog/${post.id}`} class="post-title">{post.data.title}</a>
@@ -43,8 +31,8 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
               <span class="post-date">{post.data.date.toLocaleDateString('zh-CN')}</span>
               {post.data.tags && post.data.tags.length > 0 && (
                 <div class="post-tags">
-                  {post.data.tags.map(tag => (
-                    <span class="post-tag">{tag}</span>
+                  {post.data.tags.slice(0, 3).map(tag => (
+                    <span class="tag">{tag}</span>
                   ))}
                 </div>
               )}
@@ -66,18 +54,14 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
     btn.addEventListener('click', () => {
       const tag = btn.getAttribute('data-tag');
 
-      // Update button styles
-      buttons.forEach(b => {
-        b.classList.remove('active');
-      });
+      buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
-      // Filter posts
       let visibleCount = 0;
       posts.forEach(post => {
         const tags = JSON.parse(post.getAttribute('data-tags') || '[]');
         if (tag === 'all' || tags.includes(tag)) {
-          (post as HTMLElement).style.display = 'block';
+          (post as HTMLElement).style.display = '';
           visibleCount++;
         } else {
           (post as HTMLElement).style.display = 'none';
@@ -92,54 +76,56 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
 </script>
 
 <style>
-  .blog-container {
+  .page-title {
+    margin-bottom: 48px;
+  }
+
+  .blog-layout {
     display: flex;
-    gap: 3rem;
+    gap: 64px;
     align-items: flex-start;
   }
 
   .sidebar {
-    min-width: 140px;
+    min-width: 100px;
     position: sticky;
-    top: 2rem;
+    top: 24px;
   }
 
   .sidebar-title {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 1rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    margin-bottom: 16px;
   }
 
-  .tag-cloud {
+  .tag-list {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 4px;
   }
 
   .tag-btn {
-    background: transparent;
+    background: none;
     border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
+    padding: 6px 0;
+    font-size: 14px;
+    color: var(--color-text-secondary);
     cursor: pointer;
     text-align: left;
-    font-size: 0.9rem;
-    color: #666;
-    transition: all 0.2s ease;
+    transition: color 0.2s;
     font-family: inherit;
   }
 
   .tag-btn:hover {
-    background: #f0f0f0;
-    color: #333;
+    color: var(--color-primary);
   }
 
   .tag-btn.active {
-    background: var(--color-accent);
-    color: white;
+    color: var(--color-accent);
+    font-weight: 500;
   }
 
   .content {
@@ -147,36 +133,26 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
     min-width: 0;
   }
 
-  .page-title {
-    margin-bottom: 2rem;
-  }
-
   .post-list {
     list-style: none;
-    padding: 0;
-    margin: 0;
   }
 
   .post-item {
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .post-item:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
+  .post-item:first-child {
+    padding-top: 0;
   }
 
   .post-title {
     display: block;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--color-primary);
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
+    transition: color 0.2s;
   }
 
   .post-title:hover {
@@ -186,55 +162,56 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
   .post-meta {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 12px;
     flex-wrap: wrap;
   }
 
   .post-date {
-    color: #999;
-    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
   }
 
   .post-tags {
     display: flex;
-    gap: 0.4rem;
-    flex-wrap: wrap;
+    gap: 6px;
   }
 
-  .post-tag {
-    background: #f5f0f0;
-    color: var(--color-accent);
-    padding: 0.15rem 0.6rem;
-    border-radius: 12px;
+  .tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
     font-size: 0.75rem;
+    border-radius: 6px;
   }
 
   .no-posts {
     display: none;
-    color: #999;
-    text-align: center;
-    padding: 2rem;
+    color: var(--color-text-secondary);
+    padding: 24px 0;
   }
 
   @media (max-width: 768px) {
-    .blog-container {
+    .blog-layout {
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 24px;
     }
 
     .sidebar {
-      min-width: unset;
       position: static;
       order: 2;
     }
 
-    .tag-cloud {
+    .tag-list {
       flex-direction: row;
       flex-wrap: wrap;
+      gap: 8px;
     }
 
     .tag-btn {
-      background: #f5f5f5;
+      background: var(--color-surface);
+      padding: 4px 12px;
+      border-radius: 6px;
     }
 
     .tag-btn.active {
@@ -244,10 +221,6 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
 
     .content {
       order: 1;
-    }
-
-    .post-item {
-      padding: 1rem;
     }
   }
 </style>

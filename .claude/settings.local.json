@@ -53,7 +53,8 @@
       "Bash(npm pkg:*)",
       "Bash(rmdir /s /q public)",
       "Bash(rmdir /s /q dist)",
-      "Bash(xcopy /s /e /i dist public)"
+      "Bash(xcopy /s /e /i dist public)",
+      "WebFetch(domain:every.to)"
     ]
   }
 }

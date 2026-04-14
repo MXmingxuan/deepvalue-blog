@@ -15,215 +15,209 @@ const projects = await getCollection('projects');
     <h1 class="name">宋明璇</h1>
     <p class="tagline">AI & Trading</p>
     <p class="bio">
-      产业投资背景，<br>
-      目前专注于 AI × 交易，<br>
+      产业投资背景，目前专注于 AI × 交易，<br>
       探索用 AI 重构研究与决策过程。
     </p>
   </section>
 
-  <!-- Greek key divider -->
-  <div class="greek-divider">
-    <svg viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,10 L10,10 L10,5 L20,5 L20,10 L30,10 L30,5 L40,5 L40,10 L50,10 L50,5 L60,5 L60,10 L70,10 L70,5 L80,5 L80,10 L90,10 L90,5 L100,5" fill="none" stroke="currentColor" stroke-width="2"/>
-    </svg>
-  </div>
-
-  <section class="recent-projects">
+  <section class="section">
     <h2 class="section-title">项目</h2>
-    <div class="project-grid">
+    <div class="card-grid">
       {projects.slice(0, 3).map(project => (
-        <div class="project-card">
-          <h3 class="project-title">{project.data.title}</h3>
-          <p class="project-description">{project.data.description}</p>
-        </div>
+        <article class="card">
+          <h3 class="card-title">{project.data.title}</h3>
+          <p class="card-desc">{project.data.description}</p>
+          {project.data.tech && project.data.tech.length > 0 && (
+            <div class="card-tags">
+              {project.data.tech.slice(0, 3).map(tech => (
+                <span class="tag">{tech}</span>
+              ))}
+            </div>
+          )}
+        </article>
       ))}
     </div>
-    <a href="/projects" class="view-more">查看全部项目 →</a>
+    <a href="/projects" class="more-link">查看全部项目 →</a>
   </section>
 
-  <!-- Greek key divider -->
-  <div class="greek-divider">
-    <svg viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,10 L10,10 L10,5 L20,5 L20,10 L30,10 L30,5 L40,5 L40,10 L50,10 L50,5 L60,5 L60,10 L70,10 L70,5 L80,5 L80,10 L90,10 L90,5 L100,5" fill="none" stroke="currentColor" stroke-width="2"/>
-    </svg>
-  </div>
-
-  <section class="recent-posts">
+  <section class="section">
     <h2 class="section-title">最新文章</h2>
-    <ul class="post-list">
+    <div class="post-list">
       {recentPosts.map(post => (
-        <li class="post-item">
-          <a href={`/blog/${post.id}`} class="post-title">{post.data.title}</a>
+        <article class="post-item">
+          <div class="post-content">
+            <a href={`/blog/${post.id}`} class="post-title">{post.data.title}</a>
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div class="post-tags">
+                {post.data.tags.slice(0, 2).map(tag => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+            )}
+          </div>
           <span class="post-date">{post.data.date.toLocaleDateString('zh-CN')}</span>
-        </li>
+        </article>
       ))}
-    </ul>
-    <a href="/blog" class="view-more">查看更多文章 →</a>
+    </div>
+    <a href="/blog" class="more-link">查看全部文章 →</a>
   </section>
-
-  <!--
-  如需添加图片，使用以下方式：
-  1. 将图片放入 src/assets/ 目录
-  2. 使用 Image 组件：
-
-  ---
-  import { Image } from 'astro:assets';
-  import myImage from '../assets/my-image.jpg';
-  ---
-
-  <div class="hero-image">
-    <Image src={myImage} alt="描述" width={800} />
-  </div>
-  -->
 </Base>
 
 <style>
   .hero {
-    text-align: center;
-    padding: 3rem 0 4rem;
+    padding: 48px 0 64px;
   }
 
   .name {
-    font-size: 2.8rem;
-    color: var(--color-primary);
-    margin-bottom: 0.3rem;
-    font-weight: 700;
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
   }
 
   .tagline {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     color: var(--color-accent);
-    margin-bottom: 2rem;
-    font-weight: 500;
+    font-weight: 600;
+    margin-bottom: 20px;
   }
 
   .bio {
-    max-width: 500px;
-    margin: 0 auto;
-    color: var(--color-text);
-    line-height: 1.9;
-    font-size: 1.05rem;
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.8;
   }
 
-  .greek-divider {
-    display: flex;
-    justify-content: center;
-    margin: 2.5rem 0;
-    color: var(--color-gold);
-  }
-
-  .greek-divider svg {
-    width: 120px;
-    height: 24px;
-  }
-
-  .recent-projects {
-    margin-top: 2rem;
+  .section {
+    margin-bottom: 64px;
   }
 
   .section-title {
-    font-size: 1.2rem;
-    color: var(--color-primary);
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--color-gold);
-    display: inline-block;
-  }
-
-  .project-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .project-card {
-    background: white;
-    border-radius: 8px;
-    padding: 1.2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    border: 1px solid var(--color-border);
-  }
-
-  .project-card .project-title {
-    font-size: 1rem;
-    color: var(--color-primary);
-    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .project-card .project-description {
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 8px;
+  }
+
+  .card-desc {
     font-size: 0.9rem;
-    color: #666;
-    margin: 0;
-    line-height: 1.5;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 12px;
   }
 
-  .recent-posts {
-    margin-top: 2rem;
+  .card-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+    border-radius: 6px;
   }
 
   .post-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
   }
 
   .post-item {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    padding: 1rem 0;
+    align-items: flex-start;
+    padding: 20px 0;
     border-bottom: 1px solid var(--color-border);
   }
 
+  .post-item:last-child {
+    border-bottom: none;
+  }
+
+  .post-content {
+    flex: 1;
+  }
+
   .post-title {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 600;
     color: var(--color-primary);
-    font-weight: 500;
+    margin-bottom: 8px;
+    transition: color 0.2s;
   }
 
   .post-title:hover {
     color: var(--color-accent);
   }
 
+  .post-tags {
+    display: flex;
+    gap: 6px;
+  }
+
   .post-date {
-    color: #999;
-    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
     white-space: nowrap;
-    margin-left: 1rem;
+    margin-left: 16px;
   }
 
-  .view-more {
+  .more-link {
     display: inline-block;
-    margin-top: 1.5rem;
-    color: var(--color-accent);
+    font-size: 0.9rem;
     font-weight: 500;
-  }
-
-  .view-more:hover {
-    text-decoration: underline;
-  }
-
-  /* For hero images */
-  .hero-image {
-    margin: 2rem 0;
-    text-align: center;
-  }
-
-  .hero-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
   }
 
   @media (max-width: 768px) {
     .name {
-      font-size: 2rem;
+      font-size: 2.25rem;
+    }
+
+    .card-grid {
+      grid-template-columns: 1fr;
     }
 
     .post-item {
       flex-direction: column;
-      gap: 0.3rem;
+      gap: 8px;
     }
 
     .post-date {

@@ -187,20 +187,20 @@
   "hotPaths": [
     {
       "path": "src\\layouts\\Base.astro",
-      "accessCount": 15,
-      "lastAccessed": 1776179595748,
+      "accessCount": 16,
+      "lastAccessed": 1776180410939,
       "type": "file"
     },
     {
       "path": "src\\pages\\index.astro",
-      "accessCount": 10,
-      "lastAccessed": 1776179633162,
+      "accessCount": 11,
+      "lastAccessed": 1776180436835,
       "type": "file"
     },
     {
       "path": "src\\pages\\blog\\index.astro",
-      "accessCount": 9,
-      "lastAccessed": 1776176902097,
+      "accessCount": 10,
+      "lastAccessed": 1776180477243,
       "type": "file"
     },
     {
@@ -234,6 +234,12 @@
       "type": "file"
     },
     {
+      "path": "src\\pages\\blog\\[slug].astro",
+      "accessCount": 4,
+      "lastAccessed": 1776180477934,
+      "type": "file"
+    },
+    {
       "path": "hugo.toml",
       "accessCount": 3,
       "lastAccessed": 1776153150372,
@@ -243,12 +249,6 @@
       "path": "CLAUDE.md",
       "accessCount": 3,
       "lastAccessed": 1776170622297,
-      "type": "file"
-    },
-    {
-      "path": "src\\pages\\blog\\[slug].astro",
-      "accessCount": 3,
-      "lastAccessed": 1776176935737,
       "type": "file"
     },
     {
@@ -273,6 +273,12 @@
       "path": "src\\content\\schemas.ts",
       "accessCount": 2,
       "lastAccessed": 1776170124562,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\projects\\index.astro",
+      "accessCount": 2,
+      "lastAccessed": 1776180477593,
       "type": "file"
     },
     {
@@ -333,12 +339,6 @@
       "path": "src\\content\\projects\\AI分析公司公号.md",
       "accessCount": 1,
       "lastAccessed": 1776178346218,
-      "type": "file"
-    },
-    {
-      "path": "src\\pages\\projects\\index.astro",
-      "accessCount": 1,
-      "lastAccessed": 1776178358959,
       "type": "file"
     }
   ],
