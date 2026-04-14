@@ -192,15 +192,15 @@
       "type": "file"
     },
     {
-      "path": "hugo.toml",
-      "accessCount": 3,
-      "lastAccessed": 1776153150372,
+      "path": "hugo.yaml",
+      "accessCount": 4,
+      "lastAccessed": 1776169341382,
       "type": "file"
     },
     {
-      "path": "hugo.yaml",
+      "path": "hugo.toml",
       "accessCount": 3,
-      "lastAccessed": 1776164001151,
+      "lastAccessed": 1776153150372,
       "type": "file"
     },
     {

@@ -33,7 +33,15 @@
       "Bash(taskkill /F /IM git.exe)",
       "Bash(rmdir /S /Q themes\\\\docura)",
       "Bash(del /F /Q themes\\\\docura\\\\*)",
-      "Bash(ls themes/docura/*.toml)"
+      "Bash(ls themes/docura/*.toml)",
+      "Bash(mkdir -p ../deepvalue-blog-backup)",
+      "Bash(cp content/posts/*.md ../deepvalue-blog-backup/)",
+      "Read(//d/github/**)",
+      "Bash(rm -rf themes/* public/* content/*)",
+      "Bash(rm -f hugo.yaml hugo.toml)",
+      "Bash(mkdir -p content/posts)",
+      "Bash(cp ../deepvalue-blog-backup/*.md content/posts/)",
+      "Bash(./scripts/sync.sh \"重置博客，使用 Docura 主题\")"
     ]
   }
 }
