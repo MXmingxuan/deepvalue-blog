@@ -23,7 +23,17 @@
       "Bash(./scripts/sync.sh \"切换到 Paper 主题，清理旧主题\")",
       "Bash(rm -rf themes/paper)",
       "Bash(sed -i 's/theme: paper/theme: book/' hugo.yaml)",
-      "Bash(./scripts/sync.sh \"切换到 Hugo Book 主题\")"
+      "Bash(./scripts/sync.sh \"切换到 Hugo Book 主题\")",
+      "WebFetch(domain:themes.gohugo.io)",
+      "Bash(git clone:*)",
+      "Bash(./scripts/sync.sh \"切换到 Docura 主题\")",
+      "Bash(mv docura:*)",
+      "Bash(rm -rf themes/docura)",
+      "Bash(mv docura-temp:*)",
+      "Bash(taskkill /F /IM git.exe)",
+      "Bash(rmdir /S /Q themes\\\\docura)",
+      "Bash(del /F /Q themes\\\\docura\\\\*)",
+      "Bash(ls themes/docura/*.toml)"
     ]
   }
 }

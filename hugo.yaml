@@ -1,7 +1,7 @@
 baseURL: "https://deepvalue.space/"
 languageCode: "zh-CN"
 title: "宋明轩"
-theme: book
+theme: docura
 
 outputs:
   home:

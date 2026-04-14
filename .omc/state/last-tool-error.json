@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd D:/github/deepvalue-blog/themes && git clone https://github.com/nanxiaobei/hugo-paper.git paper 2>&1\",\"description\":\"Install Paper theme\"}",
-  "error": "Exit code 128\nCloning into 'paper'...\nfatal: unable to access 'https://github.com/nanxiaobei/hugo-paper.git/': Recv failure: Connection was reset",
-  "timestamp": "2026-04-14T10:24:13.839Z",
-  "retry_count": 1
+  "tool_input_preview": "{\"command\":\"cd D:/github/deepvalue-blog && rmdir /S /Q themes\\\\docura 2>&1 || del /F /Q themes\\\\docura\\\\* 2>&1; rmdir /S /Q themes\\\\docura 2>&1\",\"timeout\":30000,\"description\":\"Force remove Windows sty...",
+  "error": "Exit code 1\nrmdir: failed to remove '/S': No such file or directory\nrmdir: failed to remove '/Q': No such file or directory\nrmdir: failed to remove 'themesdocura': No such file or directory\n/usr/bin/bash: line 1: del: command not found\nrmdir: failed to remove '/S': No such file or directory\nrmdir: failed to remove '/Q': No such file or directory\nrmdir: failed to remove 'themesdocura': No such file or directory",
+  "timestamp": "2026-04-14T12:06:32.049Z",
+  "retry_count": 6
 }
