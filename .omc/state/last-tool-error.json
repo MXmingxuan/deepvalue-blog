@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"head -10 \\\"src/content/blog/AI 时代的软件去中心化与本地化：一场由第一性原理驱动的\\\"权力回摆\\\".md\\\"\",\"description\":\"Read blog post frontmatter\"}",
-  "error": "Exit code 1\nhead: cannot open 'src/content/blog/AI 时代的软件去中心化与本地化：一场由第一性原理驱动的权力回摆.md' for reading: No such file or directory",
-  "timestamp": "2026-04-14T14:02:04.115Z",
+  "tool_input_preview": "{\"command\":\"cd D:/github/deepvalue-blog && npm run sync && git add -A && git commit -m \\\"强调色改为深蓝色\\\" && git push\",\"description\":\"Build, sync and push color change\"}",
+  "error": "Exit code 127\n\n> deepvalue-blog@0.0.1 sync\n> rmdir /s /q public 2>nul & npm run build && xcopy /s /e /i dist public\n\n\n> deepvalue-blog@0.0.1 build\n> astro build\n\n\u001b[2m22:55:07\u001b[22m \u001b[34m[content]\u001b[39m Syncing content\n\u001b[2m22:55:07\u001b[22m \u001b[34m[content]\u001b[39m Synced content\n\u001b[2m22:55:07\u001b[22m \u001b[34m[types]\u001b[39m Generated \u001b[2m365ms\u001b[22m\n\u001b[2m22:55:07\u001b[22m \u001b[34m[build]\u001b[39m output: \u001b[34m\"static\"\u001b[39m\n\u001b[2m22:55:07\u001b[22m \u001b[34m[build]\u001b[39m mode: \u001b[34m\"static\"\u001b[39m\n\u001b[2m22:55:07\u001b[22m \u001b[34m[build]\u001b[39m directory:...",
+  "timestamp": "2026-04-14T14:55:08.421Z",
   "retry_count": 1
 }
