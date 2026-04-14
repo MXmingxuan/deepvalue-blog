@@ -1,4 +1,11 @@
 ---
+import '@fontsource/geist/400.css';
+import '@fontsource/geist/500.css';
+import '@fontsource/geist/600.css';
+import '@fontsource/geist/700.css';
+import '@fontsource/geist-mono/400.css';
+import '@fontsource/geist-mono/500.css';
+
 interface Props {
   title: string;
   description?: string;
@@ -48,8 +55,8 @@ const { title, description } = Astro.props;
     --color-text-dim: #808080;
     --color-accent: #22c55e;
     --color-accent-dim: #166534;
-    --font-mono: "SF Mono", "Fira Code", "Consolas", monospace;
-    --font-sans: "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: "Geist Mono", "SF Mono", "Fira Code", "Consolas", monospace;
+    --font-sans: "Geist", "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   * {

@@ -193,8 +193,8 @@
     },
     {
       "path": "src\\layouts\\Base.astro",
-      "accessCount": 25,
-      "lastAccessed": 1776183277560,
+      "accessCount": 29,
+      "lastAccessed": 1776184096531,
       "type": "file"
     },
     {
@@ -210,15 +210,15 @@
       "type": "file"
     },
     {
-      "path": "src\\pages\\blog\\[slug].astro",
-      "accessCount": 6,
-      "lastAccessed": 1776181286854,
+      "path": "C:\\Users\\mingxuan\\.claude\\plans\\greedy-booping-spark.md",
+      "accessCount": 8,
+      "lastAccessed": 1776184059036,
       "type": "file"
     },
     {
-      "path": "C:\\Users\\mingxuan\\.claude\\plans\\greedy-booping-spark.md",
+      "path": "src\\pages\\blog\\[slug].astro",
       "accessCount": 6,
-      "lastAccessed": 1776182889836,
+      "lastAccessed": 1776181286854,
       "type": "file"
     },
     {

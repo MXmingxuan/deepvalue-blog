@@ -13,6 +13,8 @@
     "sync": "rmdir /s /q public 2>nul & npm run build && xcopy /s /e /i dist public"
   },
   "dependencies": {
+    "@fontsource/geist": "^5.2.8",
+    "@fontsource/geist-mono": "^5.2.7",
     "astro": "^6.1.6"
   }
 }
