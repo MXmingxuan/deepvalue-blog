@@ -14,6 +14,8 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description || '宋明璇的博客'} />
     <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   </head>
   <body>
     <header>
@@ -26,44 +28,140 @@ const { title, description } = Astro.props;
       <slot />
     </main>
     <footer>
-      <div style="margin-bottom: 1rem;">
-        <a href="https://github.com/MXmingxuan" target="_blank" style="margin-right: 1rem;">GitHub</a>
-        <a href="https://x.com/mingxuan808" target="_blank" style="margin-right: 1rem;">X</a>
-        <span style="margin-right: 1rem; color: #666;">mingxuantrading@foxmail.com</span>
-        <span style="color: #666;">公众号：待添加</span>
+      <div class="footer-links">
+        <a href="https://github.com/MXmingxuan" target="_blank">GitHub</a>
+        <a href="https://x.com/mingxuan808" target="_blank">X</a>
+        <span class="email">mingxuantrading@foxmail.com</span>
+        <span class="wechat">公众号：待添加</span>
       </div>
-      <p>&copy; 2024 宋明璇. All rights reserved.</p>
+      <p class="copyright">&copy; 2024 宋明璇. All rights reserved.</p>
     </footer>
   </body>
 </html>
 
 <style>
+  :root {
+    --color-primary: #1a1a2e;
+    --color-accent: #e94560;
+    --color-bg: #fafafa;
+    --color-text: #333;
+    --color-text-light: #666;
+    --color-border: #e5e5e5;
+    --font-sans: "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    max-width: 800px;
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--color-text);
+    background: var(--color-bg);
+    max-width: 900px;
     margin: 0 auto;
-    padding: 2rem;
-    line-height: 1.6;
+    padding: 3rem 2rem;
   }
+
   header {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 1rem;
-    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 3rem;
+    border-bottom: 2px solid var(--color-primary);
   }
+
   nav a {
-    margin-right: 1rem;
-    color: #333;
+    margin-right: 2rem;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1rem;
+    position: relative;
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-accent);
+    transition: width 0.3s ease;
+  }
+
+  nav a:hover {
+    color: var(--color-accent);
+  }
+
+  nav a:hover::after {
+    width: 100%;
+  }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    color: var(--color-text-light);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover {
+    color: var(--color-accent);
+  }
+
+  .email {
+    color: var(--color-text-light);
+  }
+
+  .wechat {
+    color: var(--color-text-light);
+  }
+
+  .copyright {
+    color: var(--color-text-light);
+    font-size: 0.85rem;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-top: 2rem;
+  }
+
+  a {
+    color: var(--color-primary);
     text-decoration: none;
   }
-  nav a:hover {
-    color: #0070f3;
+
+  a:hover {
+    color: var(--color-accent);
   }
-  footer {
-    border-top: 1px solid #eee;
-    padding-top: 1rem;
-    margin-top: 3rem;
-    text-align: center;
-    color: #666;
-    font-size: 0.9rem;
+
+  @media (max-width: 768px) {
+    body {
+      padding: 1.5rem 1rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+    }
   }
 </style>

@@ -9,28 +9,124 @@ const recentPosts = posts
 ---
 
 <Base title="宋明璇" description="AI & Trading">
-  <section style="text-align: center; padding: 3rem 0;">
-    <h1>宋明璇</h1>
-    <p style="font-size: 1.2rem; color: #666;">AI & Trading</p>
-    <p style="max-width: 600px; margin: 2rem auto;">
-      产业投资背景，
-      目前专注于 AI × 交易，
+  <section class="hero">
+    <h1 class="name">宋明璇</h1>
+    <p class="tagline">AI & Trading</p>
+    <p class="bio">
+      产业投资背景，<br>
+      目前专注于 AI × 交易，<br>
       探索用 AI 重构研究与决策过程。
     </p>
   </section>
 
-  <section>
-    <h2>最新文章</h2>
-    <ul>
+  <section class="recent-posts">
+    <h2 class="section-title">最新文章</h2>
+    <ul class="post-list">
       {recentPosts.map(post => (
-        <li>
-          <a href={`/blog/${post.id}`}>{post.data.title}</a>
-          <span style="color: #666; font-size: 0.9rem;">
-            — {post.data.date.toLocaleDateString('zh-CN')}
-          </span>
+        <li class="post-item">
+          <a href={`/blog/${post.id}`} class="post-title">{post.data.title}</a>
+          <span class="post-date">{post.data.date.toLocaleDateString('zh-CN')}</span>
         </li>
       ))}
     </ul>
-    <p><a href="/blog">查看更多文章 →</a></p>
+    <a href="/blog" class="view-more">查看更多文章 →</a>
   </section>
 </Base>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 3rem 0 4rem;
+  }
+
+  .name {
+    font-size: 2.8rem;
+    color: var(--color-primary);
+    margin-bottom: 0.3rem;
+    font-weight: 700;
+  }
+
+  .tagline {
+    font-size: 1.2rem;
+    color: var(--color-accent);
+    margin-bottom: 2rem;
+    font-weight: 500;
+  }
+
+  .bio {
+    max-width: 500px;
+    margin: 0 auto;
+    color: var(--color-text);
+    line-height: 1.9;
+    font-size: 1.05rem;
+  }
+
+  .recent-posts {
+    margin-top: 3rem;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-accent);
+    display: inline-block;
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .post-title {
+    color: var(--color-primary);
+    font-weight: 500;
+  }
+
+  .post-title:hover {
+    color: var(--color-accent);
+  }
+
+  .post-date {
+    color: #999;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+
+  .view-more {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .view-more:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .name {
+      font-size: 2rem;
+    }
+
+    .post-item {
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .post-date {
+      margin-left: 0;
+    }
+  }
+</style>

@@ -10,15 +10,14 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
 ---
 
 <Base title="博客 - 宋明璇" description="投资分析、AI 与分析思维">
-  <div style="display: flex; gap: 2rem;">
+  <div class="blog-container">
     <!-- Sidebar with tags -->
-    <aside style="min-width: 150px;">
-      <h3 style="font-size: 1rem; color: #666; margin-bottom: 0.5rem;">标签筛选</h3>
-      <div id="tag-filter" style="display: flex; flex-direction: column; gap: 0.5rem;">
+    <aside class="sidebar">
+      <h3 class="sidebar-title">标签</h3>
+      <div id="tag-filter" class="tag-cloud">
         <button
           data-tag="all"
           class="tag-btn active"
-          style="background: #0070f3; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; text-align: left; font-size: 0.9rem;"
         >
           全部
         </button>
@@ -26,7 +25,6 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
           <button
             data-tag={tag}
             class="tag-btn"
-            style="background: #f5f5f5; color: #333; border: 1px solid #ddd; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; text-align: left; font-size: 0.9rem;"
           >
             {tag}
           </button>
@@ -35,28 +33,26 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
     </aside>
 
     <!-- Main content -->
-    <main style="flex: 1;">
-      <h1>博客</h1>
-      <ul id="post-list" style="list-style: none; padding: 0;">
+    <main class="content">
+      <h1 class="page-title">博客</h1>
+      <ul id="post-list" class="post-list">
         {sortedPosts.map(post => (
           <li class="post-item" data-tags={JSON.stringify(post.data.tags || [])}>
-            <a href={`/blog/${post.id}`}>{post.data.title}</a>
-            <span style="color: #666; font-size: 0.9rem;">
-              — {post.data.date.toLocaleDateString('zh-CN')}
-            </span>
-            {post.data.tags && post.data.tags.length > 0 && (
-              <div style="margin-top: 0.3rem;">
-                {post.data.tags.map(tag => (
-                  <span style="display: inline-block; background: #e8f0fe; color: #0070f3; padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.75rem; margin-right: 0.3rem;">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
+            <a href={`/blog/${post.id}`} class="post-title">{post.data.title}</a>
+            <div class="post-meta">
+              <span class="post-date">{post.data.date.toLocaleDateString('zh-CN')}</span>
+              {post.data.tags && post.data.tags.length > 0 && (
+                <div class="post-tags">
+                  {post.data.tags.map(tag => (
+                    <span class="post-tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
           </li>
         ))}
       </ul>
-      <p id="no-posts" style="display: none; color: #666;">暂无相关文章</p>
+      <p id="no-posts" class="no-posts">暂无相关文章</p>
     </main>
   </div>
 </Base>
@@ -73,12 +69,8 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
       // Update button styles
       buttons.forEach(b => {
         b.classList.remove('active');
-        b.style.background = '#f5f5f5';
-        b.style.color = '#333';
       });
       btn.classList.add('active');
-      btn.style.background = '#0070f3';
-      btn.style.color = 'white';
 
       // Filter posts
       let visibleCount = 0;
@@ -92,21 +84,170 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
         }
       });
 
-      noPosts!.style.display = visibleCount === 0 ? 'block' : 'none';
+      if (noPosts) {
+        noPosts.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
     });
   });
 </script>
 
 <style>
-  .tag-btn:hover {
-    background: #e0e0e0 !important;
+  .blog-container {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
   }
-  .tag-btn.active:hover {
-    background: #005dd3 !important;
+
+  .sidebar {
+    min-width: 140px;
+    position: sticky;
+    top: 2rem;
   }
-  .post-item {
+
+  .sidebar-title {
+    font-size: 0.9rem;
+    color: #666;
     margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #eee;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tag-cloud {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tag-btn {
+    background: transparent;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #666;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+
+  .tag-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+  }
+
+  .tag-btn.active {
+    background: var(--color-accent);
+    color: white;
+  }
+
+  .content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .page-title {
+    margin-bottom: 2rem;
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-item {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .post-item:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+
+  .post-title {
+    display: block;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .post-title:hover {
+    color: var(--color-accent);
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .post-date {
+    color: #999;
+    font-size: 0.85rem;
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .post-tag {
+    background: #f5f0f0;
+    color: var(--color-accent);
+    padding: 0.15rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+  }
+
+  .no-posts {
+    display: none;
+    color: #999;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .blog-container {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sidebar {
+      min-width: unset;
+      position: static;
+      order: 2;
+    }
+
+    .tag-cloud {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .tag-btn {
+      background: #f5f5f5;
+    }
+
+    .tag-btn.active {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .content {
+      order: 1;
+    }
+
+    .post-item {
+      padding: 1rem;
+    }
   }
 </style>
