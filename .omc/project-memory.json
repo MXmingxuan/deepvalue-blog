@@ -187,8 +187,8 @@
   "hotPaths": [
     {
       "path": "src\\layouts\\Base.astro",
-      "accessCount": 9,
-      "lastAccessed": 1776176876668,
+      "accessCount": 11,
+      "lastAccessed": 1776178368881,
       "type": "file"
     },
     {
@@ -205,14 +205,20 @@
     },
     {
       "path": "src\\pages\\index.astro",
-      "accessCount": 6,
-      "lastAccessed": 1776176921810,
+      "accessCount": 8,
+      "lastAccessed": 1776178392293,
       "type": "file"
     },
     {
       "path": "package.json",
       "accessCount": 5,
       "lastAccessed": 1776175063976,
+      "type": "file"
+    },
+    {
+      "path": "src\\content.config.ts",
+      "accessCount": 5,
+      "lastAccessed": 1776178335808,
       "type": "file"
     },
     {
@@ -237,12 +243,6 @@
       "path": "CLAUDE.md",
       "accessCount": 3,
       "lastAccessed": 1776170622297,
-      "type": "file"
-    },
-    {
-      "path": "src\\content.config.ts",
-      "accessCount": 3,
-      "lastAccessed": 1776175310613,
       "type": "file"
     },
     {
@@ -321,6 +321,24 @@
       "path": "vercel.json",
       "accessCount": 1,
       "lastAccessed": 1776170867589,
+      "type": "file"
+    },
+    {
+      "path": "src\\content\\projects\\CTA期货策略.md",
+      "accessCount": 1,
+      "lastAccessed": 1776178345871,
+      "type": "file"
+    },
+    {
+      "path": "src\\content\\projects\\AI分析公司公号.md",
+      "accessCount": 1,
+      "lastAccessed": 1776178346218,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\projects\\index.astro",
+      "accessCount": 1,
+      "lastAccessed": 1776178358959,
       "type": "file"
     }
   ],

@@ -1,0 +1,125 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const projects = await getCollection('projects');
+---
+
+<Base title="项目 - 宋明璇" description="投资分析工具与 AI 应用项目">
+  <h1>项目</h1>
+  <div class="project-list">
+    {projects.map(project => (
+      <article class="project-card">
+        <header>
+          <h2 class="project-title">{project.data.title}</h2>
+          <div class="project-meta">
+            {project.data.status && (
+              <span class={`status status-${project.data.status}`}>
+                {project.data.status}
+              </span>
+            )}
+          </div>
+        </header>
+        <p class="project-description">{project.data.description}</p>
+        {project.data.tech && project.data.tech.length > 0 && (
+          <div class="project-tech">
+            {project.data.tech.map(tech => (
+              <span class="tech-tag">{tech}</span>
+            ))}
+          </div>
+        )}
+        {project.data.link && (
+          <a href={project.data.link} target="_blank" class="project-link">
+            查看项目 →
+          </a>
+        )}
+      </article>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .project-list {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .project-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .project-card header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+
+  .project-title {
+    font-size: 1.3rem;
+    color: var(--color-primary);
+    margin: 0;
+  }
+
+  .project-meta {
+    flex-shrink: 0;
+  }
+
+  .status {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .status-在运营 {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .status-开发中 {
+    background: #fff3e0;
+    color: #f57c00;
+  }
+
+  .status-已暂停 {
+    background: #fafafa;
+    color: #999;
+  }
+
+  .project-description {
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  .project-tech {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .tech-tag {
+    background: #f0f4f8;
+    color: #555;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+
+  .project-link {
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .project-link:hover {
+    text-decoration: underline;
+  }
+</style>

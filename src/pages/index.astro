@@ -6,6 +6,8 @@ const posts = await getCollection('blog');
 const recentPosts = posts
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 5);
+
+const projects = await getCollection('projects');
 ---
 
 <Base title="宋明璇" description="AI & Trading">
@@ -17,6 +19,19 @@ const recentPosts = posts
       目前专注于 AI × 交易，<br>
       探索用 AI 重构研究与决策过程。
     </p>
+  </section>
+
+  <section class="recent-projects">
+    <h2 class="section-title">项目</h2>
+    <div class="project-grid">
+      {projects.slice(0, 3).map(project => (
+        <div class="project-card">
+          <h3 class="project-title">{project.data.title}</h3>
+          <p class="project-description">{project.data.description}</p>
+        </div>
+      ))}
+    </div>
+    <a href="/projects" class="view-more">查看全部项目 →</a>
   </section>
 
   <section class="recent-posts">
@@ -61,7 +76,7 @@ const recentPosts = posts
     font-size: 1.05rem;
   }
 
-  .recent-posts {
+  .recent-projects {
     margin-top: 3rem;
   }
 
@@ -72,6 +87,38 @@ const recentPosts = posts
     padding-bottom: 0.5rem;
     border-bottom: 2px solid var(--color-accent);
     display: inline-block;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .project-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .project-card .project-title {
+    font-size: 1rem;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .project-card .project-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .recent-posts {
+    margin-top: 3rem;
   }
 
   .post-list {
