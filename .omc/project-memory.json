@@ -192,6 +192,12 @@
       "type": "file"
     },
     {
+      "path": "src\\layouts\\Base.astro",
+      "accessCount": 5,
+      "lastAccessed": 1776173945795,
+      "type": "file"
+    },
+    {
       "path": "hugo.yaml",
       "accessCount": 4,
       "lastAccessed": 1776169341382,
@@ -213,12 +219,6 @@
       "path": "CLAUDE.md",
       "accessCount": 3,
       "lastAccessed": 1776170622297,
-      "type": "file"
-    },
-    {
-      "path": "src\\layouts\\Base.astro",
-      "accessCount": 3,
-      "lastAccessed": 1776171057803,
       "type": "file"
     },
     {
