@@ -116,11 +116,11 @@ const projects = await getCollection('projects');
   }
 
   .item:hover {
-    border-color: #3a3a3a;
+    border-color: var(--color-border);
   }
 
   .item:hover .item-title:not(.link) {
-    color: #ffffff;
+    color: var(--color-accent);
   }
 
   .item-header {
@@ -198,7 +198,7 @@ const projects = await getCollection('projects');
   }
 
   .tag:hover {
-    background: #252525;
+    background: var(--color-border);
   }
 
   .date {
