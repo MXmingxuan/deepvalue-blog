@@ -50,5 +50,5 @@ Site deploys to GitHub Pages. Push to main triggers automatic build.
 
 ## Notes
 - Site: https://deepvalue.space/
-- Author: 宋明轩 (mingxuan)
+- Author: 宋明璇 (mingxuan)
 - Chinese content with simple styling

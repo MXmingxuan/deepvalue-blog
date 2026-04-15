@@ -187,20 +187,26 @@
   "hotPaths": [
     {
       "path": "src\\pages\\index.astro",
-      "accessCount": 32,
-      "lastAccessed": 1776184195667,
+      "accessCount": 33,
+      "lastAccessed": 1776219751781,
       "type": "file"
     },
     {
       "path": "src\\layouts\\Base.astro",
-      "accessCount": 29,
-      "lastAccessed": 1776184096531,
+      "accessCount": 30,
+      "lastAccessed": 1776219751575,
       "type": "file"
     },
     {
       "path": "src\\pages\\blog\\index.astro",
-      "accessCount": 18,
-      "lastAccessed": 1776183387990,
+      "accessCount": 19,
+      "lastAccessed": 1776219751840,
+      "type": "file"
+    },
+    {
+      "path": "src\\pages\\projects\\index.astro",
+      "accessCount": 9,
+      "lastAccessed": 1776219751636,
       "type": "file"
     },
     {
@@ -216,27 +222,21 @@
       "type": "file"
     },
     {
-      "path": "src\\pages\\projects\\index.astro",
-      "accessCount": 8,
-      "lastAccessed": 1776184195320,
-      "type": "file"
-    },
-    {
       "path": "src\\pages\\blog\\[slug].astro",
-      "accessCount": 6,
-      "lastAccessed": 1776181286854,
+      "accessCount": 7,
+      "lastAccessed": 1776219751597,
       "type": "file"
     },
     {
       "path": "package.json",
-      "accessCount": 5,
-      "lastAccessed": 1776175063976,
+      "accessCount": 6,
+      "lastAccessed": 1776219740710,
       "type": "file"
     },
     {
       "path": "src\\content.config.ts",
-      "accessCount": 5,
-      "lastAccessed": 1776178335808,
+      "accessCount": 6,
+      "lastAccessed": 1776219740778,
       "type": "file"
     },
     {
@@ -246,15 +246,15 @@
       "type": "file"
     },
     {
-      "path": "hugo.toml",
-      "accessCount": 3,
-      "lastAccessed": 1776153150372,
+      "path": "CLAUDE.md",
+      "accessCount": 4,
+      "lastAccessed": 1776219757476,
       "type": "file"
     },
     {
-      "path": "CLAUDE.md",
+      "path": "hugo.toml",
       "accessCount": 3,
-      "lastAccessed": 1776170622297,
+      "lastAccessed": 1776153150372,
       "type": "file"
     },
     {
@@ -282,6 +282,30 @@
       "type": "file"
     },
     {
+      "path": "astro.config.mjs",
+      "accessCount": 2,
+      "lastAccessed": 1776219740854,
+      "type": "file"
+    },
+    {
+      "path": "vercel.json",
+      "accessCount": 2,
+      "lastAccessed": 1776219751983,
+      "type": "file"
+    },
+    {
+      "path": "src\\content\\projects\\CTA期货策略.md",
+      "accessCount": 2,
+      "lastAccessed": 1776219752107,
+      "type": "file"
+    },
+    {
+      "path": "src\\content\\projects\\AI分析公司公号.md",
+      "accessCount": 2,
+      "lastAccessed": 1776219757419,
+      "type": "file"
+    },
+    {
       "path": "scripts\\sync.sh",
       "accessCount": 1,
       "lastAccessed": 1776153154928,
@@ -297,12 +321,6 @@
       "path": "scripts\\publish.sh",
       "accessCount": 1,
       "lastAccessed": 1776153176683,
-      "type": "file"
-    },
-    {
-      "path": "astro.config.mjs",
-      "accessCount": 1,
-      "lastAccessed": 1776170063858,
       "type": "file"
     },
     {
@@ -324,21 +342,33 @@
       "type": "file"
     },
     {
-      "path": "vercel.json",
+      "path": "",
       "accessCount": 1,
-      "lastAccessed": 1776170867589,
+      "lastAccessed": 1776219740902,
+      "type": "directory"
+    },
+    {
+      "path": "src\\content\\blog\\每日事件驱动观察20260414：特种电子布.md",
+      "accessCount": 1,
+      "lastAccessed": 1776219751855,
       "type": "file"
     },
     {
-      "path": "src\\content\\projects\\CTA期货策略.md",
+      "path": "tsconfig.json",
       "accessCount": 1,
-      "lastAccessed": 1776178345871,
+      "lastAccessed": 1776219751921,
       "type": "file"
     },
     {
-      "path": "src\\content\\projects\\AI分析公司公号.md",
+      "path": "src\\content\\blog\\资本周期-塔勒布.md",
       "accessCount": 1,
-      "lastAccessed": 1776178346218,
+      "lastAccessed": 1776219752045,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 1,
+      "lastAccessed": 1776219757524,
       "type": "file"
     }
   ],
