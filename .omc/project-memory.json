@@ -171,6 +171,12 @@
       "type": "file"
     },
     {
+      "path": "vercel.json",
+      "accessCount": 5,
+      "lastAccessed": 1776307440270,
+      "type": "file"
+    },
+    {
       "path": "hugo.yaml",
       "accessCount": 4,
       "lastAccessed": 1776169341382,
@@ -180,12 +186,6 @@
       "path": "CLAUDE.md",
       "accessCount": 4,
       "lastAccessed": 1776219757476,
-      "type": "file"
-    },
-    {
-      "path": "vercel.json",
-      "accessCount": 4,
-      "lastAccessed": 1776307153097,
       "type": "file"
     },
     {
