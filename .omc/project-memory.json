@@ -183,6 +183,12 @@
       "type": "file"
     },
     {
+      "path": "vercel.json",
+      "accessCount": 4,
+      "lastAccessed": 1776307153097,
+      "type": "file"
+    },
+    {
       "path": "hugo.toml",
       "accessCount": 3,
       "lastAccessed": 1776153150372,
@@ -216,12 +222,6 @@
       "path": "astro.config.mjs",
       "accessCount": 2,
       "lastAccessed": 1776219740854,
-      "type": "file"
-    },
-    {
-      "path": "vercel.json",
-      "accessCount": 2,
-      "lastAccessed": 1776219751983,
       "type": "file"
     },
     {
