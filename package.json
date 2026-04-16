@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "sync": "rmdir /s /q public 2>nul & npm run build && xcopy /s /e /i dist public"
+    "sync": "npm run build"
   },
   "dependencies": {
     "@fontsource/geist": "^5.2.8",
