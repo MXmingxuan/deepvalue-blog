@@ -1,35 +1,61 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1776153130497,
+  "lastScanned": 1776306605585,
   "projectRoot": "D:\\github\\deepvalue-blog",
   "techStack": {
-    "languages": [],
-    "frameworks": [],
-    "packageManager": null,
-    "runtime": null
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": ">=22.12.0",
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "astro",
+        "version": "6.1.6",
+        "category": "fullstack"
+      }
+    ],
+    "packageManager": "npm",
+    "runtime": "Node.js 22.12.0"
   },
   "build": {
-    "buildCommand": null,
+    "buildCommand": "npm run build",
     "testCommand": null,
     "lintCommand": null,
-    "devCommand": null,
-    "scripts": {}
+    "devCommand": "npm run dev",
+    "scripts": {
+      "dev": "astro dev",
+      "build": "astro build",
+      "preview": "astro preview",
+      "astro": "astro",
+      "sync": "rmdir /s /q public 2>nul & npm run build && xcopy /s /e /i dist public"
+    }
   },
   "conventions": {
     "namingStyle": null,
-    "importStyle": null,
+    "importStyle": "ES modules",
     "testPattern": null,
-    "fileOrganization": null
+    "fileOrganization": "type-based"
   },
   "structure": {
     "isMonorepo": false,
     "workspaces": [],
     "mainDirectories": [
-      "assets",
-      "bin",
       "public",
-      "scripts",
-      "static"
+      "src"
     ],
     "gitBranches": {
       "defaultBranch": "main",
@@ -38,149 +64,54 @@
   },
   "customNotes": [],
   "directoryMap": {
-    "archetypes": {
-      "path": "archetypes",
-      "purpose": null,
+    "dist": {
+      "path": "dist",
+      "purpose": "Distribution/build output",
       "fileCount": 1,
-      "lastAccessed": 1776153130483,
+      "lastAccessed": 1776306605564,
       "keyFiles": [
-        "default.md"
-      ]
-    },
-    "assets": {
-      "path": "assets",
-      "purpose": "Static assets",
-      "fileCount": 1,
-      "lastAccessed": 1776153130484,
-      "keyFiles": [
-        "_custom.scss"
-      ]
-    },
-    "bin": {
-      "path": "bin",
-      "purpose": "Executable scripts",
-      "fileCount": 3,
-      "lastAccessed": 1776153130484,
-      "keyFiles": [
-        "hugo.exe",
-        "LICENSE",
-        "README.md"
-      ]
-    },
-    "content": {
-      "path": "content",
-      "purpose": null,
-      "fileCount": 5,
-      "lastAccessed": 1776153130484,
-      "keyFiles": [
-        "about.md",
-        "contact.md",
-        "search.md",
-        "_index.md"
-      ]
-    },
-    "layouts": {
-      "path": "layouts",
-      "purpose": null,
-      "fileCount": 0,
-      "lastAccessed": 1776153130485,
-      "keyFiles": []
-    },
-    "notes": {
-      "path": "notes",
-      "purpose": null,
-      "fileCount": 16,
-      "lastAccessed": 1776153130485,
-      "keyFiles": [
-        "20260111-思考投资工作与加密领域机会.md",
-        "README.md",
-        "为什么一直拖延写不出报告.md",
-        "周期行业分析框架.md",
-        "国内煤制烯烃公司清单.md"
+        "index.html"
       ]
     },
     "public": {
       "path": "public",
       "purpose": "Public files",
-      "fileCount": 18,
-      "lastAccessed": 1776153130485,
+      "fileCount": 1,
+      "lastAccessed": 1776306605564,
       "keyFiles": [
-        "404.html",
-        "book.min.b3d8fe8be9e02b729ac017148cfef768901958a61b06dfacc5c048b3c52050e5.css",
-        "en.search-data.min.4af150c75488d95d2b5b0323b652b01566fcd908a6ce9a11b3829d790de2f955.json",
-        "en.search-data.min.73c7880b82e1baa42a85f7c779dac75ca51c6fb6be4d4f1c7ca3500390fc2910.json",
-        "en.search-data.min.cb7c09872bb6d789d337723832ec3cafe5d47f1256a7a5bd90fe93d969aa197e.json"
+        "index.html"
       ]
     },
-    "research-visualization": {
-      "path": "research-visualization",
-      "purpose": null,
-      "fileCount": 12,
-      "lastAccessed": 1776153130485,
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 1,
+      "lastAccessed": 1776306605572,
       "keyFiles": [
-        "App.tsx",
-        "GEMINI.md",
-        "index.css",
-        "index.html",
-        "index.tsx"
+        "content.config.ts"
       ]
-    },
-    "resources": {
-      "path": "resources",
-      "purpose": null,
-      "fileCount": 0,
-      "lastAccessed": 1776153130486,
-      "keyFiles": []
-    },
-    "scripts": {
-      "path": "scripts",
-      "purpose": "Build/utility scripts",
-      "fileCount": 2,
-      "lastAccessed": 1776153130486,
-      "keyFiles": [
-        "publish.sh",
-        "sync.sh"
-      ]
-    },
-    "static": {
-      "path": "static",
-      "purpose": "Static files",
-      "fileCount": 0,
-      "lastAccessed": 1776153130486,
-      "keyFiles": []
     },
     "themes": {
       "path": "themes",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1776153130486,
+      "lastAccessed": 1776306605572,
       "keyFiles": []
     },
-    "public\\assets": {
-      "path": "public\\assets",
-      "purpose": "Static assets",
-      "fileCount": 0,
-      "lastAccessed": 1776153130487,
-      "keyFiles": []
-    },
-    "public\\docs": {
-      "path": "public\\docs",
-      "purpose": "Documentation",
-      "fileCount": 2,
-      "lastAccessed": 1776153130487,
-      "keyFiles": [
-        "index.html",
-        "index.xml"
-      ]
-    },
-    "research-visualization\\components": {
-      "path": "research-visualization\\components",
+    "src\\components": {
+      "path": "src\\components",
       "purpose": "UI components",
-      "fileCount": 2,
-      "lastAccessed": 1776153130488,
+      "fileCount": 0,
+      "lastAccessed": 1776306605573,
+      "keyFiles": []
+    },
+    "src\\pages": {
+      "path": "src\\pages",
+      "purpose": "Page components",
+      "fileCount": 1,
+      "lastAccessed": 1776306605573,
       "keyFiles": [
-        "Diagrams.tsx",
-        "QuantumScene.tsx"
+        "index.astro"
       ]
     }
   },

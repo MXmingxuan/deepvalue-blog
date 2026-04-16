@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd D:/github/deepvalue-blog && rm -rf public && npm run build && xcopy /s /e /i dist public 2>&1\",\"description\":\"Clean rebuild and copy dist to public\"}",
-  "error": "Exit code 4\n\n> deepvalue-blog@0.0.1 build\n> astro build\n\n\u001b[2m00:28:30\u001b[22m \u001b[34m[content]\u001b[39m Syncing content\n\u001b[2m00:28:30\u001b[22m \u001b[34m[content]\u001b[39m Synced content\n\u001b[2m00:28:30\u001b[22m \u001b[34m[types]\u001b[39m Generated \u001b[2m327ms\u001b[22m\n\u001b[2m00:28:30\u001b[22m \u001b[34m[build]\u001b[39m output: \u001b[34m\"static\"\u001b[39m\n\u001b[2m00:28:30\u001b[22m \u001b[34m[build]\u001b[39m mode: \u001b[34m\"static\"\u001b[39m\n\u001b[2m00:28:30\u001b[22m \u001b[34m[build]\u001b[39m directory: \u001b[34mD:\\github\\deepvalue-blog\\dist\\\u001b[39m\n\u001b[2m00:28:30\u001b[22m \u001b[34m[build]\u001b[39m Collecting build info...\n\u001b[...",
-  "timestamp": "2026-04-14T16:28:31.841Z",
+  "tool_input_preview": "{\"command\":\"rmdir /s /q public 2>nul & xcopy /s /e /i dist public\",\"description\":\"Copy dist to public folder for GitHub Pages\"}",
+  "error": "Exit code 4\n��Ч�Ĳ�������",
+  "timestamp": "2026-04-16T02:34:47.879Z",
   "retry_count": 1
 }
