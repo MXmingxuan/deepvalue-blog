@@ -13,8 +13,9 @@
     "sync": "npm run build"
   },
   "dependencies": {
-    "@fontsource/geist": "^5.2.8",
-    "@fontsource/geist-mono": "^5.2.7",
+    "@fontsource/bebas-neue": "^5.2.7",
+    "@fontsource/inter": "^5.2.7",
+    "@fontsource/space-mono": "^5.2.7",
     "astro": "^6.1.6"
   }
 }
