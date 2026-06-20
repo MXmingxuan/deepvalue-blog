@@ -6,7 +6,8 @@ const DEFAULT_STATE = { items: {}, commands: [] };
 const updateQueues = new Map();
 
 export function createStateStore(projectRoot = process.cwd()) {
-  const stateDir = path.join(projectRoot, '.content-ops');
+  const normalizedRoot = path.resolve(projectRoot);
+  const stateDir = path.join(normalizedRoot, '.content-ops');
   const statePath = path.join(stateDir, 'state.json');
 
   async function readState() {

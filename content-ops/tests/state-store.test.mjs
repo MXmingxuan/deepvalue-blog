@@ -129,6 +129,42 @@ test('state store serializes concurrent updates across store instances for the s
   }
 });
 
+test('state store serializes concurrent updates across relative and absolute root paths', async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'content-ops-state-'));
+  const cwd = process.cwd();
+  try {
+    process.chdir(root);
+    const storeRel = createStateStore('.');
+    const storeAbs = createStateStore(root);
+
+    await Promise.all([
+      storeRel.updateState((state) => ({
+        ...state,
+        items: {
+          ...state.items,
+          rel: { workflowStatus: 'draft' }
+        }
+      })),
+      storeAbs.updateState((state) => ({
+        ...state,
+        items: {
+          ...state.items,
+          abs: { workflowStatus: 'review' }
+        }
+      }))
+    ]);
+
+    const state = await storeAbs.readState();
+    assert.deepEqual(state.items, {
+      rel: { workflowStatus: 'draft' },
+      abs: { workflowStatus: 'review' }
+    });
+  } finally {
+    process.chdir(cwd);
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test('state store update queue recovers after a failed update', async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'content-ops-state-'));
   try {
