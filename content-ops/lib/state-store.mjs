@@ -1,4 +1,5 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
+import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const DEFAULT_STATE = { items: {}, commands: [] };
@@ -25,9 +26,16 @@ export function createStateStore(projectRoot = process.cwd()) {
     await mkdir(stateDir, { recursive: true });
     const normalized = {
       items: state.items ?? {},
-      commands: Array.isArray(state.commands) ? state.commands.slice(0, 20) : []
+      commands: Array.isArray(state.commands) ? state.commands.slice(-20) : []
     };
-    await writeFile(statePath, `${JSON.stringify(normalized, null, 2)}\n`, 'utf8');
+    const tempPath = path.join(stateDir, `state.json.tmp-${process.pid}-${Date.now()}-${randomUUID()}`);
+    try {
+      await writeFile(tempPath, `${JSON.stringify(normalized, null, 2)}\n`, 'utf8');
+      await rename(tempPath, statePath);
+    } catch (error) {
+      await rm(tempPath, { force: true });
+      throw error;
+    }
   }
 
   async function updateState(updater) {
