@@ -9,17 +9,33 @@ function parseValue(raw) {
 }
 
 function stripQuotes(value) {
-  if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+  if (value.startsWith('"') && value.endsWith('"')) {
+    try {
+      const parsed = JSON.parse(value);
+      if (typeof parsed === 'string') return parsed;
+    } catch {
+      return value.slice(1, -1);
+    }
+  }
+  if (value.startsWith("'") && value.endsWith("'")) {
     return value.slice(1, -1);
   }
   return value;
 }
 
+function serializeString(value) {
+  const stringValue = String(value ?? '');
+  if (stringValue.trim() !== stringValue || /: |#|["'[\]{}\r\n]/.test(stringValue)) {
+    return JSON.stringify(stringValue);
+  }
+  return stringValue;
+}
+
 function serializeValue(value) {
   if (Array.isArray(value)) {
-    return `[${value.join(', ')}]`;
+    return `[${value.map((item) => serializeString(item)).join(', ')}]`;
   }
-  return String(value ?? '');
+  return serializeString(value);
 }
 
 export function parseFrontmatter(block) {

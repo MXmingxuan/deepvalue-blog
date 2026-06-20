@@ -31,3 +31,28 @@ test('serializeMarkdown writes arrays and preserves body', () => {
   assert.match(output, /tags: \[公司分析, 重卡\]\n/);
   assert.match(output, /\n---\n\n# 正文\n$/);
 });
+
+test('serializeMarkdown quotes unsafe scalar descriptions', () => {
+  const output = serializeMarkdown({
+    title: '测试',
+    description: 'alpha: beta # note'
+  }, '# 正文\n');
+
+  assert.match(output, /description: "alpha: beta # note"\n/);
+});
+
+test('serializeMarkdown quotes unsafe array items', () => {
+  const output = serializeMarkdown({
+    title: '测试',
+    tags: ['化工', 'alpha: beta']
+  }, '# 正文\n');
+
+  assert.match(output, /tags: \[化工, "alpha: beta"\]\n/);
+});
+
+test('parseMarkdown round-trips JSON-quoted scalar values', () => {
+  const source = `---\ntitle: 测试\ndescription: "alpha: beta # note"\n---\n\n# 正文\n`;
+  const parsed = parseMarkdown(source);
+
+  assert.equal(parsed.data.description, 'alpha: beta # note');
+});
