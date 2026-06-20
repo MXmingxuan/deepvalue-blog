@@ -7,6 +7,7 @@ const DEFAULT_STATE = { items: {}, commands: [] };
 export function createStateStore(projectRoot = process.cwd()) {
   const stateDir = path.join(projectRoot, '.content-ops');
   const statePath = path.join(stateDir, 'state.json');
+  let updateQueue = Promise.resolve();
 
   async function readState() {
     try {
@@ -39,10 +40,14 @@ export function createStateStore(projectRoot = process.cwd()) {
   }
 
   async function updateState(updater) {
-    const state = await readState();
-    const next = await updater(state);
-    await writeState(next);
-    return next;
+    const runUpdate = updateQueue.then(async () => {
+      const state = await readState();
+      const next = await updater(state);
+      await writeState(next);
+      return next;
+    });
+    updateQueue = runUpdate.catch(() => {});
+    return runUpdate;
   }
 
   return { statePath, readState, writeState, updateState };

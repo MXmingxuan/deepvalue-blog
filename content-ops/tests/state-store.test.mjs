@@ -59,3 +59,68 @@ test('state store removes temporary files after normal writes', async () => {
     await rm(root, { recursive: true, force: true });
   }
 });
+
+test('state store serializes concurrent updates on one store instance', async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'content-ops-state-'));
+  try {
+    const store = createStateStore(root);
+
+    await Promise.all([
+      store.updateState((state) => ({
+        ...state,
+        items: {
+          ...state.items,
+          a: { workflowStatus: 'draft' }
+        }
+      })),
+      store.updateState((state) => ({
+        ...state,
+        items: {
+          ...state.items,
+          b: { workflowStatus: 'review' }
+        }
+      }))
+    ]);
+
+    assert.deepEqual(await store.readState(), {
+      items: {
+        a: { workflowStatus: 'draft' },
+        b: { workflowStatus: 'review' }
+      },
+      commands: []
+    });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test('state store update queue recovers after a failed update', async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'content-ops-state-'));
+  try {
+    const store = createStateStore(root);
+
+    await assert.rejects(
+      store.updateState(() => {
+        throw new Error('boom');
+      }),
+      /boom/
+    );
+
+    await store.updateState((state) => ({
+      ...state,
+      items: {
+        ...state.items,
+        ok: { workflowStatus: 'done' }
+      }
+    }));
+
+    assert.deepEqual(await store.readState(), {
+      items: {
+        ok: { workflowStatus: 'done' }
+      },
+      commands: []
+    });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
