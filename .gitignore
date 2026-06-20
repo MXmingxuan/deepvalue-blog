@@ -26,3 +26,4 @@ pnpm-debug.log*
 
 # local isolated worktrees
 .worktrees/
+.content-ops/
