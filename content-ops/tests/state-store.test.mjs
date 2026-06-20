@@ -94,6 +94,41 @@ test('state store serializes concurrent updates on one store instance', async ()
   }
 });
 
+test('state store serializes concurrent updates across store instances for the same root', async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'content-ops-state-'));
+  try {
+    const storeA = createStateStore(root);
+    const storeB = createStateStore(root);
+
+    await Promise.all([
+      storeA.updateState((state) => ({
+        ...state,
+        items: {
+          ...state.items,
+          a: { workflowStatus: 'draft' }
+        }
+      })),
+      storeB.updateState((state) => ({
+        ...state,
+        items: {
+          ...state.items,
+          b: { workflowStatus: 'review' }
+        }
+      }))
+    ]);
+
+    assert.deepEqual(await storeA.readState(), {
+      items: {
+        a: { workflowStatus: 'draft' },
+        b: { workflowStatus: 'review' }
+      },
+      commands: []
+    });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test('state store update queue recovers after a failed update', async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'content-ops-state-'));
   try {

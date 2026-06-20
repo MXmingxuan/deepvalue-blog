@@ -3,11 +3,11 @@ import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const DEFAULT_STATE = { items: {}, commands: [] };
+const updateQueues = new Map();
 
 export function createStateStore(projectRoot = process.cwd()) {
   const stateDir = path.join(projectRoot, '.content-ops');
   const statePath = path.join(stateDir, 'state.json');
-  let updateQueue = Promise.resolve();
 
   async function readState() {
     try {
@@ -40,13 +40,20 @@ export function createStateStore(projectRoot = process.cwd()) {
   }
 
   async function updateState(updater) {
+    const updateQueue = updateQueues.get(statePath) ?? Promise.resolve();
     const runUpdate = updateQueue.then(async () => {
       const state = await readState();
       const next = await updater(state);
       await writeState(next);
       return next;
     });
-    updateQueue = runUpdate.catch(() => {});
+    const nextQueue = runUpdate.catch(() => {});
+    updateQueues.set(statePath, nextQueue);
+    nextQueue.then(() => {
+      if (updateQueues.get(statePath) === nextQueue) {
+        updateQueues.delete(statePath);
+      }
+    });
     return runUpdate;
   }
 
