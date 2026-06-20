@@ -3,9 +3,51 @@ function parseValue(raw) {
   if (value.startsWith('[') && value.endsWith(']')) {
     const inner = value.slice(1, -1).trim();
     if (!inner) return [];
-    return inner.split(',').map((item) => stripQuotes(item.trim())).filter(Boolean);
+    return splitInlineArray(inner).map((item) => stripQuotes(item.trim())).filter(Boolean);
   }
   return stripQuotes(value);
+}
+
+function splitInlineArray(value) {
+  const items = [];
+  let current = '';
+  let quote = null;
+  let escaped = false;
+
+  for (const char of value) {
+    if (escaped) {
+      current += char;
+      escaped = false;
+      continue;
+    }
+
+    if (quote) {
+      current += char;
+      if (quote === '"' && char === '\\') {
+        escaped = true;
+      } else if (char === quote) {
+        quote = null;
+      }
+      continue;
+    }
+
+    if (char === '"' || char === "'") {
+      quote = char;
+      current += char;
+      continue;
+    }
+
+    if (char === ',') {
+      items.push(current);
+      current = '';
+      continue;
+    }
+
+    current += char;
+  }
+
+  items.push(current);
+  return items;
 }
 
 function stripQuotes(value) {
@@ -25,7 +67,7 @@ function stripQuotes(value) {
 
 function serializeString(value) {
   const stringValue = String(value ?? '');
-  if (stringValue.trim() !== stringValue || /: |#|["'[\]{}\r\n]/.test(stringValue)) {
+  if (stringValue.trim() !== stringValue || /,|: |#|["'[\]{}\r\n]/.test(stringValue)) {
     return JSON.stringify(stringValue);
   }
   return stringValue;

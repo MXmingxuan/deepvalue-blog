@@ -50,6 +50,32 @@ test('serializeMarkdown quotes unsafe array items', () => {
   assert.match(output, /tags: \[化工, "alpha: beta"\]\n/);
 });
 
+test('serializeMarkdown quotes array items containing commas', () => {
+  const output = serializeMarkdown({
+    title: '测试',
+    tags: ['a, b', 'c']
+  }, '# 正文\n');
+
+  assert.match(output, /tags: \["a, b", c\]\n/);
+});
+
+test('parseMarkdown parses quoted array items containing commas', () => {
+  const source = `---\ntitle: 测试\ntags: ["a, b", c]\n---\nbody`;
+  const parsed = parseMarkdown(source);
+
+  assert.deepEqual(parsed.data.tags, ['a, b', 'c']);
+});
+
+test('parseMarkdown round-trips comma array items', () => {
+  const output = serializeMarkdown({
+    title: '测试',
+    tags: ['a, b', 'c']
+  }, '# 正文\n');
+  const parsed = parseMarkdown(output);
+
+  assert.deepEqual(parsed.data.tags, ['a, b', 'c']);
+});
+
 test('parseMarkdown round-trips JSON-quoted scalar values', () => {
   const source = `---\ntitle: 测试\ndescription: "alpha: beta # note"\n---\n\n# 正文\n`;
   const parsed = parseMarkdown(source);
