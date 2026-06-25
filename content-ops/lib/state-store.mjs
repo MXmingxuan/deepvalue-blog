@@ -5,10 +5,15 @@ import path from 'node:path';
 const DEFAULT_STATE = { items: {}, commands: [] };
 const updateQueues = new Map();
 
+function queueKeyFor(statePath) {
+  return process.platform === 'win32' ? statePath.toLowerCase() : statePath;
+}
+
 export function createStateStore(projectRoot = process.cwd()) {
   const normalizedRoot = path.resolve(projectRoot);
   const stateDir = path.join(normalizedRoot, '.content-ops');
   const statePath = path.join(stateDir, 'state.json');
+  const queueKey = queueKeyFor(statePath);
 
   async function readState() {
     try {
@@ -41,7 +46,7 @@ export function createStateStore(projectRoot = process.cwd()) {
   }
 
   async function updateState(updater) {
-    const updateQueue = updateQueues.get(statePath) ?? Promise.resolve();
+    const updateQueue = updateQueues.get(queueKey) ?? Promise.resolve();
     const runUpdate = updateQueue.then(async () => {
       const state = await readState();
       const next = await updater(state);
@@ -49,10 +54,10 @@ export function createStateStore(projectRoot = process.cwd()) {
       return next;
     });
     const nextQueue = runUpdate.catch(() => {});
-    updateQueues.set(statePath, nextQueue);
+    updateQueues.set(queueKey, nextQueue);
     nextQueue.then(() => {
-      if (updateQueues.get(statePath) === nextQueue) {
-        updateQueues.delete(statePath);
+      if (updateQueues.get(queueKey) === nextQueue) {
+        updateQueues.delete(queueKey);
       }
     });
     return runUpdate;

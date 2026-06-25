@@ -165,6 +165,41 @@ test('state store serializes concurrent updates across relative and absolute roo
   }
 });
 
+test('state store serializes concurrent updates across windows path casing aliases', async () => {
+  if (process.platform !== 'win32') return;
+
+  const root = await mkdtemp(path.join(os.tmpdir(), 'content-ops-state-'));
+  try {
+    const storeLower = createStateStore(root.toLowerCase());
+    const storeUpper = createStateStore(root.toUpperCase());
+
+    await Promise.all([
+      storeLower.updateState((state) => ({
+        ...state,
+        items: {
+          ...state.items,
+          lower: { workflowStatus: 'draft' }
+        }
+      })),
+      storeUpper.updateState((state) => ({
+        ...state,
+        items: {
+          ...state.items,
+          upper: { workflowStatus: 'review' }
+        }
+      }))
+    ]);
+
+    const state = await createStateStore(root).readState();
+    assert.deepEqual(state.items, {
+      lower: { workflowStatus: 'draft' },
+      upper: { workflowStatus: 'review' }
+    });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test('state store update queue recovers after a failed update', async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'content-ops-state-'));
   try {
