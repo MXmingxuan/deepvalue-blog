@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deep Value Ops</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">DEEP VALUE OPS</div>
+        <label class="search-wrap">
+          <span>搜索</span>
+          <input id="search" class="search" aria-label="搜索标题、标签、代码、主题">
+        </label>
+        <div class="actions">
+          <button id="refreshBtn" type="button">刷新</button>
+          <button id="buildBtn" type="button">构建</button>
+          <button id="syncBtn" type="button">同步</button>
+        </div>
+      </header>
+
+      <div id="message" class="message" hidden></div>
+
+      <div class="layout">
+        <aside class="sidebar" id="pipeline"></aside>
+        <main class="main">
+          <section id="dashboard"></section>
+          <section id="detail" class="hidden"></section>
+        </main>
+        <aside class="inspector" id="inspector"></aside>
+      </div>
+    </div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
