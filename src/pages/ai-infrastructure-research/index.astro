@@ -1,0 +1,123 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const keywords = ['数据中心', '燃气轮机', '电力', '储能', '服务器', '液冷', 'PCB', '光模块'];
+const posts = await getCollection('blog');
+
+const topicPosts = posts
+  .filter(post => post.data.sector === 'ai-infrastructure')
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Base title="AI 基础设施研究 - Deep Value Research" description="AI 基础设施、数据中心、电力、燃气轮机与算力产业链研究">
+  <section class="topic-hero ai">
+    <p class="eyebrow">AI INFRASTRUCTURE</p>
+    <h1>AI 基础设施研究</h1>
+    <p>
+      从模型之外看 AI：数据中心、电力约束、燃气轮机、储能与服务器供应链。这个专题优先区分真实收入、资本开支、能源瓶颈和情绪映射。
+    </p>
+  </section>
+
+  <section class="research-list">
+    <div class="list-header">
+      <span>{topicPosts.length} 篇相关文章</span>
+      <span>当前重点：{keywords.join(' / ')}</span>
+    </div>
+    {topicPosts.length > 0 ? (
+      topicPosts.map(post => (
+        <article class="research-item">
+          <a href={`/blog/${post.id}`}>{post.data.title}</a>
+          <div class="meta">
+            <span>{post.data.date.toLocaleDateString('zh-CN')}</span>
+            <span>{post.data.research_type}</span>
+            {post.data.tags.slice(0, 3).map(tag => <span class="tag">{tag}</span>)}
+          </div>
+          {(post.data.summary || post.data.description) && <p>{post.data.summary || post.data.description}</p>}
+        </article>
+      ))
+    ) : (
+      <p class="empty-state">暂时还没有 AI 基础设施研究文章。</p>
+    )}
+  </section>
+</Base>
+
+<style>
+  .topic-hero {
+    padding: 78px 0 64px;
+    border-bottom: 1px solid rgba(158, 184, 255, 0.5);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+  }
+
+  h1 {
+    max-width: 900px;
+    margin-top: 18px;
+    font-size: clamp(52px, 8vw, 104px);
+    font-weight: 500;
+    line-height: 0.96;
+    letter-spacing: 0;
+  }
+
+  .topic-hero p:last-child {
+    max-width: 780px;
+    margin-top: 28px;
+    font-size: 20px;
+    line-height: 1.8;
+    color: rgba(246, 243, 236, 0.76);
+  }
+
+  .research-list {
+    padding: 56px 0 0;
+  }
+
+  .list-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+
+  .research-item {
+    display: grid;
+    gap: 14px;
+    padding: 30px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .research-item a {
+    font-size: clamp(24px, 4vw, 44px);
+    line-height: 1.12;
+  }
+
+  .research-item p {
+    max-width: 720px;
+    color: rgba(246, 243, 236, 0.72);
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .empty-state {
+    padding: 40px 0;
+    color: var(--muted);
+  }
+</style>

@@ -9,7 +9,7 @@ const blog = defineCollection({
     updated: z.date().optional(),
     description: z.string().optional(),
     summary: z.string().optional(),
-    sector: z.enum(['fluorochemical', 'ai-data-center', 'other']).default('other'),
+    sector: z.enum(['chemical', 'ai-infrastructure', 'shipping-shipbuilding', 'other']).default('other'),
     research_type: z.enum(['sector', 'company', 'event', 'memo']).default('memo'),
     status: z.enum(['draft', 'active', 'archived']).default('draft'),
     confidence: z.enum(['low', 'medium', 'high']).optional(),

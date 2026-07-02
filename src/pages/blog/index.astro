@@ -6,8 +6,9 @@ const posts = await getCollection('blog');
 const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const sectorLabels = {
-  fluorochemical: '氟化工',
-  'ai-data-center': 'AI 数据中心',
+  chemical: '化工',
+  'ai-infrastructure': 'AI 基础设施',
+  'shipping-shipbuilding': '航运与船舶',
   other: '其他',
 };
 

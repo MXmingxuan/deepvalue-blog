@@ -3,7 +3,7 @@ title: "AI 数据中心研究：算力之外的基础设施链条"
 date: 2026-07-02
 description: "AI 数据中心专题的占位文章，用于承接后续关于服务器、智算中心、电力、储能、PCB 与液冷的研究。"
 summary: "这篇文章先搭建 AI 数据中心研究的基本框架：算力设备、数据中心建设、电力约束、散热系统和材料供应链。"
-sector: "ai-data-center"
+sector: "ai-infrastructure"
 research_type: "sector"
 status: "draft"
 confidence: "medium"

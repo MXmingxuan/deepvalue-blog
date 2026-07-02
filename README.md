@@ -2,8 +2,9 @@
 
 Astro static research site for long-form industry notes. The current focus is:
 
-- 氟化工研究
-- AI 数据中心研究
+- 化工研究
+- AI 基础设施研究
+- 航运与船舶研究
 
 ## Commands
 
@@ -29,7 +30,7 @@ title: "文章标题"
 date: 2026-07-02
 description: "页面 SEO 描述"
 summary: "列表页显示的摘要"
-sector: "fluorochemical" # fluorochemical | ai-data-center | other
+sector: "chemical" # chemical | ai-infrastructure | shipping-shipbuilding | other
 research_type: "sector" # sector | company | event | memo
 status: "draft" # draft | active | archived
 confidence: "medium" # low | medium | high
@@ -44,8 +45,9 @@ thesis: "核心判断"
 ## Routes
 
 - `/` - Research homepage
-- `/fluorochemical-research/` - 氟化工研究
-- `/ai-data-center-research/` - AI 数据中心研究
+- `/chemical-research/` - 化工研究
+- `/ai-infrastructure-research/` - AI 基础设施研究
+- `/shipping-shipbuilding-research/` - 航运与船舶研究
 - `/blog/` - All research notes
 - `/blog/[slug]/` - Article detail
 

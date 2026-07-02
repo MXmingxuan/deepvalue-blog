@@ -1,133 +1,16 @@
 ---
-import Base from '../../layouts/Base.astro';
-import { getCollection } from 'astro:content';
-
-const keywords = ['萤石', '氢氟酸', '制冷剂', '含氟材料', '电子化学品', '电解液', '六氟体系'];
-const posts = await getCollection('blog');
-
-const topicPosts = posts
-  .filter(post => post.data.sector === 'fluorochemical')
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const target = '/chemical-research/';
 ---
 
-<Base title="氟化工研究 - Deep Value Research" description="含氟材料、电子化学品、电解液与氟化工产业链研究">
-  <section class="topic-hero fluorine">
-    <p class="eyebrow">FLUOROCHEMICALS</p>
-    <h1>氟化工研究</h1>
-    <p>
-      关注含氟材料、电子化学品、六氟体系、电解液、制冷剂与上游资源约束。这个专题更适合作为研究雷达：先识别产业链位置，再判断利润弹性和市场叙事是否一致。
-    </p>
-  </section>
-
-  <section class="research-list">
-    <div class="list-header">
-      <span>{topicPosts.length} 篇相关文章</span>
-      <span>关键词：{keywords.join(' / ')}</span>
-    </div>
-    {topicPosts.length > 0 ? (
-      topicPosts.map(post => (
-        <article class="research-item">
-          <a href={`/blog/${post.id}`}>{post.data.title}</a>
-          <div class="meta">
-            <span>{post.data.date.toLocaleDateString('zh-CN')}</span>
-            <span>{post.data.research_type}</span>
-            {post.data.tags.slice(0, 3).map(tag => <span class="tag">{tag}</span>)}
-          </div>
-          {(post.data.summary || post.data.description) && <p>{post.data.summary || post.data.description}</p>}
-        </article>
-      ))
-    ) : (
-      <p class="empty-state">暂时还没有匹配到氟化工专题文章。</p>
-    )}
-  </section>
-</Base>
-
-<style>
-  .topic-hero {
-    padding: 78px 0 64px;
-    border-bottom: 1px solid rgba(116, 215, 179, 0.46);
-  }
-
-  .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    color: var(--muted);
-  }
-
-  h1 {
-    max-width: 840px;
-    margin-top: 18px;
-    font-size: clamp(52px, 8vw, 104px);
-    font-weight: 500;
-    line-height: 0.96;
-    letter-spacing: 0;
-  }
-
-  .topic-hero p:last-child {
-    max-width: 760px;
-    margin-top: 28px;
-    font-size: 20px;
-    line-height: 1.8;
-    color: rgba(246, 243, 236, 0.76);
-  }
-
-  .research-list {
-    padding: 56px 0 0;
-  }
-
-  .list-header {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-    padding-bottom: 22px;
-    border-bottom: 1px solid var(--line);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    color: var(--muted);
-  }
-
-  .research-item {
-    display: grid;
-    gap: 14px;
-    padding: 30px 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .research-item a {
-    font-size: clamp(24px, 4vw, 44px);
-    line-height: 1.12;
-  }
-
-  .research-item p {
-    max-width: 720px;
-    color: rgba(246, 243, 236, 0.72);
-  }
-
-  .meta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--muted);
-  }
-
-  .empty-state {
-    padding: 40px 0;
-    color: var(--muted);
-  }
-
-  @media (max-width: 720px) {
-    .topic-hero {
-      padding: 52px 0 44px;
-    }
-
-    .topic-hero p:last-child {
-      font-size: 17px;
-    }
-  }
-</style>
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+    <link rel="canonical" href={target} />
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <p><a href={target}>跳转到化工研究</a></p>
+  </body>
+</html>

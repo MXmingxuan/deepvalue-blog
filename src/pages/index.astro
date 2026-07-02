@@ -7,20 +7,28 @@ const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.get
 
 const topicDefinitions = [
   {
-    sector: 'fluorochemical',
-    href: '/fluorochemical-research/',
-    eyebrow: 'FLUOROCHEMICALS',
-    title: '氟化工研究',
+    sector: 'chemical',
+    href: '/chemical-research/',
+    eyebrow: 'CHEMICALS',
+    title: '化工研究',
     accent: 'fluorine',
-    summary: '跟踪含氟材料、电子化学品、电解液、制冷剂与上游资源约束，关注产业链利润再分配和国产替代节奏。',
+    summary: '当前重点：氟化工、电子化学品、含氟材料。后续可扩展到硅化工、磷化工、农化、制冷剂等细分方向。',
   },
   {
-    sector: 'ai-data-center',
-    href: '/ai-data-center-research/',
+    sector: 'ai-infrastructure',
+    href: '/ai-infrastructure-research/',
     eyebrow: 'AI INFRASTRUCTURE',
-    title: 'AI 数据中心研究',
+    title: 'AI 基础设施研究',
     accent: 'ai',
-    summary: '从算力、服务器、储能、电源、PCB、液冷与运营模式切入，拆解 AI 基建里真正能落到收入和利润的环节。',
+    summary: '当前重点：数据中心、电力约束、燃气轮机。也跟踪服务器、储能、液冷、PCB、光模块等 AI 基建环节。',
+  },
+  {
+    sector: 'shipping-shipbuilding',
+    href: '/shipping-shipbuilding-research/',
+    eyebrow: 'SHIPPING & SHIPBUILDING',
+    title: '航运与船舶研究',
+    accent: 'shipping',
+    summary: '当前重点：船舶周期、造船订单、航运供需。后续可拆分油运、干散货、集运、船用设备与海工装备。',
   },
 ];
 
@@ -32,13 +40,13 @@ const topics = topicDefinitions.map(topic => ({
 const latestPosts = sortedPosts.slice(0, 7);
 ---
 
-<Base title="Deep Value Research" description="氟化工与 AI 数据中心产业研究文章展示">
+<Base title="Deep Value Research" description="化工、AI 基础设施、航运与船舶产业研究文章展示">
   <section class="hero">
     <div class="hero-copy">
       <p class="eyebrow">INDUSTRY RESEARCH ARCHIVE</p>
       <h1>把产业链研究沉淀成可复用的判断框架</h1>
       <p class="hero-intro">
-        这里展示两条长期跟踪的研究主线：氟化工与 AI 数据中心。重点不是堆文章，而是把公司、赛道、事件和证伪条件放进同一张研究地图。
+        这里展示三条长期跟踪的研究主线：化工、AI 基础设施、航运与船舶。重点不是堆文章，而是把公司、赛道、事件和证伪条件放进同一张研究地图。
       </p>
     </div>
     <div class="hero-panel" aria-label="研究主线">
@@ -159,6 +167,11 @@ const latestPosts = sortedPosts.slice(0, 7);
   .topic-card.ai:hover,
   .research-lane.ai {
     border-color: rgba(158, 184, 255, 0.5);
+  }
+
+  .topic-card.shipping:hover,
+  .research-lane.shipping {
+    border-color: rgba(216, 181, 109, 0.52);
   }
 
   .topic-card span,
