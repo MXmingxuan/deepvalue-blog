@@ -154,6 +154,65 @@ const sectorLabels = {
     border-bottom: 1px solid var(--muted);
   }
 
+  .post-content :global(table) {
+    display: table;
+    width: 100%;
+    max-width: 100%;
+    margin: 34px 0;
+    overflow: hidden;
+    border: 1px solid rgba(245, 243, 238, 0.18);
+    border-radius: 8px;
+    border-spacing: 0;
+    border-collapse: separate;
+    background:
+      linear-gradient(135deg, rgba(116, 215, 179, 0.08), transparent 34%),
+      rgba(245, 243, 238, 0.045);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+    white-space: normal;
+  }
+
+  .post-content :global(thead) {
+    background: rgba(245, 243, 238, 0.12);
+  }
+
+  .post-content :global(tbody tr:nth-child(even)) {
+    background: rgba(245, 243, 238, 0.045);
+  }
+
+  .post-content :global(tbody tr:hover) {
+    background: rgba(116, 215, 179, 0.1);
+  }
+
+  .post-content :global(th),
+  .post-content :global(td) {
+    padding: 14px 16px;
+    border-right: 1px solid rgba(245, 243, 238, 0.12);
+    border-bottom: 1px solid rgba(245, 243, 238, 0.1);
+    text-align: left;
+    vertical-align: top;
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .post-content :global(th:last-child),
+  .post-content :global(td:last-child) {
+    border-right: 0;
+  }
+
+  .post-content :global(tr:last-child td) {
+    border-bottom: 0;
+  }
+
+  .post-content :global(th) {
+    color: var(--text);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .post-content :global(td) {
+    color: rgba(246, 243, 236, 0.78);
+  }
+
   .post-content blockquote {
     margin: 32px 0;
     padding-left: 24px;
@@ -201,6 +260,17 @@ const sectorLabels = {
 
     .post-content {
       font-size: 16px;
+    }
+
+    .post-content :global(th),
+    .post-content :global(td) {
+      padding: 12px 14px;
+    }
+
+    .post-content :global(table) {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
     }
   }
 </style>
