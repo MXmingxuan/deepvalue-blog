@@ -30,6 +30,14 @@ const topicDefinitions = [
     accent: 'shipping',
     summary: '当前重点：船舶周期、造船订单、航运供需。后续可拆分油运、干散货、集运、船用设备与海工装备。',
   },
+  {
+    sector: 'energy',
+    href: '/energy-research/',
+    eyebrow: 'ENERGY',
+    title: '能源研究',
+    accent: 'energy',
+    summary: '当前重点：氢能源、钠电池、新型储能与能源材料。关注技术路线、成本曲线、产业化节奏和需求验证。',
+  },
 ];
 
 const topics = topicDefinitions.map(topic => ({
@@ -40,13 +48,13 @@ const topics = topicDefinitions.map(topic => ({
 const latestPosts = sortedPosts.slice(0, 7);
 ---
 
-<Base title="Deep Value Research" description="化工、AI 基础设施、航运与船舶产业研究文章展示">
+<Base title="Deep Value Research" description="化工、AI 基础设施、航运与船舶、能源产业研究文章展示">
   <section class="hero">
     <div class="hero-copy">
       <p class="eyebrow">INDUSTRY RESEARCH ARCHIVE</p>
       <h1>把产业链研究沉淀成可复用的判断框架</h1>
       <p class="hero-intro">
-        这里展示三条长期跟踪的研究主线：化工、AI 基础设施、航运与船舶。重点不是堆文章，而是把公司、赛道、事件和证伪条件放进同一张研究地图。
+        这里展示四条长期跟踪的研究主线：化工、AI 基础设施、航运与船舶、能源。重点不是堆文章，而是把公司、赛道、事件和证伪条件放进同一张研究地图。
       </p>
     </div>
     <div class="hero-panel" aria-label="研究主线">
@@ -107,7 +115,7 @@ const latestPosts = sortedPosts.slice(0, 7);
 <style>
   .hero {
     display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+    grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
     gap: 48px;
     align-items: end;
     min-height: 620px;
@@ -140,13 +148,14 @@ const latestPosts = sortedPosts.slice(0, 7);
 
   .hero-panel {
     display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
   }
 
   .topic-card {
     display: grid;
     gap: 14px;
-    min-height: 184px;
+    min-height: 168px;
     padding: 22px;
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -172,6 +181,11 @@ const latestPosts = sortedPosts.slice(0, 7);
   .topic-card.shipping:hover,
   .research-lane.shipping {
     border-color: rgba(216, 181, 109, 0.52);
+  }
+
+  .topic-card.energy:hover,
+  .research-lane.energy {
+    border-color: rgba(242, 201, 76, 0.56);
   }
 
   .topic-card span,
@@ -305,6 +319,10 @@ const latestPosts = sortedPosts.slice(0, 7);
     .hero {
       min-height: auto;
       padding: 56px 0;
+    }
+
+    .hero-panel {
+      grid-template-columns: 1fr;
     }
 
     .research-lane {
