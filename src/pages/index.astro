@@ -3,229 +3,304 @@ import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog');
-const recentPosts = posts
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 3);
+const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const projects = await getCollection('projects');
+const topicDefinitions = [
+  {
+    sector: 'fluorochemical',
+    href: '/fluorochemical-research/',
+    eyebrow: 'FLUOROCHEMICALS',
+    title: '氟化工研究',
+    accent: 'fluorine',
+    summary: '跟踪含氟材料、电子化学品、电解液、制冷剂与上游资源约束，关注产业链利润再分配和国产替代节奏。',
+  },
+  {
+    sector: 'ai-data-center',
+    href: '/ai-data-center-research/',
+    eyebrow: 'AI INFRASTRUCTURE',
+    title: 'AI 数据中心研究',
+    accent: 'ai',
+    summary: '从算力、服务器、储能、电源、PCB、液冷与运营模式切入，拆解 AI 基建里真正能落到收入和利润的环节。',
+  },
+];
+
+const topics = topicDefinitions.map(topic => ({
+  ...topic,
+  posts: sortedPosts.filter(post => post.data.sector === topic.sector).slice(0, 4),
+}));
+
+const latestPosts = sortedPosts.slice(0, 7);
 ---
 
-<Base title="Deep Value" description="AI & Trading">
+<Base title="Deep Value Research" description="氟化工与 AI 数据中心产业研究文章展示">
   <section class="hero">
-    <p class="label">// ABOUT</p>
-    <h1 class="name">宋明璇</h1>
-    <p class="tagline">AI & Trading</p>
-    <p class="bio">
-      用 AI 重构研究流程，用系统化方法做交易决策 <br>
-      聚焦 AI × Trading，研究信息提炼、策略构建与决策自动化
-    </p>
+    <div class="hero-copy">
+      <p class="eyebrow">INDUSTRY RESEARCH ARCHIVE</p>
+      <h1>把产业链研究沉淀成可复用的判断框架</h1>
+      <p class="hero-intro">
+        这里展示两条长期跟踪的研究主线：氟化工与 AI 数据中心。重点不是堆文章，而是把公司、赛道、事件和证伪条件放进同一张研究地图。
+      </p>
+    </div>
+    <div class="hero-panel" aria-label="研究主线">
+      {topics.map(topic => (
+        <a href={topic.href} class={`topic-card ${topic.accent}`}>
+          <span>{topic.eyebrow}</span>
+          <strong>{topic.title}</strong>
+          <small>{topic.posts.length} 篇相关文章</small>
+        </a>
+      ))}
+    </div>
   </section>
 
-  <section class="section">
-    <p class="label">// PROJECTS</p>
-    <div class="list">
-      {projects.map(project => (
-        <article class="item">
-          <div class="item-header">
-            <span class="item-title">{project.data.title}</span>
-            {project.data.status && (
-              <span class="status">{project.data.status}</span>
-            )}
-          </div>
-          <p class="item-desc">{project.data.description}</p>
-          {project.data.tech && (
-            <div class="tags">
-              {project.data.tech.slice(0, 4).map(t => <span class="tag">{t}</span>)}
-            </div>
+  <section class="section topic-grid" aria-label="核心研究方向">
+    {topics.map(topic => (
+      <article class={`research-lane ${topic.accent}`}>
+        <div class="lane-header">
+          <p class="eyebrow">{topic.eyebrow}</p>
+          <h2>{topic.title}</h2>
+          <p>{topic.summary}</p>
+        </div>
+        <div class="article-stack">
+          {topic.posts.length > 0 ? (
+            topic.posts.map(post => (
+              <a href={`/blog/${post.id}`} class="article-row">
+                <span class="article-title">{post.data.title}</span>
+                <span class="article-date">{post.data.date.toLocaleDateString('zh-CN')}</span>
+              </a>
+            ))
+          ) : (
+            <p class="empty-state">相关研究文章会在这里自动汇总。</p>
           )}
-        </article>
-      ))}
-    </div>
+        </div>
+        <a href={topic.href} class="lane-link">进入专题</a>
+      </article>
+    ))}
   </section>
 
-  <section class="section">
-    <p class="label">// RECENT POSTS</p>
-    <div class="list">
-      {recentPosts.map(post => (
-        <article class="item">
-          <a href={`/blog/${post.id}`} class="item-title link">{post.data.title}</a>
-          <div class="item-meta">
-            {post.data.tags && post.data.tags.slice(0, 2).map(tag => (
-              <span class="tag">{tag}</span>
-            ))}
-            <span class="date">{post.data.date.toLocaleDateString('zh-CN')}</span>
+  <section class="section latest-section">
+    <div class="section-heading">
+      <p class="eyebrow">LATEST NOTES</p>
+      <h2>最新研究文章</h2>
+    </div>
+    <div class="latest-list">
+      {latestPosts.map(post => (
+        <article class="latest-item">
+          <a href={`/blog/${post.id}`} class="latest-title">{post.data.title}</a>
+          <div class="latest-meta">
+            <span>{post.data.date.toLocaleDateString('zh-CN')}</span>
+            {post.data.tags && post.data.tags.slice(0, 3).map(tag => <span class="tag">{tag}</span>)}
           </div>
         </article>
       ))}
     </div>
-    <a href="/blog" class="more">→ 查看全部文章</a>
   </section>
 </Base>
 
 <style>
   .hero {
-    padding: 64px 0 72px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+    gap: 48px;
+    align-items: end;
+    min-height: 620px;
+    padding: 84px 0 72px;
   }
 
-  .label {
+  .eyebrow {
     font-family: var(--font-mono);
-    font-size: 1rem;
-    color: var(--color-accent);
-    margin-bottom: 16px;
-    letter-spacing: 0.05em;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--muted);
   }
 
-  .name {
-    font-size: 2.25rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    margin-bottom: 8px;
+  .hero h1 {
+    max-width: 900px;
+    margin-top: 20px;
+    font-size: clamp(48px, 8vw, 104px);
+    font-weight: 500;
+    line-height: 0.98;
+    letter-spacing: 0;
   }
 
-  .tagline {
+  .hero-intro {
+    max-width: 680px;
+    margin-top: 28px;
+    font-size: clamp(17px, 2vw, 22px);
+    line-height: 1.8;
+    color: rgba(246, 243, 236, 0.78);
+  }
+
+  .hero-panel {
+    display: grid;
+    gap: 14px;
+  }
+
+  .topic-card {
+    display: grid;
+    gap: 14px;
+    min-height: 184px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(5, 5, 5, 0.72);
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .topic-card:hover {
+    transform: translateY(-3px);
+    background: rgba(245, 243, 238, 0.06);
+  }
+
+  .topic-card.fluorine:hover,
+  .research-lane.fluorine {
+    border-color: rgba(116, 215, 179, 0.48);
+  }
+
+  .topic-card.ai:hover,
+  .research-lane.ai {
+    border-color: rgba(158, 184, 255, 0.5);
+  }
+
+  .topic-card span,
+  .topic-card small {
     font-family: var(--font-mono);
-    font-size: 1rem;
-    color: var(--color-accent);
-    margin-bottom: 20px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
   }
 
-  .bio {
-    font-size: 1.0625rem;
-    color: var(--color-text);
-    line-height: 1.9;
-    letter-spacing: 0.01em;
+  .topic-card strong {
+    align-self: end;
+    font-size: 28px;
+    line-height: 1.2;
   }
 
   .section {
-    padding: 40px 0;
+    padding: 72px 0;
+    border-top: 1px solid var(--line);
   }
 
-  .list {
+  .topic-grid {
     display: grid;
-    gap: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
   }
 
-  .item {
-    padding: 24px 0;
-    border-bottom: 1px solid var(--color-border);
-    transition: border-color 0.15s ease;
-  }
-
-  .item:first-child {
-    padding-top: 0;
-  }
-
-  .item:hover {
-    border-color: var(--color-border);
-  }
-
-  .item:hover .item-title:not(.link) {
-    color: var(--color-accent);
-  }
-
-  .item-header {
+  .research-lane {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
+    flex-direction: column;
+    min-height: 520px;
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(5, 5, 5, 0.56);
   }
 
-  .item-title {
-    font-size: 1.125rem;
+  .lane-header h2,
+  .section-heading h2 {
+    margin-top: 12px;
+    font-size: clamp(30px, 4vw, 52px);
     font-weight: 500;
-    color: var(--color-primary);
+    line-height: 1.05;
   }
 
-  .item-title.link {
-    display: block;
-    position: relative;
-    transition: color 0.15s ease;
+  .lane-header p:last-child {
+    margin-top: 18px;
+    color: rgba(246, 243, 236, 0.72);
+    line-height: 1.8;
   }
 
-  .item-title.link::before {
-    content: '→';
-    position: absolute;
-    left: -18px;
-    opacity: 0;
-    color: var(--color-accent);
-    transition: opacity 0.15s ease;
+  .article-stack {
+    display: grid;
+    margin-top: 30px;
+    border-top: 1px solid var(--line);
   }
 
-  .item-title.link:hover {
-    color: var(--color-accent);
+  .article-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
   }
 
-  .item-title.link:hover::before {
-    opacity: 1;
+  .article-title {
+    font-size: 17px;
+    line-height: 1.5;
   }
 
-  .status {
+  .article-date,
+  .latest-meta {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-bg);
-    background: var(--color-accent);
-    padding: 2px 6px;
-    border-radius: 2px;
+    font-size: 11px;
+    color: var(--muted);
   }
 
-  .item-desc {
-    font-size: 1rem;
-    color: var(--color-text-dim);
-    line-height: 1.6;
-    margin-bottom: 10px;
+  .empty-state {
+    padding: 24px 0;
+    color: var(--muted);
   }
 
-  .item-meta {
+  .lane-link {
+    align-self: flex-start;
+    margin-top: auto;
+    padding-top: 32px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--text);
+  }
+
+  .latest-section {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 64px;
+  }
+
+  .latest-list {
+    display: grid;
+    border-top: 1px solid var(--line);
+  }
+
+  .latest-item {
+    display: grid;
+    gap: 12px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .latest-title {
+    font-size: clamp(20px, 2.6vw, 32px);
+    line-height: 1.2;
+  }
+
+  .latest-meta {
     display: flex;
     align-items: center;
-    gap: 8px;
-  }
-
-  .tags {
-    display: flex;
-    gap: 6px;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
-  .tag {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    color: var(--color-text-dim);
-    background: var(--color-surface);
-    padding: 3px 8px;
-    border-radius: 2px;
-    transition: background-color 0.15s ease;
-  }
-
-  .tag:hover {
-    background: var(--color-border);
-  }
-
-  .date {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-text-dim);
-  }
-
-  .more {
-    display: inline-block;
-    margin-top: 24px;
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
-    color: var(--color-accent);
-  }
-
-  .more:hover {
-    color: var(--color-accent-dim);
-  }
-
-  @media (max-width: 768px) {
-    .hero {
-      padding: 40px 0 48px;
+  @media (max-width: 880px) {
+    .hero,
+    .topic-grid,
+    .latest-section {
+      grid-template-columns: 1fr;
     }
 
-    .name {
-      font-size: 2rem;
+    .hero {
+      min-height: auto;
+      padding: 56px 0;
+    }
+
+    .research-lane {
+      min-height: auto;
+    }
+
+    .article-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
     }
   }
 </style>

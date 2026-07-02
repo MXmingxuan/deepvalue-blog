@@ -1,6 +1,10 @@
 # build output
 dist/
-public/
+
+# editor/local workspace state
+.obsidian/
+Pasted image *
+
 # generated types
 .astro/
 

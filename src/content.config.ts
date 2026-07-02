@@ -6,9 +6,18 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.date(),
+    updated: z.date().optional(),
     description: z.string().optional(),
-    tags: z.array(z.string()).optional(),
-    categories: z.array(z.string()).optional(),
+    summary: z.string().optional(),
+    sector: z.enum(['fluorochemical', 'ai-data-center', 'other']).default('other'),
+    research_type: z.enum(['sector', 'company', 'event', 'memo']).default('memo'),
+    status: z.enum(['draft', 'active', 'archived']).default('draft'),
+    confidence: z.enum(['low', 'medium', 'high']).optional(),
+    tags: z.array(z.string()).default([]),
+    categories: z.array(z.string()).default([]),
+    companies: z.array(z.string()).default([]),
+    tickers: z.array(z.string()).default([]),
+    thesis: z.string().optional(),
   }),
 });
 
@@ -18,7 +27,7 @@ const projects = defineCollection({
     title: z.string(),
     description: z.string(),
     tech: z.array(z.string()).optional(),
-    status: z.enum(['在运营', '开发中', '已暂停']).optional(),
+    status: z.string().optional(),
     link: z.string().optional(),
   }),
 });

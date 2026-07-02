@@ -1,43 +1,56 @@
-# Astro Starter Kit: Minimal
+# Deep Value Research
 
-```sh
-npm create astro@latest -- --template minimal
+Astro static research site for long-form industry notes. The current focus is:
+
+- 氟化工研究
+- AI 数据中心研究
+
+## Commands
+
+```bash
+npm.cmd run dev
+npm.cmd run build
+npm.cmd run preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Content
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+Research articles live in:
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+src/content/blog/
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Each article is a Markdown file with structured frontmatter. Use `sector` to decide which topic page receives the article:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```yaml
+---
+title: "文章标题"
+date: 2026-07-02
+description: "页面 SEO 描述"
+summary: "列表页显示的摘要"
+sector: "fluorochemical" # fluorochemical | ai-data-center | other
+research_type: "sector" # sector | company | event | memo
+status: "draft" # draft | active | archived
+confidence: "medium" # low | medium | high
+tags: ["标签"]
+categories: ["专题"]
+companies: []
+tickers: []
+thesis: "核心判断"
+---
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Routes
 
-## 🧞 Commands
+- `/` - Research homepage
+- `/fluorochemical-research/` - 氟化工研究
+- `/ai-data-center-research/` - AI 数据中心研究
+- `/blog/` - All research notes
+- `/blog/[slug]/` - Article detail
 
-All commands are run from the root of the project, from a terminal:
+## Architecture
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Astro content collections validate article metadata.
+- Markdown files are the source of truth.
+- Pages are statically generated for fast deployment and simple hosting.

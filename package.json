@@ -10,7 +10,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "sync": "npm run build"
+    "sync": "npm run build",
+    "prepare:publish": "node scripts/prepare-publish.mjs",
+    "publish:check": "npm run prepare:publish && npm run build"
   },
   "dependencies": {
     "@fontsource/bebas-neue": "^5.2.7",
