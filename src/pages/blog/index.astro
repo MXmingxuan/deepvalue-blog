@@ -93,7 +93,7 @@ const allDomains = [...new Set(sortedPosts.map(post => post.data.domain))];
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.08em;
-    color: var(--muted);
+    color: var(--metadata-primary);
   }
 
   .page-title {
@@ -109,7 +109,7 @@ const allDomains = [...new Set(sortedPosts.map(post => post.data.domain))];
     margin-top: 24px;
     font-size: 18px;
     line-height: 1.8;
-    color: rgba(246, 243, 236, 0.72);
+    color: var(--text-secondary);
   }
 
   .layout {
@@ -139,7 +139,7 @@ const allDomains = [...new Set(sortedPosts.map(post => post.data.domain))];
     border: 0;
     border-bottom: 1px solid transparent;
     background: transparent;
-    color: var(--muted);
+    color: var(--metadata-primary);
     cursor: pointer;
     font-family: var(--font-mono);
     font-size: 12px;
@@ -179,12 +179,12 @@ const allDomains = [...new Set(sortedPosts.map(post => post.data.domain))];
   .post-arrow {
     font-family: var(--font-mono);
     font-size: 12px;
-    color: var(--muted);
+    color: var(--link-primary);
   }
 
   .post-summary {
     max-width: 760px;
-    color: rgba(246, 243, 236, 0.72);
+    color: var(--text-secondary);
   }
 
   .post-meta {

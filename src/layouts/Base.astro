@@ -84,6 +84,8 @@ const navItems = [
     --color-paper: #d8cfbd;
     --color-copper: #a46743;
     --color-olive: #777b68;
+    --color-copper-text: #673e29;
+    --color-olive-text: #484c3a;
     --color-chalk: #eee8dc;
     --color-smoke: #252620;
 
@@ -114,8 +116,8 @@ const navItems = [
     --text-secondary: var(--color-ink-muted);
     --text-inverse: var(--color-paper);
     --text-inverse-muted: var(--color-paper-muted);
-    --link-primary: var(--color-copper);
-    --metadata-primary: var(--color-olive);
+    --link-primary: var(--color-copper-text);
+    --metadata-primary: var(--color-olive-text);
     --border-subtle: var(--color-border-on-paper);
     --border-subtle-inverse: var(--color-border-on-ink);
 
@@ -149,12 +151,21 @@ const navItems = [
     --line: var(--border-subtle);
     --muted: var(--text-secondary);
     --text: var(--text-primary);
+    --accent-fluorine: #3f725f;
+    --accent-ai: #53689c;
+    --accent-warm: var(--link-primary);
+    --accent-energy: #745c00;
     --velvet-black: var(--color-ink);
     --showroom-white: var(--color-paper);
-    --silver-mist: var(--color-olive);
+    --silver-mist: var(--metadata-primary);
     --color-bg: var(--color-paper);
     --color-text: var(--color-ink);
     --color-text-dim: var(--text-secondary);
+    --color-primary: var(--text-primary);
+    --color-accent: var(--link-primary);
+    --color-accent-dim: var(--metadata-primary);
+    --color-border: var(--border-subtle);
+    --color-surface: var(--surface-secondary);
     --font-display: var(--font-editorial);
     --font-mono: var(--font-data);
     --font-body: var(--font-editorial);
@@ -364,7 +375,7 @@ const navItems = [
 
   .page-header p {
     margin: 0;
-    color: var(--color-copper);
+    color: var(--link-primary);
     font-family: var(--font-data);
     font-size: var(--caption);
     letter-spacing: 0.13em;
@@ -376,6 +387,38 @@ const navItems = [
     font-weight: var(--weight-medium);
     letter-spacing: -0.025em;
     line-height: 1.08;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 3px 9px;
+    color: var(--metadata-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    font-family: var(--font-data);
+    font-size: 0.625rem;
+    letter-spacing: 0.04em;
+  }
+
+  .pill-btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 18px;
+    color: var(--link-primary);
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-family: var(--font-data);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    transition: background var(--duration-fast) linear, color var(--duration-fast) linear;
+  }
+
+  .pill-btn:hover {
+    color: var(--color-paper);
+    background: var(--color-ink);
   }
 
   .site-footer {

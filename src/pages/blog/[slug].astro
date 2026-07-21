@@ -72,7 +72,7 @@ const domainLabels = {
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.08em;
-    color: var(--muted);
+    color: var(--metadata-primary);
   }
 
   .post-title {
@@ -87,7 +87,7 @@ const domainLabels = {
     max-width: 760px;
     font-size: 18px;
     line-height: 1.8;
-    color: rgba(246, 243, 236, 0.74);
+    color: var(--text-secondary);
   }
 
   .post-meta,
@@ -102,8 +102,8 @@ const domainLabels = {
     max-width: 860px;
     padding: 18px 20px;
     border-left: 2px solid var(--accent-warm);
-    background: rgba(216, 181, 109, 0.08);
-    color: rgba(246, 243, 236, 0.88);
+    background: color-mix(in srgb, var(--color-copper) 9%, var(--color-paper));
+    color: var(--text-primary);
     line-height: 1.8;
   }
 
@@ -112,7 +112,7 @@ const domainLabels = {
     font-family: var(--font-body);
     font-size: 17px;
     line-height: 1.9;
-    color: rgba(246, 243, 236, 0.86);
+    color: var(--text-primary);
   }
 
   .post-content p {
@@ -152,7 +152,8 @@ const domainLabels = {
   }
 
   .post-content a {
-    border-bottom: 1px solid var(--muted);
+    color: var(--link-primary);
+    border-bottom: 1px solid currentColor;
   }
 
   .post-content :global(table) {
@@ -161,34 +162,32 @@ const domainLabels = {
     max-width: 100%;
     margin: 34px 0;
     overflow: hidden;
-    border: 1px solid rgba(245, 243, 238, 0.18);
+    border: 1px solid var(--border-subtle);
     border-radius: 8px;
     border-spacing: 0;
     border-collapse: separate;
-    background:
-      linear-gradient(135deg, rgba(116, 215, 179, 0.08), transparent 34%),
-      rgba(245, 243, 238, 0.045);
+    background: color-mix(in srgb, var(--color-ink) 2.5%, var(--color-paper));
     box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
     white-space: normal;
   }
 
   .post-content :global(thead) {
-    background: rgba(245, 243, 238, 0.12);
+    background: color-mix(in srgb, var(--color-ink) 8%, var(--color-paper));
   }
 
   .post-content :global(tbody tr:nth-child(even)) {
-    background: rgba(245, 243, 238, 0.045);
+    background: color-mix(in srgb, var(--color-ink) 4%, var(--color-paper));
   }
 
   .post-content :global(tbody tr:hover) {
-    background: rgba(116, 215, 179, 0.1);
+    background: color-mix(in srgb, var(--color-copper) 10%, var(--color-paper));
   }
 
   .post-content :global(th),
   .post-content :global(td) {
     padding: 14px 16px;
-    border-right: 1px solid rgba(245, 243, 238, 0.12);
-    border-bottom: 1px solid rgba(245, 243, 238, 0.1);
+    border-right: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
     text-align: left;
     vertical-align: top;
     word-break: normal;
@@ -211,20 +210,20 @@ const domainLabels = {
   }
 
   .post-content :global(td) {
-    color: rgba(246, 243, 236, 0.78);
+    color: var(--text-secondary);
   }
 
   .post-content blockquote {
     margin: 32px 0;
     padding-left: 24px;
     border-left: 2px solid var(--muted);
-    color: var(--muted);
+    color: var(--text-secondary);
   }
 
   .post-content code {
     font-family: var(--font-mono);
     font-size: 0.9em;
-    background: rgba(245, 243, 238, 0.1);
+    background: color-mix(in srgb, var(--color-ink) 9%, var(--color-paper));
     padding: 2px 8px;
     border-radius: 4px;
   }
@@ -235,7 +234,7 @@ const domainLabels = {
     overflow-x: auto;
     border: 1px solid var(--line);
     border-radius: 8px;
-    background: rgba(245, 243, 238, 0.08);
+    background: color-mix(in srgb, var(--color-ink) 6%, var(--color-paper));
   }
 
   .post-content pre code {
