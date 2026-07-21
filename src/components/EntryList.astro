@@ -2,20 +2,52 @@
 const { entries, emptyText = '暂时没有已发布内容。' } = Astro.props;
 ---
 
-{entries.length > 0 ? (
-  <ol class="entry-list">
-    {entries.map(entry => (
-      <li>
-        <a href={`/blog/${entry.data.publish_id}`}>{entry.data.title}</a>
-        <p>{entry.data.summary}</p>
-        <small>
-          {entry.data.published_at.toLocaleDateString('zh-CN')}
-          {' · '}{entry.data.format === 'article' ? '研究文章' : '研究日志'}
-        </small>
-      </li>
-    ))}
-  </ol>
-) : <p class="empty">{emptyText}</p>}
+<div data-entry-list>
+  {entries.length > 0 ? (
+    <ol class="entry-list">
+      {entries.map(entry => (
+        <li
+          data-entry
+          data-section={entry.data.section}
+          data-topic={entry.data.topic}
+        >
+          <a href={`/blog/${entry.data.publish_id}`}>{entry.data.title}</a>
+          <p>{entry.data.summary}</p>
+          <small>
+            {entry.data.published_at.toLocaleDateString('zh-CN')}
+            {' · '}{entry.data.format === 'article' ? '研究文章' : '研究日志'}
+          </small>
+        </li>
+      ))}
+    </ol>
+  ) : <p class="empty" data-unfiltered-empty>{emptyText}</p>}
+  <p class="empty" data-filtered-empty hidden>此专题暂时没有已发布内容。</p>
+</div>
+
+<script>
+  const parameters = new URLSearchParams(window.location.search);
+  const section = parameters.get('section') || '';
+  const topic = parameters.get('topic') || '';
+
+  if (section || topic) {
+    document.querySelectorAll<HTMLElement>('[data-entry-list]').forEach(root => {
+      const entries = root.querySelectorAll<HTMLElement>('[data-entry]');
+      let visibleCount = 0;
+
+      entries.forEach(entry => {
+        const matchesSection = !section || entry.dataset.section === section;
+        const matchesTopic = !topic || entry.dataset.topic === topic;
+        entry.hidden = !(matchesSection && matchesTopic);
+        if (!entry.hidden) visibleCount += 1;
+      });
+
+      const unfilteredEmpty = root.querySelector<HTMLElement>('[data-unfiltered-empty]');
+      const filteredEmpty = root.querySelector<HTMLElement>('[data-filtered-empty]');
+      if (unfilteredEmpty) unfilteredEmpty.hidden = true;
+      if (filteredEmpty) filteredEmpty.hidden = visibleCount !== 0;
+    });
+  }
+</script>
 
 <style>
   .entry-list { list-style: none; display: grid; gap: 0; }

@@ -39,6 +39,33 @@ test('selectPublished filters drafts before applying domain and format filters',
   );
 });
 
+test('selectPublished combines domain, section, and topic filters after excluding drafts', () => {
+  const entries = [
+    entry('matching-published', { section: 'commodities', topic: 'energy' }),
+    entry('matching-draft', {
+      status: 'draft',
+      section: 'commodities',
+      topic: 'energy',
+    }),
+    entry('wrong-domain', {
+      domain: 'ai',
+      section: 'commodities',
+      topic: 'energy',
+    }),
+    entry('wrong-section', { section: 'macro', topic: 'energy' }),
+    entry('wrong-topic', { section: 'commodities', topic: 'shipping' }),
+  ];
+
+  assert.deepEqual(
+    selectPublished(entries, {
+      domain: 'investment',
+      section: 'commodities',
+      topic: 'energy',
+    }).map(item => item.id),
+    ['matching-published'],
+  );
+});
+
 test('selectPublished returns all and only published entries when filters are empty', () => {
   const entries = [
     entry('article'),

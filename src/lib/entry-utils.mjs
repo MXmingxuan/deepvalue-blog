@@ -15,6 +15,8 @@ export function selectPublished(entries, filters = {}) {
   const selected = entries.filter(entry => {
     if (!isPublished(entry)) return false;
     if (filters.domain && entry.data.domain !== filters.domain) return false;
+    if (filters.section && entry.data.section !== filters.section) return false;
+    if (filters.topic && entry.data.topic !== filters.topic) return false;
     if (filters.format && entry.data.format !== filters.format) return false;
     return true;
   });

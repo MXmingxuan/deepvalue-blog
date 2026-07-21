@@ -54,7 +54,8 @@ Only `status: published` entries appear in lists or receive `/blog/<publish_id>/
 /blog/<id>/     文章或日志详情
 ```
 
-Legacy research-section URLs redirect to the corresponding current information-architecture routes.
+The six legacy topic URLs are HTTP 301 redirects managed in `vercel.json`. Their
+`section` and `topic` query parameters filter the destination list in the browser.
 
 ## Release verification
 
