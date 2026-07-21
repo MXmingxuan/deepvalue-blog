@@ -39,6 +39,16 @@ test('selectPublished filters drafts before applying domain and format filters',
   );
 });
 
+test('selectPublished returns all and only published entries when filters are empty', () => {
+  const entries = [
+    entry('article'),
+    entry('log', { format: 'log' }),
+    entry('draft', { status: 'draft' }),
+  ];
+
+  assert.deepEqual(selectPublished(entries).map(item => item.id), ['article', 'log']);
+});
+
 test('sortEntriesNewestFirst uses updated_at before published_at', () => {
   const entries = [
     entry('older', { published_at: new Date('2026-07-01') }),
