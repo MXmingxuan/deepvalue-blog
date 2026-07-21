@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "test": "node --test tests/*.test.mjs",
     "sync": "npm run build",
     "prepare:publish": "node scripts/prepare-publish.mjs",
     "publish:check": "npm run prepare:publish && npm run build"
