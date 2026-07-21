@@ -1,60 +1,78 @@
 # Deep Value Research
 
-Astro static research site for long-form industry notes. The current focus is:
-
-- 化工研究
-- AI 基础设施研究
-- 航运与船舶研究
-- 能源研究
+Astro static research site for published investment research, AI and technology notes, research logs, and essays beyond the core research domains.
 
 ## Commands
 
 ```bash
-npm.cmd run dev
-npm.cmd run build
-npm.cmd run preview
+npm run dev
+npm test
+npm run build
+npm run preview
 ```
 
 ## Content
 
-Research articles live in:
+Published articles and research logs live in:
 
 ```text
-src/content/blog/
+src/content/entries/
 ```
 
-Each article is a Markdown file with structured frontmatter. Use `sector` to decide which topic page receives the article:
+Each entry is a Markdown file with structured frontmatter. This is the minimal published article:
 
 ```yaml
 ---
-title: "文章标题"
-date: 2026-07-02
-description: "页面 SEO 描述"
-summary: "列表页显示的摘要"
-sector: "chemical" # chemical | ai-infrastructure | shipping-shipbuilding | energy | other
-research_type: "sector" # sector | company | event | memo
-status: "draft" # draft | active | archived
-confidence: "medium" # low | medium | high
-tags: ["标签"]
-categories: ["专题"]
+title: 文章标题
+publish_id: stable-public-slug
+domain: investment
+section: commodities
+topic: copper
+format: article
+status: published
+published_at: 2026-07-21
+summary: 列表与 SEO 摘要
+source_type: original
+tags: [铜]
+commodities: [铜]
 companies: []
 tickers: []
-thesis: "核心判断"
 ---
 ```
 
+Only `status: published` entries appear in lists or receive `/blog/<publish_id>/` routes. Draft and archived entries remain in the content collection but are not public.
+
 ## Routes
 
-- `/` - Research homepage
-- `/chemical-research/` - 化工研究
-- `/ai-infrastructure-research/` - AI 基础设施研究
-- `/shipping-shipbuilding-research/` - 航运与船舶研究
-- `/energy-research/` - 能源研究
-- `/blog/` - All research notes
-- `/blog/[slug]/` - Article detail
+```text
+/investment/    投资研究
+/ai/            AI 与技术
+/research-log/  研究日志
+/beyond/        边界之外
+/archive/       全部已发布内容
+/about/         关于 Deep Value
+/blog/<id>/     文章或日志详情
+```
+
+Legacy research-section URLs redirect to the corresponding current information-architecture routes.
+
+## Release verification
+
+Run the full suite before publishing:
+
+```bash
+npm test
+npm run build
+test -f 'dist/blog/滨化股份-g5-级电子级氢氟酸真业务小体量与第二曲线验证/index.html'
+test ! -e 'dist/blog/ai数据中心研究占位'
+test ! -e 'dist/blog/氟化工研究占位'
+test ! -e 'dist/blog/能源研究占位'
+for route in investment ai beyond research-log archive about; do test -f "dist/$route/index.html"; done
+git diff --check
+```
 
 ## Architecture
 
-- Astro content collections validate article metadata.
+- Astro content collections validate entry metadata.
 - Markdown files are the source of truth.
 - Pages are statically generated for fast deployment and simple hosting.
