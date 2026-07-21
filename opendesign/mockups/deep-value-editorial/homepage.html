@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Deep Value 以投资、交易与大宗商品研究为核心，同时记录 AI 应用、研究工作流与边界之外的探索。" />
+  <link rel="icon" href="data:," />
+  <title>Deep Value Research — Editorial homepage</title>
+  <style>
+    @import url("../../design-systems/deep-value-editorial/tokens/colors_and_type.css");
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text-primary);
+      background: var(--surface-inverse);
+      font-family: var(--font-editorial);
+      font-size: var(--body);
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--color-copper);
+      outline-offset: 4px;
+    }
+
+    .page-shell {
+      overflow: hidden;
+    }
+
+    .masthead {
+      position: absolute;
+      inset: 0 0 auto;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: minmax(190px, 0.85fr) minmax(0, 2fr) auto;
+      min-height: 72px;
+      color: var(--text-inverse);
+      border-bottom: 1px solid var(--border-subtle-inverse);
+      background: color-mix(in srgb, var(--color-ink) 78%, transparent);
+      backdrop-filter: blur(10px);
+    }
+
+    .wordmark,
+    .edition,
+    .masthead nav {
+      display: flex;
+      align-items: center;
+    }
+
+    .wordmark {
+      padding: 0 3.2vw;
+      border-right: 1px solid var(--border-subtle-inverse);
+      font-family: var(--font-data);
+      font-size: 0.76rem;
+      font-weight: var(--weight-bold);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .edition {
+      padding: 0 1.5rem;
+      color: var(--text-inverse-muted);
+      font-family: var(--font-data);
+      font-size: var(--caption);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .masthead nav {
+      justify-content: flex-end;
+      padding-right: 3.2vw;
+    }
+
+    .masthead nav a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      margin-left: 1.35rem;
+      color: var(--text-inverse-muted);
+      font-family: var(--font-data);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      transition: color var(--duration-base) var(--ease-editorial);
+    }
+
+    .masthead nav a::after {
+      position: absolute;
+      right: 0;
+      bottom: 7px;
+      left: 0;
+      height: 1px;
+      content: "";
+      background: var(--color-copper);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform var(--duration-base) var(--ease-editorial);
+    }
+
+    .masthead nav a:hover,
+    .masthead nav a:focus-visible {
+      color: var(--text-inverse);
+    }
+
+    .masthead nav a:hover::after,
+    .masthead nav a:focus-visible::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      min-height: min(900px, 94vh);
+      overflow: hidden;
+      color: var(--text-inverse);
+      background-color: var(--color-ink);
+      isolation: isolate;
+    }
+
+    .hero::before {
+      position: absolute;
+      inset: 0;
+      z-index: -3;
+      content: "";
+      background-image: url("../../../public/images/brand/commodities-macro-hero.png");
+      background-position: center 54%;
+      background-size: cover;
+      transform: scale(1.015);
+      animation: image-settle var(--duration-entrance) var(--ease-editorial) both;
+    }
+
+    .hero::after {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      content: "";
+      background:
+        linear-gradient(90deg, rgba(11, 12, 11, 0.94) 0%, rgba(11, 12, 11, 0.74) 34%, rgba(11, 12, 11, 0.18) 72%),
+        linear-gradient(0deg, rgba(11, 12, 11, 0.9) 0%, transparent 46%, rgba(11, 12, 11, 0.26) 100%);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(240px, 0.55fr);
+      align-items: end;
+      width: min(1440px, 100%);
+      min-height: inherit;
+      margin: 0 auto;
+      padding: 11rem 3.2vw 4.25rem;
+    }
+
+    .hero-copy {
+      align-self: end;
+      max-width: 840px;
+      animation: rise-in var(--duration-entrance) var(--ease-editorial) 90ms both;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin: 0;
+      font-family: var(--font-data);
+      font-size: var(--caption);
+      letter-spacing: 0.16em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 2.6rem;
+      height: 1px;
+      content: "";
+      background: currentColor;
+    }
+
+    .hero .eyebrow {
+      color: color-mix(in srgb, var(--color-copper) 84%, var(--color-paper));
+    }
+
+    .hero h1 {
+      max-width: 10ch;
+      margin: 1.15rem 0 1.5rem;
+      font-size: var(--h1);
+      font-weight: var(--weight-medium);
+      letter-spacing: -0.035em;
+      line-height: 0.98;
+    }
+
+    .hero-intro {
+      max-width: 650px;
+      margin: 0;
+      color: color-mix(in srgb, var(--color-paper) 82%, transparent);
+      font-size: var(--body-large);
+      line-height: 1.85;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 2.4rem;
+    }
+
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 11rem;
+      min-height: 48px;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid currentColor;
+      font-family: var(--font-data);
+      font-size: 0.73rem;
+      letter-spacing: 0.08em;
+      transition: color var(--duration-fast) linear, padding var(--duration-base) var(--ease-editorial);
+    }
+
+    .text-link::after {
+      content: "↗";
+    }
+
+    .text-link:hover {
+      padding-right: 0.45rem;
+      color: var(--color-copper);
+    }
+
+    .hero-index {
+      align-self: end;
+      margin-left: 3rem;
+      border-top: 1px solid var(--border-subtle-inverse);
+      animation: rise-in var(--duration-entrance) var(--ease-editorial) 180ms both;
+    }
+
+    .hero-index-row {
+      display: grid;
+      grid-template-columns: 2.5rem 1fr;
+      gap: 0.5rem;
+      padding: 0.9rem 0;
+      color: var(--text-inverse-muted);
+      border-bottom: 1px solid var(--border-subtle-inverse);
+      font-family: var(--font-data);
+      font-size: var(--caption);
+      line-height: 1.5;
+    }
+
+    .hero-index-row span:first-child {
+      color: var(--color-copper);
+    }
+
+    .paper {
+      color: var(--text-primary);
+      background-color: var(--surface-primary);
+      background-image:
+        linear-gradient(color-mix(in srgb, var(--color-ink) 2.2%, transparent) 1px, transparent 1px);
+      background-size: 100% 9px;
+    }
+
+    .issue-bar {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 0.55fr;
+      width: min(1440px, 100%);
+      min-height: 66px;
+      margin: 0 auto;
+      border-right: 1px solid var(--border-subtle);
+      border-left: 1px solid var(--border-subtle);
+    }
+
+    .issue-bar span {
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      border-right: 1px solid var(--border-subtle);
+      font-family: var(--font-data);
+      font-size: var(--caption);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .issue-bar span:last-child {
+      border-right: 0;
+    }
+
+    .issue-bar .olive {
+      color: var(--color-olive);
+    }
+
+    .content-frame {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      border: 1px solid var(--border-subtle);
+      border-bottom: 0;
+    }
+
+    .section-label {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      min-height: 64px;
+      padding: 0 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: var(--font-data);
+      font-size: var(--caption);
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .section-label span:last-child {
+      color: var(--color-olive);
+      letter-spacing: 0.04em;
+    }
+
+    .featured {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.45fr);
+      min-height: 640px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .feature-main {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(2rem, 5vw, 5.5rem);
+      border-right: 1px solid var(--border-subtle);
+    }
+
+    .feature-kicker,
+    .meta-line,
+    .rail-label,
+    .empty-label,
+    .footer-meta {
+      font-family: var(--font-data);
+      font-size: var(--caption);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .feature-kicker {
+      display: flex;
+      justify-content: space-between;
+      color: var(--color-copper);
+    }
+
+    .feature-main h2 {
+      max-width: 17ch;
+      margin: 2.5rem 0 2rem;
+      font-size: clamp(2.4rem, 5vw, 5.6rem);
+      font-weight: var(--weight-medium);
+      letter-spacing: -0.035em;
+      line-height: 1.06;
+    }
+
+    .feature-summary {
+      max-width: 690px;
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: var(--body-large);
+      line-height: 1.9;
+    }
+
+    .meta-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem 1.2rem;
+      margin-top: 3rem;
+      padding-top: 1.2rem;
+      color: var(--color-olive);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .feature-link {
+      align-self: flex-start;
+      min-width: min(100%, 15rem);
+      margin-top: 2rem;
+      color: var(--color-copper);
+    }
+
+    .feature-rail {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .rail-label {
+      padding: 1.4rem 1.5rem;
+      color: var(--color-olive);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .thesis {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2.25rem 1.5rem;
+    }
+
+    .thesis::before {
+      margin-bottom: 1.5rem;
+      color: var(--color-copper);
+      font-family: var(--font-data);
+      font-size: var(--caption);
+      letter-spacing: 0.08em;
+      content: "THESIS";
+    }
+
+    .thesis p {
+      margin: 0;
+      font-size: var(--step-1);
+      line-height: 1.75;
+    }
+
+    .confidence {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      padding: 1.4rem 1.5rem;
+      color: var(--color-olive);
+      border-top: 1px solid var(--border-subtle);
+      font-family: var(--font-data);
+      font-size: var(--caption);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .departments {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .department {
+      display: flex;
+      min-height: 370px;
+      flex-direction: column;
+      padding: 2rem 1.5rem;
+      border-right: 1px solid var(--border-subtle);
+    }
+
+    .department:last-child {
+      border-right: 0;
+    }
+
+    .department-index {
+      color: var(--color-copper);
+      font-family: var(--font-data);
+      font-size: var(--caption);
+      letter-spacing: 0.08em;
+    }
+
+    .department h3 {
+      margin: 1.4rem 0 1rem;
+      font-size: var(--h3);
+      font-weight: var(--weight-medium);
+      line-height: 1.2;
+    }
+
+    .department p {
+      max-width: 34rem;
+      margin: 0;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .department .empty-label {
+      display: block;
+      margin-top: auto;
+      padding-top: 2rem;
+      color: var(--color-olive);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .department .text-link {
+      min-width: 100%;
+      margin-top: auto;
+      color: var(--color-copper);
+    }
+
+    .method {
+      display: grid;
+      grid-template-columns: 0.65fr 1.35fr;
+      min-height: 430px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .method-title {
+      padding: 3rem 1.5rem;
+      border-right: 1px solid var(--border-subtle);
+    }
+
+    .method-title h2 {
+      max-width: 7ch;
+      margin: 1.6rem 0 0;
+      font-size: var(--h2);
+      font-weight: var(--weight-medium);
+      line-height: 1.08;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .method-item {
+      padding: 3rem 1.8rem;
+      border-right: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .method-item:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .method-item:nth-last-child(-n + 2) {
+      border-bottom: 0;
+    }
+
+    .method-item strong {
+      display: block;
+      margin-bottom: 1rem;
+      color: var(--color-copper);
+      font-family: var(--font-data);
+      font-size: var(--caption);
+      letter-spacing: 0.08em;
+    }
+
+    .method-item p {
+      margin: 0;
+      line-height: 1.8;
+    }
+
+    .footer {
+      color: var(--text-inverse);
+      background: var(--surface-inverse);
+    }
+
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      width: min(1440px, 100%);
+      min-height: 280px;
+      margin: 0 auto;
+      padding: 4rem 3.2vw 2.4rem;
+    }
+
+    .footer-wordmark {
+      margin: 0;
+      font-size: clamp(2.6rem, 7vw, 7rem);
+      font-weight: var(--weight-medium);
+      letter-spacing: -0.04em;
+      line-height: 0.9;
+    }
+
+    .footer-meta {
+      color: var(--text-inverse-muted);
+      text-align: right;
+      line-height: 1.8;
+    }
+
+    @keyframes rise-in {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes image-settle {
+      from {
+        opacity: 0.75;
+        transform: scale(1.04);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1.015);
+      }
+    }
+
+    @media (max-width: 1120px) {
+      .masthead {
+        grid-template-columns: auto 1fr;
+      }
+
+      .edition {
+        display: none;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr) 270px;
+      }
+
+      .masthead nav a:nth-child(n + 5) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .masthead {
+        position: absolute;
+        display: flex;
+        min-height: 64px;
+      }
+
+      .wordmark {
+        flex: 1;
+      }
+
+      .masthead nav {
+        padding-right: 1rem;
+      }
+
+      .masthead nav a {
+        display: none;
+      }
+
+      .masthead nav a:first-child {
+        display: inline-flex;
+        margin-left: 0;
+      }
+
+      .hero {
+        min-height: 780px;
+      }
+
+      .hero::before {
+        background-position: 62% center;
+      }
+
+      .hero::after {
+        background:
+          linear-gradient(90deg, rgba(11, 12, 11, 0.91) 0%, rgba(11, 12, 11, 0.53) 65%, rgba(11, 12, 11, 0.28) 100%),
+          linear-gradient(0deg, rgba(11, 12, 11, 0.96) 0%, rgba(11, 12, 11, 0.18) 72%);
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+        padding-top: 8.5rem;
+        padding-bottom: 2rem;
+      }
+
+      .hero h1 {
+        max-width: 8ch;
+      }
+
+      .hero-index {
+        margin: 3rem 0 0;
+      }
+
+      .issue-bar {
+        grid-template-columns: 1fr auto;
+      }
+
+      .issue-bar span:nth-child(2) {
+        display: none;
+      }
+
+      .featured,
+      .method {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-main,
+      .method-title {
+        border-right: 0;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .featured {
+        min-height: 0;
+      }
+
+      .feature-rail {
+        min-height: 360px;
+      }
+
+      .departments {
+        grid-template-columns: 1fr;
+      }
+
+      .department {
+        min-height: 280px;
+        border-right: 0;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .department:last-child {
+        border-bottom: 0;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .wordmark {
+        padding-left: 1rem;
+      }
+
+      .hero-grid {
+        padding-right: 1rem;
+        padding-left: 1rem;
+      }
+
+      .hero h1 {
+        font-size: clamp(3.1rem, 15vw, 5rem);
+      }
+
+      .hero-intro {
+        font-size: 1rem;
+      }
+
+      .hero-actions {
+        display: grid;
+      }
+
+      .text-link {
+        width: 100%;
+      }
+
+      .issue-bar span,
+      .section-label,
+      .feature-main,
+      .thesis,
+      .confidence,
+      .department,
+      .method-title,
+      .method-item {
+        padding-right: 1rem;
+        padding-left: 1rem;
+      }
+
+      .feature-main {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+      }
+
+      .feature-main h2 {
+        font-size: clamp(2.25rem, 11vw, 3.5rem);
+      }
+
+      .method-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .method-item,
+      .method-item:nth-child(2n) {
+        border-right: 0;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .method-item:last-child {
+        border-bottom: 0;
+      }
+
+      .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        padding-right: 1rem;
+        padding-left: 1rem;
+      }
+
+      .footer-meta {
+        text-align: left;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="masthead">
+      <a class="wordmark" href="/">Deep Value Research</a>
+      <div class="edition">Independent research publication</div>
+      <nav aria-label="主导航">
+        <a href="/investment/">投资研究</a>
+        <a href="/ai/">AI 与技术</a>
+        <a href="/research-log/">研究日志</a>
+        <a href="/beyond/">边界之外</a>
+        <a href="/archive/">档案</a>
+        <a href="/about/">关于</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Investment · Trading · Commodities</p>
+            <h1 id="hero-title">投资、交易与大宗商品研究</h1>
+            <p class="hero-intro">Deep Value 以投资、交易与大宗商品研究为核心，同时记录 AI 应用、研究工作流与边界之外的探索。</p>
+            <div class="hero-actions">
+              <a class="text-link" href="/investment/">进入投资研究</a>
+              <a class="text-link" href="/research-log/">查看研究日志</a>
+            </div>
+          </div>
+
+          <aside class="hero-index" aria-label="研究范围">
+            <div class="hero-index-row"><span>01</span><span>资源与产业</span></div>
+            <div class="hero-index-row"><span>02</span><span>宏观与周期</span></div>
+            <div class="hero-index-row"><span>03</span><span>市场与交易</span></div>
+            <div class="hero-index-row"><span>04</span><span>AI 与研究工作流</span></div>
+          </aside>
+        </div>
+      </section>
+
+      <div class="paper">
+        <div class="issue-bar" aria-label="出版信息">
+          <span>Deep Value / Research</span>
+          <span class="olive">Long-cycle observations</span>
+          <span>2026</span>
+        </div>
+
+        <div class="content-frame">
+          <div class="section-label">
+            <span>Featured research / 重点研究</span>
+            <span>Investment · Fluorochemicals</span>
+          </div>
+
+          <article class="featured">
+            <div class="feature-main">
+              <div>
+                <div class="feature-kicker">
+                  <span>Published research</span>
+                  <span>02 JUL 2026</span>
+                </div>
+                <h2>滨化股份 G5 级电子级氢氟酸：真业务、小体量与第二曲线验证</h2>
+                <p class="feature-summary">滨化股份 G5 级电子级氢氟酸具备真实产能与客户基础，但业务体量、盈利能力与第二曲线价值仍需持续验证。</p>
+                <div class="meta-line">
+                  <span>氟化工</span>
+                  <span>电子化学品</span>
+                  <span>半导体材料</span>
+                  <span>滨化股份 · 601678</span>
+                </div>
+              </div>
+              <a class="text-link feature-link" href="/blog/滨化股份-g5-级电子级氢氟酸真业务小体量与第二曲线验证">阅读全文</a>
+            </div>
+
+            <aside class="feature-rail">
+              <div class="rail-label">Research judgment</div>
+              <div class="thesis">
+                <p>G5 级电子级氢氟酸是真实业务，但其投资价值取决于客户放量、毛利率转正和产品平台化。</p>
+              </div>
+              <div class="confidence">
+                <span>Confidence</span>
+                <span>Medium</span>
+              </div>
+            </aside>
+          </article>
+
+          <div class="section-label">
+            <span>Research desk / 研究版图</span>
+            <span>Published work only</span>
+          </div>
+
+          <section class="departments" aria-label="研究栏目">
+            <article class="department">
+              <span class="department-index">01 / INVESTMENT</span>
+              <h3>投资研究</h3>
+              <p>围绕大宗商品、产业、宏观、市场与交易展开长期研究。现有已发布研究聚焦氟化工与电子化学品。</p>
+              <a class="text-link" href="/investment/">进入栏目</a>
+            </article>
+
+            <article class="department">
+              <span class="department-index">02 / RESEARCH LOG</span>
+              <h3>研究日志</h3>
+              <p>记录判断如何形成、变化与被验证。当前尚无已发布研究日志。</p>
+              <span class="empty-label">No published logs</span>
+            </article>
+
+            <article class="department">
+              <span class="department-index">03 / AI &amp; BEYOND</span>
+              <h3>AI 与边界之外</h3>
+              <p>保留对 AI 应用、研究工作流与其他长期兴趣的观察。当前尚无已发布文章。</p>
+              <span class="empty-label">No published entries</span>
+            </article>
+          </section>
+
+          <section class="method" aria-labelledby="method-title">
+            <div class="method-title">
+              <p class="eyebrow">Editorial method</p>
+              <h2 id="method-title">把判断放回证据</h2>
+            </div>
+            <div class="method-grid">
+              <div class="method-item">
+                <strong>01 / EVIDENCE</strong>
+                <p>区分公司披露、行业资料、事实观察与研究者推断。</p>
+              </div>
+              <div class="method-item">
+                <strong>02 / CONDITIONS</strong>
+                <p>给出判断成立、强化、转弱与失效的条件。</p>
+              </div>
+              <div class="method-item">
+                <strong>03 / CONTINUITY</strong>
+                <p>让文章承载完整研究，让日志保留判断演化的时间线。</p>
+              </div>
+              <div class="method-item">
+                <strong>04 / SCOPE</strong>
+                <p>不以虚构条目填充版面，只展示已经发布的研究。</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <p class="footer-wordmark">Deep Value</p>
+        <div class="footer-meta">
+          <div>Independent research publication</div>
+          <div>Investment · Commodities · AI</div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

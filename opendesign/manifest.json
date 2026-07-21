@@ -1,0 +1,51 @@
+{
+  "generated": "2026-07-21T06:40:45Z",
+  "sections": [
+    {
+      "id": "mockups",
+      "label": "Mockups",
+      "groups": [
+        {
+          "slug": "deep-value-editorial",
+          "files": [
+            {
+              "label": "homepage.html",
+              "path": "mockups/deep-value-editorial/homepage.html"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "design-systems",
+      "label": "Design Systems",
+      "groups": [
+        {
+          "slug": "deep-value-editorial",
+          "files": [
+            {
+              "label": "README.md",
+              "path": "design-systems/deep-value-editorial/README.md"
+            },
+            {
+              "label": "SKILL.md",
+              "path": "design-systems/deep-value-editorial/SKILL.md"
+            },
+            {
+              "label": "style-notes.md",
+              "path": "design-systems/deep-value-editorial/brand/style-notes.md"
+            },
+            {
+              "label": "voice-and-tone.md",
+              "path": "design-systems/deep-value-editorial/brand/voice-and-tone.md"
+            },
+            {
+              "label": "colors_and_type.css",
+              "path": "design-systems/deep-value-editorial/tokens/colors_and_type.css"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
