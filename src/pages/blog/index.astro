@@ -1,19 +1,16 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getCollection } from 'astro:content';
+import { getPublishedEntries } from '../../lib/entries.mjs';
 
-const posts = await getCollection('blog');
-const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const sortedPosts = await getPublishedEntries({ format: 'article' });
 
-const sectorLabels = {
-  chemical: '化工',
-  'ai-infrastructure': 'AI 基础设施',
-  'shipping-shipbuilding': '航运与船舶',
-  energy: '能源',
-  other: '其他',
+const domainLabels = {
+  investment: '投资研究',
+  ai: 'AI 与技术',
+  beyond: '边界之外',
 };
 
-const allSectors = [...new Set(sortedPosts.map(post => post.data.sector))];
+const allDomains = [...new Set(sortedPosts.map(post => post.data.domain))];
 ---
 
 <Base title="研究文章 - Deep Value Research" description="产业研究文章归档">
@@ -27,9 +24,9 @@ const allSectors = [...new Set(sortedPosts.map(post => post.data.sector))];
     <aside class="sidebar">
       <p class="sidebar-label">专题</p>
       <div class="filter-list">
-        <button data-sector="all" class="filter-btn active">全部</button>
-        {allSectors.map(sector => (
-          <button data-sector={sector} class="filter-btn">{sectorLabels[sector]}</button>
+        <button data-domain="all" class="filter-btn active">全部</button>
+        {allDomains.map(domain => (
+          <button data-domain={domain} class="filter-btn">{domainLabels[domain]}</button>
         ))}
       </div>
     </aside>
@@ -37,16 +34,16 @@ const allSectors = [...new Set(sortedPosts.map(post => post.data.sector))];
     <section class="content" aria-label="文章列表">
       <ul class="post-list" id="post-list">
         {sortedPosts.map(post => (
-          <li class="post-item" data-sector={post.data.sector}>
-            <a href={`/blog/${post.id}`} class="post-link">
+          <li class="post-item" data-domain={post.data.domain}>
+            <a href={`/blog/${post.data.publish_id}`} class="post-link">
               <span class="post-title">{post.data.title}</span>
               <span class="post-arrow">打开</span>
             </a>
-            <p class="post-summary">{post.data.summary || post.data.description}</p>
+            <p class="post-summary">{post.data.summary}</p>
             <div class="post-meta">
-              <span>{post.data.date.toLocaleDateString('zh-CN')}</span>
-              <span>{sectorLabels[post.data.sector]}</span>
-              <span>{post.data.research_type}</span>
+              <span>{post.data.published_at.toLocaleDateString('zh-CN')}</span>
+              <span>{domainLabels[post.data.domain]}</span>
+              <span>{post.data.format}</span>
               {post.data.tags.slice(0, 3).map(tag => <span class="tag">{tag}</span>)}
             </div>
           </li>
@@ -64,13 +61,13 @@ const allSectors = [...new Set(sortedPosts.map(post => post.data.sector))];
 
   buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      const sector = btn.getAttribute('data-sector');
+      const domain = btn.getAttribute('data-domain');
       buttons.forEach((button) => button.classList.remove('active'));
       btn.classList.add('active');
 
       let visibleCount = 0;
       posts.forEach((post) => {
-        const shouldShow = sector === 'all' || post.getAttribute('data-sector') === sector;
+        const shouldShow = domain === 'all' || post.getAttribute('data-domain') === domain;
         (post as HTMLElement).style.display = shouldShow ? '' : 'none';
         if (shouldShow) visibleCount++;
       });

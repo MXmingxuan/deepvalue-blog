@@ -1,13 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getCollection } from 'astro:content';
+import { getPublishedEntries } from '../../lib/entries.mjs';
 
 const keywords = ['数据中心', '燃气轮机', '电力', '储能', '服务器', '液冷', 'PCB', '光模块'];
-const posts = await getCollection('blog');
+const posts = await getPublishedEntries();
 
 const topicPosts = posts
-  .filter(post => post.data.sector === 'ai-infrastructure')
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  .filter(post => post.data.domain === 'ai' && post.data.topic === 'ai-infrastructure');
 ---
 
 <Base title="AI 基础设施研究 - Deep Value Research" description="AI 基础设施、数据中心、电力、燃气轮机与算力产业链研究">
@@ -27,13 +26,13 @@ const topicPosts = posts
     {topicPosts.length > 0 ? (
       topicPosts.map(post => (
         <article class="research-item">
-          <a href={`/blog/${post.id}`}>{post.data.title}</a>
+          <a href={`/blog/${post.data.publish_id}`}>{post.data.title}</a>
           <div class="meta">
-            <span>{post.data.date.toLocaleDateString('zh-CN')}</span>
-            <span>{post.data.research_type}</span>
+            <span>{post.data.published_at.toLocaleDateString('zh-CN')}</span>
+            <span>{post.data.format}</span>
             {post.data.tags.slice(0, 3).map(tag => <span class="tag">{tag}</span>)}
           </div>
-          {(post.data.summary || post.data.description) && <p>{post.data.summary || post.data.description}</p>}
+          {post.data.summary && <p>{post.data.summary}</p>}
         </article>
       ))
     ) : (

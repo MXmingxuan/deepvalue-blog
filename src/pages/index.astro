@@ -1,13 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getCollection } from 'astro:content';
+import { getPublishedEntries } from '../lib/entries.mjs';
 
-const posts = await getCollection('blog');
-const sortedPosts = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const sortedPosts = await getPublishedEntries();
 
 const topicDefinitions = [
   {
-    sector: 'chemical',
+    domain: 'investment',
+    topic: 'fluorochemicals',
     href: '/chemical-research/',
     eyebrow: 'CHEMICALS',
     title: '化工研究',
@@ -15,7 +15,8 @@ const topicDefinitions = [
     summary: '当前重点：氟化工、电子化学品、含氟材料。后续可扩展到硅化工、磷化工、农化、制冷剂等细分方向。',
   },
   {
-    sector: 'ai-infrastructure',
+    domain: 'ai',
+    topic: 'ai-infrastructure',
     href: '/ai-infrastructure-research/',
     eyebrow: 'AI INFRASTRUCTURE',
     title: 'AI 基础设施研究',
@@ -23,7 +24,8 @@ const topicDefinitions = [
     summary: '当前重点：数据中心、电力约束、燃气轮机。也跟踪服务器、储能、液冷、PCB、光模块等 AI 基建环节。',
   },
   {
-    sector: 'shipping-shipbuilding',
+    domain: 'investment',
+    topic: 'shipping',
     href: '/shipping-shipbuilding-research/',
     eyebrow: 'SHIPPING & SHIPBUILDING',
     title: '航运与船舶研究',
@@ -31,7 +33,8 @@ const topicDefinitions = [
     summary: '当前重点：船舶周期、造船订单、航运供需。后续可拆分油运、干散货、集运、船用设备与海工装备。',
   },
   {
-    sector: 'energy',
+    domain: 'investment',
+    topic: 'energy',
     href: '/energy-research/',
     eyebrow: 'ENERGY',
     title: '能源研究',
@@ -42,7 +45,9 @@ const topicDefinitions = [
 
 const topics = topicDefinitions.map(topic => ({
   ...topic,
-  posts: sortedPosts.filter(post => post.data.sector === topic.sector).slice(0, 4),
+  posts: sortedPosts
+    .filter(post => post.data.domain === topic.domain && post.data.topic === topic.topic)
+    .slice(0, 4),
 }));
 
 const latestPosts = sortedPosts.slice(0, 7);
@@ -79,9 +84,9 @@ const latestPosts = sortedPosts.slice(0, 7);
         <div class="article-stack">
           {topic.posts.length > 0 ? (
             topic.posts.map(post => (
-              <a href={`/blog/${post.id}`} class="article-row">
+              <a href={`/blog/${post.data.publish_id}`} class="article-row">
                 <span class="article-title">{post.data.title}</span>
-                <span class="article-date">{post.data.date.toLocaleDateString('zh-CN')}</span>
+                <span class="article-date">{post.data.published_at.toLocaleDateString('zh-CN')}</span>
               </a>
             ))
           ) : (
@@ -101,9 +106,9 @@ const latestPosts = sortedPosts.slice(0, 7);
     <div class="latest-list">
       {latestPosts.map(post => (
         <article class="latest-item">
-          <a href={`/blog/${post.id}`} class="latest-title">{post.data.title}</a>
+          <a href={`/blog/${post.data.publish_id}`} class="latest-title">{post.data.title}</a>
           <div class="latest-meta">
-            <span>{post.data.date.toLocaleDateString('zh-CN')}</span>
+            <span>{post.data.published_at.toLocaleDateString('zh-CN')}</span>
             {post.data.tags && post.data.tags.slice(0, 3).map(tag => <span class="tag">{tag}</span>)}
           </div>
         </article>

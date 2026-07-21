@@ -1,37 +1,36 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
+import { getPublishedEntries } from '../../lib/entries.mjs';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts.map(post => ({
-    params: { slug: post.id },
-    props: { post },
+  const entries = await getPublishedEntries();
+  return entries.map(entry => ({
+    params: { slug: entry.data.publish_id },
+    props: { post: entry },
   }));
 }
 
 const { post } = Astro.props;
 const { Content } = await render(post);
 
-const sectorLabels = {
-  chemical: '化工研究',
-  'ai-infrastructure': 'AI 基础设施研究',
-  'shipping-shipbuilding': '航运与船舶研究',
-  energy: '能源研究',
-  other: '其他研究',
+const domainLabels = {
+  investment: '投资研究',
+  ai: 'AI 与技术',
+  beyond: '边界之外',
 };
 ---
 
-<Base title={`${post.data.title} - Deep Value Research`} description={post.data.description || post.data.summary}>
+<Base title={`${post.data.title} - Deep Value Research`} description={post.data.summary}>
   <article class="blog-post">
     <header class="post-header">
-      <p class="eyebrow">{sectorLabels[post.data.sector]}</p>
+      <p class="eyebrow">{domainLabels[post.data.domain]}</p>
       <h1 class="post-title">{post.data.title}</h1>
-      <p class="post-summary">{post.data.summary || post.data.description}</p>
+      <p class="post-summary">{post.data.summary}</p>
       <div class="post-meta">
-        <span>{post.data.date.toLocaleDateString('zh-CN')}</span>
-        {post.data.updated && <span>更新：{post.data.updated.toLocaleDateString('zh-CN')}</span>}
-        <span>{post.data.research_type}</span>
+        <span>{post.data.published_at.toLocaleDateString('zh-CN')}</span>
+        {post.data.updated_at && <span>更新：{post.data.updated_at.toLocaleDateString('zh-CN')}</span>}
+        <span>{post.data.format}</span>
         <span>{post.data.status}</span>
         {post.data.confidence && <span>confidence: {post.data.confidence}</span>}
       </div>
