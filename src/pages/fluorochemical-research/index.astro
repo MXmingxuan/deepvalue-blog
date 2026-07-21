@@ -1,16 +1,3 @@
 ---
-const target = '/chemical-research/';
+return Astro.redirect('/investment/?section=commodities&topic=fluorochemicals', 301);
 ---
-
-<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content={`0;url=${target}`} />
-    <link rel="canonical" href={target} />
-    <title>Redirecting...</title>
-  </head>
-  <body>
-    <p><a href={target}>跳转到化工研究</a></p>
-  </body>
-</html>

@@ -1,16 +1,3 @@
 ---
-const target = '/ai-infrastructure-research/';
+return Astro.redirect('/ai/?section=ai-industry&topic=ai-infrastructure', 301);
 ---
-
-<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content={`0;url=${target}`} />
-    <link rel="canonical" href={target} />
-    <title>Redirecting...</title>
-  </head>
-  <body>
-    <p><a href={target}>跳转到 AI 基础设施研究</a></p>
-  </body>
-</html>
