@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import EntryList from '../../components/EntryList.astro';
+import { getPublishedEntries } from '../../lib/entries.mjs';
+
+const entries = await getPublishedEntries({ format: 'log' });
+---
+
+<Base title="研究日志 - Deep Value Research" description="跨领域研究日志">
+  <header class="page-header">
+    <p>RESEARCH LOG</p>
+    <h1>研究日志</h1>
+  </header>
+  <EntryList entries={entries} emptyText="暂时还没有已发布的研究日志。" />
+</Base>

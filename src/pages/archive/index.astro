@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import EntryList from '../../components/EntryList.astro';
+import { getPublishedEntries } from '../../lib/entries.mjs';
+
+const entries = await getPublishedEntries();
+---
+
+<Base title="档案 - Deep Value Research" description="Deep Value Research 已发布内容档案">
+  <header class="page-header">
+    <p>ARCHIVE</p>
+    <h1>档案</h1>
+  </header>
+  <EntryList entries={entries} />
+</Base>

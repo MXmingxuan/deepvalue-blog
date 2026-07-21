@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import EntryList from '../../components/EntryList.astro';
+import { getPublishedEntries } from '../../lib/entries.mjs';
+
+const entries = await getPublishedEntries({ domain: 'beyond' });
+---
+
+<Base title="边界之外 - Deep Value Research" description="边界之外的研究与探索">
+  <header class="page-header">
+    <p>BEYOND</p>
+    <h1>边界之外</h1>
+  </header>
+  <EntryList entries={entries} />
+</Base>

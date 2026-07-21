@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import EntryList from '../../components/EntryList.astro';
+import { getPublishedEntries } from '../../lib/entries.mjs';
+
+const entries = await getPublishedEntries({ domain: 'ai' });
+---
+
+<Base title="AI 与技术 - Deep Value Research" description="AI 应用、技术与研究工作流探索">
+  <header class="page-header">
+    <p>AI &amp; TECHNOLOGY</p>
+    <h1>AI 与技术</h1>
+  </header>
+  <EntryList entries={entries} />
+</Base>
