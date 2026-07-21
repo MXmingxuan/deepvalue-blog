@@ -6,10 +6,75 @@ import { getPublishedEntries } from '../../lib/entries.mjs';
 const entries = await getPublishedEntries();
 ---
 
-<Base title="档案 - Deep Value Research" description="Deep Value Research 已发布内容档案">
-  <header class="page-header">
-    <p>ARCHIVE</p>
-    <h1>档案</h1>
+<Base title="档案 - Deep Value Research" description="Deep Value Research 已发布文章与研究日志的时间档案">
+  <header class="publication-header">
+    <div class="publication-kicker">
+      <p>ARCHIVE</p>
+      <span>CHRONOLOGICAL INDEX</span>
+    </div>
+    <div class="publication-copy">
+      <h1>档案</h1>
+      <p class="publication-description">
+        按最近更新与首次发布日期排列全部已发布文章和研究日志。这里提供紧凑的时间索引，不展示草稿或归档状态内容。
+      </p>
+    </div>
   </header>
-  <EntryList entries={entries} />
+
+  <section class="chronological-index" aria-labelledby="archive-index-title">
+    <header>
+      <div>
+        <p>PUBLICATION RECORD</p>
+        <h2 id="archive-index-title">已发布内容</h2>
+      </div>
+      <span>{String(entries.length).padStart(2, '0')} ENTRIES</span>
+    </header>
+
+    <EntryList
+      entries={entries}
+      emptyText="档案暂时为空；已发布的文章和研究日志会按时间出现在这里。"
+      compact
+    />
+  </section>
 </Base>
+
+<style>
+  .chronological-index {
+    margin-top: var(--space-6);
+  }
+
+  .chronological-index > header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .chronological-index > header p,
+  .chronological-index > header h2,
+  .chronological-index > header span {
+    margin: 0;
+  }
+
+  .chronological-index > header p,
+  .chronological-index > header span {
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.09em;
+  }
+
+  .chronological-index > header h2 {
+    margin-top: var(--space-1);
+    font-size: var(--step-3);
+    font-weight: var(--weight-medium);
+    line-height: 1.15;
+  }
+
+  @media (max-width: 700px) {
+    .chronological-index {
+      margin-top: var(--space-5);
+    }
+  }
+</style>

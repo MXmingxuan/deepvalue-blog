@@ -1,27 +1,130 @@
 ---
-const { entries, emptyText = '暂时没有已发布内容。' } = Astro.props;
+const {
+  entries,
+  emptyText = '暂时没有已发布内容。',
+  groupByFormat = false,
+  compact = false,
+} = Astro.props;
+
+const domainLabels = {
+  investment: '投资研究',
+  ai: 'AI 与技术',
+  beyond: '边界之外',
+};
+
+const formatLabels = {
+  article: '研究文章',
+  log: '研究日志',
+};
+
+const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+const groups = groupByFormat
+  ? [
+      {
+        id: 'article',
+        label: '研究文章',
+        eyebrow: 'ARTICLES',
+        emptyText: '本领域暂时没有已发布的研究文章。',
+        entries: entries.filter(entry => entry.data.format === 'article'),
+      },
+      {
+        id: 'log',
+        label: '研究日志',
+        eyebrow: 'LOGS',
+        emptyText: '本领域暂时没有已发布的研究日志。',
+        entries: entries.filter(entry => entry.data.format === 'log'),
+      },
+    ]
+  : [
+      {
+        id: 'all',
+        label: undefined,
+        eyebrow: undefined,
+        emptyText,
+        entries,
+      },
+    ];
 ---
 
-<div data-entry-list>
+<div
+  class:list={['entry-list-shell', { 'is-compact': compact, 'is-grouped': groupByFormat }]}
+  data-entry-list
+>
   {entries.length > 0 ? (
-    <ol class="entry-list">
-      {entries.map(entry => (
-        <li
-          data-entry
-          data-section={entry.data.section}
-          data-topic={entry.data.topic}
+    <div class="entry-groups">
+      {groups.map(group => (
+        <section
+          class="entry-group"
+          data-entry-group={group.id}
+          aria-label={group.label || '已发布内容'}
         >
-          <a href={`/blog/${entry.data.publish_id}`}>{entry.data.title}</a>
-          <p>{entry.data.summary}</p>
-          <small>
-            {entry.data.published_at.toLocaleDateString('zh-CN')}
-            {' · '}{entry.data.format === 'article' ? '研究文章' : '研究日志'}
-          </small>
-        </li>
+          {group.label && (
+            <header class="entry-group-header">
+              <div>
+                <p>{group.eyebrow}</p>
+                <h2>{group.label}</h2>
+              </div>
+              <span>{String(group.entries.length).padStart(2, '0')}</span>
+            </header>
+          )}
+
+          {group.entries.length > 0 ? (
+            <ol class="entry-list">
+              {group.entries.map(entry => (
+                <li
+                  class="entry-item"
+                  data-entry
+                  data-domain={entry.data.domain}
+                  data-section={entry.data.section || ''}
+                  data-topic={entry.data.topic || ''}
+                >
+                  <div class="entry-date-rail">
+                    <time datetime={entry.data.published_at.toISOString()}>
+                      {dateFormatter.format(entry.data.published_at)}
+                    </time>
+                    <span>{entry.data.section || entry.data.topic || 'general'}</span>
+                  </div>
+
+                  <div class="entry-main">
+                    <div class="entry-metadata">
+                      <span>{domainLabels[entry.data.domain]}</span>
+                      <span>{formatLabels[entry.data.format]}</span>
+                      {entry.data.topic && <span>{entry.data.topic}</span>}
+                    </div>
+                    <a class="entry-title" href={`/blog/${entry.data.publish_id}/`}>
+                      {entry.data.title}
+                    </a>
+                    {entry.data.summary && <p class="entry-summary">{entry.data.summary}</p>}
+                    {entry.data.tags.length > 0 && (
+                      <div class="entry-tags" aria-label="标签">
+                        {entry.data.tags.map(tag => <span class="entry-tag">#{tag}</span>)}
+                      </div>
+                    )}
+                  </div>
+
+                  <a class="entry-action" href={`/blog/${entry.data.publish_id}/`}>
+                    {entry.data.format === 'article' ? '阅读全文' : '查看日志'}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p class="entry-empty entry-group-empty" data-group-empty>{group.emptyText}</p>
+          )}
+        </section>
       ))}
-    </ol>
-  ) : <p class="empty" data-unfiltered-empty>{emptyText}</p>}
-  <p class="empty" data-filtered-empty hidden>此专题暂时没有已发布内容。</p>
+    </div>
+  ) : (
+    <p class="entry-empty" data-unfiltered-empty>{emptyText}</p>
+  )}
+
+  <p class="entry-empty" data-filtered-empty hidden>此筛选条件下暂时没有已发布内容。</p>
 </div>
 
 <script>
@@ -29,31 +132,455 @@ const { entries, emptyText = '暂时没有已发布内容。' } = Astro.props;
   const section = parameters.get('section') || '';
   const topic = parameters.get('topic') || '';
 
-  if (section || topic) {
-    document.querySelectorAll<HTMLElement>('[data-entry-list]').forEach(root => {
+  document.querySelectorAll<HTMLElement>('[data-entry-list]').forEach(root => {
+    const scope = root.closest<HTMLElement>('[data-entry-filter-scope]');
+    const domainButtons = scope?.querySelectorAll<HTMLButtonElement>('[data-domain-filter]') || [];
+    let activeDomain = 'all';
+
+    const applyFilters = () => {
       const entries = root.querySelectorAll<HTMLElement>('[data-entry]');
+      const isFiltering = Boolean(section || topic || activeDomain !== 'all');
       let visibleCount = 0;
 
       entries.forEach(entry => {
         const matchesSection = !section || entry.dataset.section === section;
         const matchesTopic = !topic || entry.dataset.topic === topic;
-        entry.hidden = !(matchesSection && matchesTopic);
+        const matchesDomain = activeDomain === 'all' || entry.dataset.domain === activeDomain;
+        entry.hidden = !(matchesSection && matchesTopic && matchesDomain);
         if (!entry.hidden) visibleCount += 1;
+      });
+
+      root.querySelectorAll<HTMLElement>('[data-entry-group]').forEach(group => {
+        const groupEntries = group.querySelectorAll<HTMLElement>('[data-entry]');
+        const groupVisibleCount = [...groupEntries].filter(entry => !entry.hidden).length;
+        group.hidden = isFiltering && groupVisibleCount === 0;
       });
 
       const unfilteredEmpty = root.querySelector<HTMLElement>('[data-unfiltered-empty]');
       const filteredEmpty = root.querySelector<HTMLElement>('[data-filtered-empty]');
-      if (unfilteredEmpty) unfilteredEmpty.hidden = true;
-      if (filteredEmpty) filteredEmpty.hidden = visibleCount !== 0;
+      if (unfilteredEmpty) unfilteredEmpty.hidden = isFiltering;
+      if (filteredEmpty) filteredEmpty.hidden = !isFiltering || visibleCount !== 0;
+    };
+
+    domainButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        activeDomain = button.dataset.domainFilter || 'all';
+        domainButtons.forEach(candidate => {
+          const isActive = candidate === button;
+          candidate.classList.toggle('is-active', isActive);
+          candidate.setAttribute('aria-pressed', String(isActive));
+        });
+        applyFilters();
+      });
     });
-  }
+
+    applyFilters();
+  });
+
+  document.querySelectorAll<HTMLAnchorElement>('[data-section-index] a').forEach(link => {
+    const linkUrl = new URL(link.href);
+    const linkSection = linkUrl.searchParams.get('section') || '';
+    const linkTopic = linkUrl.searchParams.get('topic') || '';
+    const isUnfilteredIndex = !linkSection && !linkTopic && !section && !topic;
+    const isMatchingFilter = Boolean(linkSection || linkTopic)
+      && linkSection === section
+      && (!linkTopic || linkTopic === topic);
+    const isCurrent = isUnfilteredIndex || isMatchingFilter;
+    if (isCurrent) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
 </script>
 
 <style>
-  .entry-list { list-style: none; display: grid; gap: 0; }
-  li { padding: 28px 0; border-bottom: 1px solid var(--line); }
-  a { font-size: clamp(24px, 4vw, 42px); line-height: 1.15; }
-  p { max-width: 720px; margin-top: 10px; color: var(--muted); }
-  small { display: block; margin-top: 12px; font-family: var(--font-mono); color: var(--muted); }
-  .empty { padding: 32px 0; color: var(--muted); }
+  .entry-list-shell,
+  .entry-groups {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .entry-group {
+    min-width: 0;
+  }
+
+  .entry-group-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .entry-group-header p,
+  .entry-group-header span {
+    margin: 0;
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.11em;
+  }
+
+  .entry-group-header h2 {
+    margin: var(--space-1) 0 0;
+    font-size: var(--step-3);
+    font-weight: var(--weight-medium);
+    line-height: 1.15;
+  }
+
+  .entry-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .entry-group-header + .entry-list {
+    border-top: 0;
+  }
+
+  .entry-item {
+    display: grid;
+    grid-template-columns: minmax(7.5rem, 0.23fr) minmax(0, 1fr) auto;
+    gap: clamp(1.25rem, 3vw, 3.25rem);
+    align-items: start;
+    padding: clamp(1.55rem, 3vw, 2.5rem) 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .entry-date-rail {
+    display: grid;
+    gap: var(--space-1);
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+  }
+
+  .entry-date-rail span {
+    overflow-wrap: anywhere;
+  }
+
+  .entry-main {
+    display: grid;
+    min-width: 0;
+    gap: var(--space-2);
+  }
+
+  .entry-metadata,
+  .entry-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-2);
+  }
+
+  .entry-metadata {
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .entry-metadata span + span::before {
+    margin-right: var(--space-2);
+    color: var(--color-copper-text);
+    content: "/";
+  }
+
+  .entry-title {
+    width: fit-content;
+    max-width: 50rem;
+    font-size: var(--step-2);
+    font-weight: var(--weight-medium);
+    letter-spacing: -0.015em;
+    line-height: 1.24;
+    text-wrap: balance;
+    transition: color var(--duration-fast) linear;
+  }
+
+  .entry-title:hover {
+    color: var(--link-primary);
+  }
+
+  .entry-summary {
+    max-width: 47rem;
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: var(--step-0);
+    line-height: 1.75;
+  }
+
+  .entry-tags {
+    margin-top: var(--space-1);
+  }
+
+  .entry-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 0.18rem 0.45rem;
+    color: var(--metadata-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0;
+    font-family: var(--font-data);
+    font-size: 0.66rem;
+    letter-spacing: 0.03em;
+  }
+
+  .entry-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    min-width: 6.7rem;
+    min-height: 44px;
+    padding-bottom: 0.15rem;
+    color: var(--link-primary);
+    border-bottom: 1px solid currentColor;
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.05em;
+    transition: color var(--duration-fast) linear;
+  }
+
+  .entry-action:hover {
+    color: var(--text-primary);
+  }
+
+  .entry-empty {
+    margin: 0;
+    padding: var(--space-5) 0;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .entry-group-empty {
+    border-top: 0;
+  }
+
+  .is-compact,
+  .is-compact .entry-groups {
+    gap: 0;
+  }
+
+  .is-compact .entry-item {
+    grid-template-columns: minmax(7.5rem, 0.18fr) minmax(0, 1fr) 2.5rem;
+    gap: var(--space-4);
+    align-items: center;
+    padding: 1rem 0;
+  }
+
+  .is-compact .entry-main {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .is-compact .entry-metadata {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .is-compact .entry-title {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: var(--step-0);
+    line-height: 1.5;
+  }
+
+  .is-compact .entry-summary,
+  .is-compact .entry-tags {
+    display: none;
+  }
+
+  .is-compact .entry-action {
+    min-width: 2.5rem;
+    width: 2.5rem;
+    overflow: hidden;
+    color: transparent;
+    border: 0;
+    white-space: nowrap;
+  }
+
+  .is-compact .entry-action span {
+    color: var(--link-primary);
+  }
+
+  @media (max-width: 760px) {
+    .entry-list-shell,
+    .entry-groups {
+      gap: var(--space-5);
+    }
+
+    .entry-item,
+    .is-compact .entry-item {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2);
+      padding: var(--space-4) 0;
+    }
+
+    .entry-date-rail {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    .entry-action,
+    .is-compact .entry-action {
+      width: fit-content;
+      min-width: 0;
+      color: var(--link-primary);
+      border-bottom: 1px solid currentColor;
+    }
+
+    .is-compact .entry-main {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+    }
+
+    .is-compact .entry-metadata,
+    .is-compact .entry-title {
+      grid-column: 1;
+      grid-row: auto;
+    }
+  }
+</style>
+
+<style is:global>
+  .publication-header {
+    display: grid;
+    grid-template-columns: minmax(8.5rem, 0.25fr) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 6.5rem);
+    padding: clamp(2rem, 5vw, 4.75rem) 0 var(--space-5);
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .publication-kicker {
+    display: grid;
+    align-content: space-between;
+    min-height: 9rem;
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.1em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .publication-kicker p,
+  .publication-copy h1,
+  .publication-copy p {
+    margin: 0;
+  }
+
+  .publication-kicker span {
+    color: var(--link-primary);
+  }
+
+  .publication-copy {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .publication-copy h1 {
+    max-width: 12ch;
+    font-size: var(--step-4);
+    font-weight: var(--weight-medium);
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  .publication-description {
+    max-width: 46rem;
+    color: var(--text-secondary);
+    font-size: var(--step-1);
+    line-height: 1.75;
+  }
+
+  .section-index {
+    display: grid;
+    grid-template-columns: minmax(8.5rem, 0.25fr) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 6.5rem);
+    margin-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .section-index > p {
+    margin: 0;
+    padding: 1rem 0;
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.1em;
+  }
+
+  .section-index ol {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .section-index a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.55rem 1.05rem;
+    color: var(--metadata-primary);
+    border-left: 1px solid var(--border-subtle);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    transition: color var(--duration-fast) linear, background var(--duration-fast) linear;
+  }
+
+  .section-index a:hover,
+  .section-index a[aria-current="page"] {
+    color: var(--text-inverse);
+    background: var(--color-ink);
+  }
+
+  @media (max-width: 700px) {
+    .publication-header,
+    .section-index {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+
+    .publication-header {
+      padding-top: var(--space-4);
+    }
+
+    .publication-kicker {
+      display: flex;
+      min-height: 0;
+      justify-content: space-between;
+    }
+
+    .publication-copy h1 {
+      font-size: var(--step-3);
+    }
+
+    .section-index {
+      margin-bottom: var(--space-5);
+    }
+
+    .section-index > p {
+      padding-bottom: 0;
+    }
+
+    .section-index ol {
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .section-index a {
+      border-left: 0;
+      border-right: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+  }
 </style>

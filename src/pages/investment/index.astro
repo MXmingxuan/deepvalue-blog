@@ -4,12 +4,42 @@ import EntryList from '../../components/EntryList.astro';
 import { getPublishedEntries } from '../../lib/entries.mjs';
 
 const entries = await getPublishedEntries({ domain: 'investment' });
+
+const sections = [
+  { href: '/investment/', label: '全部' },
+  { href: '/investment/?section=commodities', label: '大宗商品' },
+  { href: '/investment/?section=industries', label: '产业与公司' },
+  { href: '/investment/?section=macro', label: '宏观与周期' },
+  { href: '/investment/?section=markets', label: '市场与交易' },
+];
 ---
 
 <Base title="投资研究 - Deep Value Research" description="大宗商品、产业、宏观、市场与交易研究">
-  <header class="page-header">
-    <p>INVESTMENT RESEARCH</p>
-    <h1>投资研究</h1>
+  <header class="publication-header">
+    <div class="publication-kicker">
+      <p>INVESTMENT RESEARCH</p>
+      <span>01 / PRIMARY DOMAIN</span>
+    </div>
+    <div class="publication-copy">
+      <h1>投资研究</h1>
+      <p class="publication-description">
+        围绕大宗商品、产业与公司、宏观周期以及市场与交易展开研究。文章沉淀可复用的判断，日志保留证据与观点的演变。
+      </p>
+    </div>
   </header>
-  <EntryList entries={entries} />
+
+  <nav class="section-index" data-section-index aria-label="投资研究栏目">
+    <p>SECTION INDEX</p>
+    <ol>
+      {sections.map(section => (
+        <li><a href={section.href}>{section.label}</a></li>
+      ))}
+    </ol>
+  </nav>
+
+  <EntryList
+    entries={entries}
+    emptyText="投资研究暂时没有已发布内容；后续文章与研究日志会在发布后出现在这里。"
+    groupByFormat
+  />
 </Base>

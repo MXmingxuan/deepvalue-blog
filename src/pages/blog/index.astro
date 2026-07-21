@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import EntryList from '../../components/EntryList.astro';
 import { getPublishedEntries } from '../../lib/entries.mjs';
 
 const sortedPosts = await getPublishedEntries({ format: 'article' });
@@ -13,220 +14,241 @@ const domainLabels = {
 const allDomains = [...new Set(sortedPosts.map(post => post.data.domain))];
 ---
 
-<Base title="研究文章 - Deep Value Research" description="产业研究文章归档">
-  <section class="page-header">
-    <p class="eyebrow">RESEARCH NOTES</p>
-    <h1 class="page-title">研究文章</h1>
-    <p class="page-intro">按专题、类型和时间沉淀研究记录。每篇文章都尽量保留核心假设、证据边界和后续证伪条件。</p>
-  </section>
+<Base title="研究文章 - Deep Value Research" description="Deep Value Research 已发布研究文章索引">
+  <header class="article-index-header">
+    <div class="article-index-kicker">
+      <p>RESEARCH ARTICLES</p>
+      <span>DURABLE CONCLUSIONS</span>
+    </div>
+    <div class="article-index-copy">
+      <h1>研究文章</h1>
+      <p>按领域、专题和时间沉淀可复用的研究结论，尽量保留核心假设、证据边界和后续证伪条件。</p>
+    </div>
+  </header>
 
-  <div class="layout">
-    <aside class="sidebar">
-      <p class="sidebar-label">专题</p>
-      <div class="filter-list">
-        <button data-domain="all" class="filter-btn active">全部</button>
-        {allDomains.map(domain => (
-          <button data-domain={domain} class="filter-btn">{domainLabels[domain]}</button>
+  <div class="article-index-layout" data-entry-filter-scope>
+    <aside class="domain-filter" aria-label="按领域筛选文章">
+      <p>DOMAIN FILTER</p>
+      <div>
+        <button type="button" class="is-active" data-domain-filter="all" aria-pressed="true">
+          <span>00</span>全部
+        </button>
+        {allDomains.map((domain, index) => (
+          <button type="button" data-domain-filter={domain} aria-pressed="false">
+            <span>{String(index + 1).padStart(2, '0')}</span>{domainLabels[domain]}
+          </button>
         ))}
       </div>
     </aside>
 
-    <section class="content" aria-label="文章列表">
-      <ul class="post-list" id="post-list">
-        {sortedPosts.map(post => (
-          <li class="post-item" data-domain={post.data.domain}>
-            <a href={`/blog/${post.data.publish_id}`} class="post-link">
-              <span class="post-title">{post.data.title}</span>
-              <span class="post-arrow">打开</span>
-            </a>
-            <p class="post-summary">{post.data.summary}</p>
-            <div class="post-meta">
-              <span>{post.data.published_at.toLocaleDateString('zh-CN')}</span>
-              <span>{domainLabels[post.data.domain]}</span>
-              <span>{post.data.format}</span>
-              {post.data.tags.slice(0, 3).map(tag => <span class="tag">{tag}</span>)}
-            </div>
-          </li>
-        ))}
-      </ul>
-      <p id="no-posts" class="no-posts">没有匹配的研究文章。</p>
+    <section class="article-index-list" aria-labelledby="article-list-title">
+      <header>
+        <div>
+          <p>ARTICLE INDEX</p>
+          <h2 id="article-list-title">全部文章</h2>
+        </div>
+        <span>{String(sortedPosts.length).padStart(2, '0')} PUBLISHED</span>
+      </header>
+
+      <EntryList
+        entries={sortedPosts}
+        emptyText="暂时没有已发布的研究文章。"
+      />
     </section>
   </div>
 </Base>
 
-<script>
-  const buttons = document.querySelectorAll('.filter-btn');
-  const posts = document.querySelectorAll('.post-item');
-  const noPosts = document.getElementById('no-posts');
-
-  buttons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const domain = btn.getAttribute('data-domain');
-      buttons.forEach((button) => button.classList.remove('active'));
-      btn.classList.add('active');
-
-      let visibleCount = 0;
-      posts.forEach((post) => {
-        const shouldShow = domain === 'all' || post.getAttribute('data-domain') === domain;
-        (post as HTMLElement).style.display = shouldShow ? '' : 'none';
-        if (shouldShow) visibleCount++;
-      });
-
-      if (noPosts) {
-        noPosts.style.display = visibleCount === 0 ? 'block' : 'none';
-      }
-    });
-  });
-</script>
-
 <style>
-  .page-header {
-    padding: 72px 0 52px;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 48px;
+  .article-index-header {
+    display: grid;
+    grid-template-columns: minmax(9rem, 0.25fr) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 6.5rem);
+    padding: clamp(2rem, 5vw, 4.75rem) 0 var(--space-6);
+    border-bottom: 1px solid var(--color-ink);
   }
 
-  .eyebrow,
-  .sidebar-label,
-  .post-meta,
-  .no-posts {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
+  .article-index-kicker {
+    display: grid;
+    align-content: space-between;
+    min-height: 9rem;
     color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.1em;
+    line-height: 1.6;
   }
 
-  .page-title {
-    margin-top: 16px;
-    font-size: clamp(48px, 8vw, 92px);
-    font-weight: 500;
-    line-height: 0.96;
-    letter-spacing: 0;
+  .article-index-kicker p,
+  .article-index-copy h1,
+  .article-index-copy p {
+    margin: 0;
   }
 
-  .page-intro {
-    max-width: 680px;
-    margin-top: 24px;
-    font-size: 18px;
-    line-height: 1.8;
-    color: var(--text-secondary);
-  }
-
-  .layout {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 64px;
-    align-items: flex-start;
-  }
-
-  .sidebar {
-    position: sticky;
-    top: 32px;
-  }
-
-  .sidebar-label {
-    margin-bottom: 18px;
-  }
-
-  .filter-list {
-    display: grid;
-    gap: 8px;
-  }
-
-  .filter-btn {
-    width: 100%;
-    padding: 10px 0;
-    border: 0;
-    border-bottom: 1px solid transparent;
-    background: transparent;
-    color: var(--metadata-primary);
-    cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    text-align: left;
-  }
-
-  .filter-btn:hover,
-  .filter-btn.active {
-    color: var(--text);
-    border-bottom-color: var(--text);
-  }
-
-  .post-list {
-    list-style: none;
-    border-top: 1px solid var(--line);
-  }
-
-  .post-item {
-    display: grid;
-    gap: 14px;
-    padding: 28px 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .post-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-  }
-
-  .post-title {
-    font-size: clamp(24px, 4vw, 44px);
-    line-height: 1.12;
-  }
-
-  .post-arrow {
-    font-family: var(--font-mono);
-    font-size: 12px;
+  .article-index-kicker span {
     color: var(--link-primary);
   }
 
-  .post-summary {
-    max-width: 760px;
+  .article-index-copy {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .article-index-copy h1 {
+    font-size: var(--step-4);
+    font-weight: var(--weight-medium);
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+  }
+
+  .article-index-copy p {
+    max-width: 46rem;
     color: var(--text-secondary);
+    font-size: var(--step-1);
+    line-height: 1.75;
   }
 
-  .post-meta {
-    display: flex;
+  .article-index-layout {
+    display: grid;
+    grid-template-columns: minmax(9rem, 0.25fr) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 6.5rem);
+    padding-top: var(--space-6);
+  }
+
+  .domain-filter {
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+    align-self: start;
+  }
+
+  .domain-filter > p {
+    margin: 0 0 var(--space-3);
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.1em;
+  }
+
+  .domain-filter > div {
+    display: grid;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .domain-filter button {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: var(--space-2);
     align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
+    min-height: 44px;
+    padding: 0.65rem 0;
+    color: var(--metadata-primary);
+    border: 0;
+    border-bottom: 1px solid var(--border-subtle);
+    border-radius: 0;
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    text-align: left;
   }
 
-  .no-posts {
-    display: none;
-    padding: 32px 0;
+  .domain-filter button span {
+    color: var(--link-primary);
   }
 
-  @media (max-width: 780px) {
-    .layout {
+  .domain-filter button:hover,
+  .domain-filter button.is-active {
+    color: var(--text-primary);
+  }
+
+  .domain-filter button.is-active {
+    box-shadow: inset 3px 0 0 var(--color-copper-text);
+    padding-left: var(--space-2);
+  }
+
+  .article-index-list {
+    min-width: 0;
+  }
+
+  .article-index-list > header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .article-index-list > header p,
+  .article-index-list > header h2,
+  .article-index-list > header span {
+    margin: 0;
+  }
+
+  .article-index-list > header p,
+  .article-index-list > header span {
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.09em;
+  }
+
+  .article-index-list > header h2 {
+    margin-top: var(--space-1);
+    font-size: var(--step-3);
+    font-weight: var(--weight-medium);
+    line-height: 1.15;
+  }
+
+  @media (max-width: 760px) {
+    .article-index-header,
+    .article-index-layout {
       grid-template-columns: 1fr;
-      gap: 32px;
+      gap: var(--space-3);
     }
 
-    .sidebar {
+    .article-index-header {
+      padding-top: var(--space-4);
+    }
+
+    .article-index-kicker {
+      display: flex;
+      min-height: 0;
+      justify-content: space-between;
+    }
+
+    .article-index-copy h1 {
+      font-size: var(--step-3);
+    }
+
+    .article-index-layout {
+      padding-top: var(--space-5);
+    }
+
+    .domain-filter {
       position: static;
     }
 
-    .filter-list {
+    .domain-filter > div {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
     }
 
-    .filter-btn {
+    .domain-filter button {
+      display: inline-flex;
       width: auto;
-      min-height: 36px;
-      padding: 8px 12px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
+      padding: 0.65rem 0.85rem;
+      border-right: 1px solid var(--border-subtle);
+      text-align: center;
     }
 
-    .filter-btn.active {
-      background: var(--text);
+    .domain-filter button.is-active {
       color: var(--text-inverse);
-      border-color: var(--text);
+      background: var(--color-ink);
+      box-shadow: none;
+    }
+
+    .domain-filter button.is-active span {
+      color: var(--color-copper);
     }
   }
 </style>

@@ -4,12 +4,42 @@ import EntryList from '../../components/EntryList.astro';
 import { getPublishedEntries } from '../../lib/entries.mjs';
 
 const entries = await getPublishedEntries({ domain: 'beyond' });
+
+const sections = [
+  { href: '/beyond/', label: '全部' },
+  { href: '/beyond/?section=life', label: '生活观察' },
+  { href: '/beyond/?section=reading', label: '阅读与思考' },
+  { href: '/beyond/?section=projects', label: '个人项目' },
+  { href: '/beyond/?section=other', label: '其他探索' },
+];
 ---
 
-<Base title="边界之外 - Deep Value Research" description="边界之外的研究与探索">
-  <header class="page-header">
-    <p>BEYOND</p>
-    <h1>边界之外</h1>
+<Base title="边界之外 - Deep Value Research" description="生活、阅读、个人项目与其他边界探索">
+  <header class="publication-header">
+    <div class="publication-kicker">
+      <p>BEYOND THE BOUNDARY</p>
+      <span>03 / LOWER EMPHASIS</span>
+    </div>
+    <div class="publication-copy">
+      <h1>边界之外</h1>
+      <p class="publication-description">
+        收录不以投资或 AI 为主要对象的生活观察、阅读思考、个人项目与其他兴趣，保留专业研究之外的必要余地。
+      </p>
+    </div>
   </header>
-  <EntryList entries={entries} />
+
+  <nav class="section-index" data-section-index aria-label="边界之外栏目">
+    <p>SECTION INDEX</p>
+    <ol>
+      {sections.map(section => (
+        <li><a href={section.href}>{section.label}</a></li>
+      ))}
+    </ol>
+  </nav>
+
+  <EntryList
+    entries={entries}
+    emptyText="边界之外暂时没有已发布内容；相关记录会在发布后出现在这里。"
+    groupByFormat
+  />
 </Base>

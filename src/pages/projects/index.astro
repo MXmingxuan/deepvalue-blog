@@ -5,123 +5,268 @@ import { getCollection } from 'astro:content';
 const projects = await getCollection('projects');
 ---
 
-<Base title="项目 - 宋明璇" description="投资分析工具与 AI 应用项目">
-  <section class="page-header">
-    <p class="label">// PROJECTS</p>
-    <h1>项目</h1>
-  </section>
+<Base title="项目 - Deep Value Research" description="投资分析工具、交易研究系统与 AI 应用项目">
+  <header class="project-header">
+    <div class="project-kicker">
+      <p>PROJECTS &amp; TOOLS</p>
+      <span>WORKING SYSTEMS</span>
+    </div>
+    <div class="project-copy">
+      <h1>项目</h1>
+      <p>投资分析工具、交易研究系统与 AI 应用实践。这里保留项目当前用途、技术构成和可访问入口。</p>
+    </div>
+  </header>
 
-  <div class="project-list">
-    {projects.map(project => (
-      <article class="project-item">
-        <header>
-          <span class="project-title">{project.data.title}</span>
-          {project.data.status && (
-            <span class="status">{project.data.status}</span>
+  <section class="project-index" aria-labelledby="project-index-title">
+    <header>
+      <div>
+        <p>PROJECT INDEX</p>
+        <h2 id="project-index-title">项目列表</h2>
+      </div>
+      <span>{String(projects.length).padStart(2, '0')} PROJECTS</span>
+    </header>
+
+    <ol>
+      {projects.map((project, index) => (
+        <li class="project-item">
+          <span class="project-number">{String(index + 1).padStart(2, '0')}</span>
+          <article>
+            <header>
+              <h3>{project.data.title}</h3>
+              {project.data.status && <span class="project-status">{project.data.status}</span>}
+            </header>
+            <p>{project.data.description}</p>
+            {project.data.tech && project.data.tech.length > 0 && (
+              <div class="project-tech" aria-label="技术栈">
+                {project.data.tech.map(tech => <span>{tech}</span>)}
+              </div>
+            )}
+          </article>
+          {project.data.link ? (
+            <a class="project-link" href={project.data.link} target="_blank" rel="noreferrer">
+              查看项目 <span aria-hidden="true">↗</span>
+            </a>
+          ) : (
+            <span class="project-link-unavailable">暂无公开入口</span>
           )}
-        </header>
-        <p class="project-desc">{project.data.description}</p>
-        {project.data.tech && project.data.tech.length > 0 && (
-          <div class="project-tech">
-            {project.data.tech.map(tech => (
-              <span class="tech-tag">{tech}</span>
-            ))}
-          </div>
-        )}
-        {project.data.link && (
-          <a href={project.data.link} target="_blank" class="project-link">
-            → 查看项目
-          </a>
-        )}
-      </article>
-    ))}
-  </div>
+        </li>
+      ))}
+    </ol>
+  </section>
 </Base>
 
 <style>
-  .page-header {
-    padding: 48px 0 32px;
-    border-bottom: 1px solid var(--color-border);
-    margin-bottom: 32px;
-  }
-
-  .label {
-    font-family: var(--font-mono);
-    font-size: 1rem;
-    color: var(--color-accent);
-    margin-bottom: 12px;
-  }
-
-  .page-header h1 {
-    font-size: 1.75rem;
-  }
-
-  .project-list {
+  .project-header {
     display: grid;
-    gap: 0;
+    grid-template-columns: minmax(9rem, 0.25fr) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 6.5rem);
+    padding: clamp(2rem, 5vw, 4.75rem) 0 var(--space-6);
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .project-kicker {
+    display: grid;
+    align-content: space-between;
+    min-height: 9rem;
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.1em;
+    line-height: 1.6;
+  }
+
+  .project-kicker p,
+  .project-copy h1,
+  .project-copy p {
+    margin: 0;
+  }
+
+  .project-kicker span {
+    color: var(--link-primary);
+  }
+
+  .project-copy {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .project-copy h1 {
+    color: var(--text-primary);
+    font-size: var(--step-4);
+    font-weight: var(--weight-medium);
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+  }
+
+  .project-copy p {
+    max-width: 44rem;
+    color: var(--text-secondary);
+    font-size: var(--step-1);
+    line-height: 1.75;
+  }
+
+  .project-index {
+    margin-top: var(--space-6);
+  }
+
+  .project-index > header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .project-index > header p,
+  .project-index > header h2,
+  .project-index > header span {
+    margin: 0;
+  }
+
+  .project-index > header p,
+  .project-index > header span,
+  .project-number,
+  .project-status,
+  .project-tech,
+  .project-link,
+  .project-link-unavailable {
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.06em;
+  }
+
+  .project-index > header p,
+  .project-index > header span,
+  .project-number,
+  .project-link-unavailable {
+    color: var(--metadata-primary);
+  }
+
+  .project-index > header h2 {
+    margin-top: var(--space-1);
+    font-size: var(--step-3);
+    font-weight: var(--weight-medium);
+  }
+
+  .project-index ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   .project-item {
-    padding: 24px 0;
-    border-bottom: 1px solid var(--color-border);
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+    gap: clamp(1rem, 3vw, 3rem);
+    align-items: start;
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border-subtle);
   }
 
-  .project-item:first-child {
-    padding-top: 0;
+  .project-number {
+    padding-top: 0.35rem;
   }
 
-  .project-item header {
+  .project-item article {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .project-item article > header {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
+    gap: var(--space-2);
   }
 
-  .project-title {
-    font-size: 1.0625rem;
-    font-weight: 500;
-    color: var(--color-primary);
+  .project-item h3,
+  .project-item article > p {
+    margin: 0;
   }
 
-  .status {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: #ffffff;
-    background: var(--color-accent);
-    padding: 2px 6px;
-    border-radius: 2px;
+  .project-item h3 {
+    color: var(--text-primary);
+    font-size: var(--step-1);
+    font-weight: var(--weight-medium);
+    line-height: 1.35;
   }
 
-  .project-desc {
-    font-size: 0.875rem;
-    color: var(--color-text-dim);
-    line-height: 1.6;
-    margin-bottom: 12px;
+  .project-status {
+    padding: 0.2rem 0.45rem;
+    color: var(--text-inverse);
+    border-radius: 0;
+    background: var(--color-ink);
+  }
+
+  .project-item article > p {
+    max-width: 44rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
   }
 
   .project-tech {
     display: flex;
-    gap: 6px;
     flex-wrap: wrap;
-    margin-bottom: 12px;
+    gap: var(--space-1);
+    margin-top: var(--space-1);
+    color: var(--metadata-primary);
   }
 
-  .tech-tag {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    color: var(--color-text-dim);
-    background: var(--color-surface);
-    padding: 3px 8px;
-    border-radius: 2px;
+  .project-tech span {
+    padding: 0.2rem 0.4rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: 0;
+  }
+
+  .project-link,
+  .project-link-unavailable {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    white-space: nowrap;
   }
 
   .project-link {
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
-    color: var(--color-accent);
+    color: var(--link-primary);
+    border-bottom: 1px solid currentColor;
   }
 
   .project-link:hover {
-    color: var(--color-accent-dim);
+    color: var(--text-primary);
+  }
+
+  @media (max-width: 700px) {
+    .project-header {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+      padding-top: var(--space-4);
+    }
+
+    .project-kicker {
+      display: flex;
+      min-height: 0;
+      justify-content: space-between;
+    }
+
+    .project-copy h1 {
+      font-size: var(--step-3);
+    }
+
+    .project-index {
+      margin-top: var(--space-5);
+    }
+
+    .project-item {
+      grid-template-columns: 2rem minmax(0, 1fr);
+      gap: var(--space-2);
+    }
+
+    .project-link,
+    .project-link-unavailable {
+      grid-column: 2;
+      width: fit-content;
+    }
   }
 </style>

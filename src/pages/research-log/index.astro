@@ -1,15 +1,535 @@
 ---
 import Base from '../../layouts/Base.astro';
-import EntryList from '../../components/EntryList.astro';
+import { render } from 'astro:content';
 import { getPublishedEntries } from '../../lib/entries.mjs';
 
 const entries = await getPublishedEntries({ format: 'log' });
+const SHORT_LOG_CHARACTER_LIMIT = 520;
+
+const domainLabels = {
+  investment: '投资研究',
+  ai: 'AI 与技术',
+  beyond: '边界之外',
+};
+
+const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+const timeFormatter = new Intl.DateTimeFormat('zh-CN', {
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+});
+
+function plainText(markdown = '') {
+  return markdown
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/^[-*+]\s+/gm, '')
+    .replace(/^>\s?/gm, '')
+    .replace(/[`*_~]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+const logRows = await Promise.all(entries.map(async entry => {
+  const body = entry.body?.trim() || '';
+  const bodyText = plainText(body);
+  const isLong = bodyText.length > SHORT_LOG_CHARACTER_LIMIT;
+  const rendered = isLong ? undefined : await render(entry);
+  const excerpt = entry.data.summary || `${bodyText.slice(0, 260)}${bodyText.length > 260 ? '…' : ''}`;
+
+  return {
+    entry,
+    isLong,
+    excerpt,
+    Content: rendered?.Content,
+  };
+}));
+
+const topics = [...new Set(entries.map(entry => entry.data.topic).filter(Boolean))];
 ---
 
-<Base title="研究日志 - Deep Value Research" description="跨领域研究日志">
-  <header class="page-header">
-    <p>RESEARCH LOG</p>
-    <h1>研究日志</h1>
+<Base title="研究日志 - Deep Value Research" description="跨领域、按时间保留的研究观察与判断更新">
+  <header class="log-publication-header">
+    <div class="log-heading-index">
+      <p>RESEARCH LOG</p>
+      <span>CHRONOLOGICAL STREAM</span>
+    </div>
+    <div class="log-heading-copy">
+      <h1>研究日志</h1>
+      <p>
+        按时间保留跨领域的观察、证据更新与判断变化。日志可以很短，也可以很长；区别在于它记录的是当时的研究状态，而不是篇幅。
+      </p>
+    </div>
   </header>
-  <EntryList entries={entries} emptyText="暂时还没有已发布的研究日志。" />
+
+  <nav class="log-filter-index" aria-label="研究日志筛选">
+    <p>FILTER STREAM</p>
+    <div>
+      <a href="/research-log/" data-log-filter-link>全部</a>
+      <a href="/research-log/?domain=investment" data-log-filter-link>投资研究</a>
+      <a href="/research-log/?domain=ai" data-log-filter-link>AI 与技术</a>
+      <a href="/research-log/?domain=beyond" data-log-filter-link>边界之外</a>
+      {topics.map(topic => (
+        <a href={`/research-log/?topic=${encodeURIComponent(topic)}`} data-log-filter-link>#{topic}</a>
+      ))}
+    </div>
+  </nav>
+
+  {logRows.length > 0 ? (
+    <section class="log-stream" aria-labelledby="stream-title">
+      <header class="stream-header">
+        <h2 id="stream-title">时间流</h2>
+        <span>{String(logRows.length).padStart(2, '0')} PUBLISHED</span>
+      </header>
+
+      <ol>
+        {logRows.map(({ entry, isLong, excerpt, Content }) => (
+          <li
+            data-log-entry
+            data-domain={entry.data.domain}
+            data-section={entry.data.section || ''}
+            data-topic={entry.data.topic || ''}
+          >
+            <time class="log-timestamp" datetime={entry.data.published_at.toISOString()}>
+              <span>{dateFormatter.format(entry.data.published_at)}</span>
+              <span>{timeFormatter.format(entry.data.published_at)}</span>
+            </time>
+
+            <article class="log-entry">
+              <div class="log-metadata">
+                <span>{domainLabels[entry.data.domain]}</span>
+                {entry.data.topic && <span>{entry.data.topic}</span>}
+                {entry.data.section && <span>{entry.data.section}</span>}
+              </div>
+
+              <h2><a href={`/blog/${entry.data.publish_id}/`}>{entry.data.title}</a></h2>
+
+              {isLong ? (
+                <p class="log-excerpt">{excerpt}</p>
+              ) : Content ? (
+                <div class="log-body"><Content /></div>
+              ) : entry.data.summary ? (
+                <p class="log-excerpt">{entry.data.summary}</p>
+              ) : null}
+
+              {entry.data.tags.length > 0 && (
+                <div class="log-hashtags" aria-label="标签">
+                  {entry.data.tags.map(tag => <span>#{tag}</span>)}
+                </div>
+              )}
+
+              {isLong && (
+                <a class="log-read-more" href={`/blog/${entry.data.publish_id}/`}>
+                  阅读全文 <span aria-hidden="true">↗</span>
+                </a>
+              )}
+            </article>
+          </li>
+        ))}
+      </ol>
+    </section>
+  ) : (
+    <section class="log-empty" data-unfiltered-empty aria-labelledby="empty-log-title">
+      <p>00 / NO PUBLISHED LOGS</p>
+      <div>
+        <h2 id="empty-log-title">研究日志尚未发布</h2>
+        <p>已发布的研究日志会按时间顺序出现在这里，并保留领域、主题、标签和当时的判断。当前不以示例卡片填充。</p>
+      </div>
+    </section>
+  )}
+
+  <p class="filtered-empty" data-filtered-empty hidden>此筛选条件下暂时没有已发布的研究日志。</p>
 </Base>
+
+<script>
+  const parameters = new URLSearchParams(window.location.search);
+  const domain = parameters.get('domain') || '';
+  const section = parameters.get('section') || '';
+  const topic = parameters.get('topic') || '';
+  const isFiltering = Boolean(domain || section || topic);
+  const entries = document.querySelectorAll<HTMLElement>('[data-log-entry]');
+  let visibleCount = 0;
+
+  entries.forEach(entry => {
+    const matchesDomain = !domain || entry.dataset.domain === domain;
+    const matchesSection = !section || entry.dataset.section === section;
+    const matchesTopic = !topic || entry.dataset.topic === topic;
+    entry.hidden = !(matchesDomain && matchesSection && matchesTopic);
+    if (!entry.hidden) visibleCount += 1;
+  });
+
+  const unfilteredEmpty = document.querySelector<HTMLElement>('[data-unfiltered-empty]');
+  const filteredEmpty = document.querySelector<HTMLElement>('[data-filtered-empty]');
+  if (unfilteredEmpty) unfilteredEmpty.hidden = isFiltering;
+  if (filteredEmpty) filteredEmpty.hidden = !isFiltering || visibleCount !== 0;
+
+  document.querySelectorAll<HTMLAnchorElement>('[data-log-filter-link]').forEach(link => {
+    const target = new URL(link.href);
+    const isCurrent =
+      (target.searchParams.get('domain') || '') === domain &&
+      (target.searchParams.get('section') || '') === section &&
+      (target.searchParams.get('topic') || '') === topic;
+    if (isCurrent) link.setAttribute('aria-current', 'page');
+  });
+</script>
+
+<style>
+  .log-publication-header {
+    display: grid;
+    grid-template-columns: minmax(9rem, 0.25fr) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 6.5rem);
+    padding: clamp(2rem, 5vw, 4.75rem) 0 var(--space-5);
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .log-heading-index {
+    display: grid;
+    align-content: space-between;
+    min-height: 9rem;
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.1em;
+    line-height: 1.6;
+  }
+
+  .log-heading-index p,
+  .log-heading-copy h1,
+  .log-heading-copy p {
+    margin: 0;
+  }
+
+  .log-heading-index span {
+    color: var(--link-primary);
+  }
+
+  .log-heading-copy {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .log-heading-copy h1 {
+    font-size: var(--step-4);
+    font-weight: var(--weight-medium);
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+  }
+
+  .log-heading-copy p {
+    max-width: 47rem;
+    color: var(--text-secondary);
+    font-size: var(--step-1);
+    line-height: 1.75;
+  }
+
+  .log-filter-index {
+    display: grid;
+    grid-template-columns: minmax(9rem, 0.25fr) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 6.5rem);
+    margin-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .log-filter-index > p {
+    margin: 0;
+    padding: 1rem 0;
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.1em;
+  }
+
+  .log-filter-index > div {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .log-filter-index a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.55rem 1rem;
+    color: var(--metadata-primary);
+    border-left: 1px solid var(--border-subtle);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+  }
+
+  .log-filter-index a:hover,
+  .log-filter-index a[aria-current="page"] {
+    color: var(--text-inverse);
+    background: var(--color-ink);
+  }
+
+  .stream-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .stream-header h2 {
+    margin: 0;
+    font-size: var(--step-3);
+    font-weight: var(--weight-medium);
+  }
+
+  .stream-header span {
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.08em;
+  }
+
+  .log-stream ol {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .log-stream ol::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(10rem - 1px);
+    width: 1px;
+    content: "";
+    background: var(--border-subtle);
+  }
+
+  .log-stream li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .log-stream li::before {
+    position: absolute;
+    top: 2.15rem;
+    left: calc(10rem - 4px);
+    width: 7px;
+    height: 7px;
+    content: "";
+    background: var(--color-copper-text);
+  }
+
+  .log-timestamp {
+    display: grid;
+    align-content: start;
+    gap: var(--space-1);
+    padding: 2rem var(--space-4) 2rem 0;
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.04em;
+  }
+
+  .log-entry {
+    display: grid;
+    gap: var(--space-3);
+    padding: 2rem 0 2.5rem clamp(1.75rem, 4vw, 4rem);
+  }
+
+  .log-metadata,
+  .log-hashtags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.05em;
+  }
+
+  .log-metadata span + span::before {
+    margin-right: var(--space-2);
+    color: var(--link-primary);
+    content: "/";
+  }
+
+  .log-entry h2 {
+    max-width: 46rem;
+    margin: 0;
+    font-size: var(--step-2);
+    font-weight: var(--weight-medium);
+    line-height: 1.3;
+  }
+
+  .log-entry h2 a:hover {
+    color: var(--link-primary);
+  }
+
+  .log-excerpt {
+    max-width: 46rem;
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.85;
+  }
+
+  .log-body {
+    max-width: 46rem;
+    color: var(--text-primary);
+    line-height: 1.85;
+  }
+
+  .log-body :global(> :first-child) {
+    margin-top: 0;
+  }
+
+  .log-body :global(> :last-child) {
+    margin-bottom: 0;
+  }
+
+  .log-body :global(p),
+  .log-body :global(ul),
+  .log-body :global(ol),
+  .log-body :global(blockquote) {
+    margin: 0 0 var(--space-3);
+  }
+
+  .log-body :global(a) {
+    color: var(--link-primary);
+    border-bottom: 1px solid currentColor;
+  }
+
+  .log-hashtags span {
+    padding-bottom: 0.15rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .log-read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: fit-content;
+    min-height: 44px;
+    color: var(--link-primary);
+    border-bottom: 1px solid currentColor;
+    font-family: var(--font-data);
+    font-size: var(--caption);
+  }
+
+  .log-empty {
+    display: grid;
+    grid-template-columns: minmax(9rem, 0.25fr) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 6.5rem);
+    padding: var(--space-6) 0;
+    border-top: 1px solid var(--color-ink);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .log-empty > p {
+    margin: 0;
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.08em;
+  }
+
+  .log-empty div {
+    display: grid;
+    gap: var(--space-2);
+    max-width: 43rem;
+  }
+
+  .log-empty h2,
+  .log-empty div p,
+  .filtered-empty {
+    margin: 0;
+  }
+
+  .log-empty h2 {
+    font-size: var(--step-2);
+    font-weight: var(--weight-medium);
+  }
+
+  .log-empty div p,
+  .filtered-empty {
+    color: var(--text-secondary);
+  }
+
+  .filtered-empty {
+    padding: var(--space-5) 0;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  @media (max-width: 700px) {
+    .log-publication-header,
+    .log-filter-index,
+    .log-empty {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+
+    .log-publication-header {
+      padding-top: var(--space-4);
+    }
+
+    .log-heading-index {
+      display: flex;
+      min-height: 0;
+      justify-content: space-between;
+    }
+
+    .log-heading-copy h1 {
+      font-size: var(--step-3);
+    }
+
+    .log-filter-index {
+      margin-bottom: var(--space-5);
+    }
+
+    .log-filter-index > p {
+      padding-bottom: 0;
+    }
+
+    .log-filter-index > div {
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .log-filter-index a {
+      border-left: 0;
+      border-right: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .log-stream ol::before {
+      left: 3px;
+    }
+
+    .log-stream li {
+      grid-template-columns: 1fr;
+      padding-left: var(--space-4);
+    }
+
+    .log-stream li::before {
+      top: 1.65rem;
+      left: 0;
+    }
+
+    .log-timestamp {
+      display: flex;
+      justify-content: space-between;
+      padding: 1.45rem 0 0;
+    }
+
+    .log-entry {
+      padding: var(--space-2) 0 var(--space-5);
+    }
+
+    .log-empty {
+      padding: var(--space-5) 0;
+    }
+  }
+</style>

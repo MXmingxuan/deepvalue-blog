@@ -19,258 +19,656 @@ const domainLabels = {
   ai: 'AI 与技术',
   beyond: '边界之外',
 };
+
+const sourceLabels = {
+  original: '原创研究',
+  book: '书籍',
+  podcast: '播客',
+  report: '报告',
+  news: '新闻',
+  mixed: '综合来源',
+};
+
+const confidenceLabels = {
+  low: '低',
+  medium: '中',
+  high: '高',
+};
+
+const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+const isLog = post.data.format === 'log';
+const backHref = isLog ? '/research-log/' : '/blog/';
+const backLabel = isLog ? '返回研究日志' : '返回研究文章';
+
+const metadata = [
+  { label: 'PUBLISHED', value: dateFormatter.format(post.data.published_at) },
+  post.data.updated_at && { label: 'UPDATED', value: dateFormatter.format(post.data.updated_at) },
+  post.data.section && { label: 'SECTION', value: post.data.section },
+  post.data.topic && { label: 'TOPIC', value: post.data.topic },
+  { label: 'SOURCE', value: sourceLabels[post.data.source_type] },
+  post.data.confidence && { label: 'CONFIDENCE', value: confidenceLabels[post.data.confidence] },
+].filter(Boolean);
+
+const taxonomyGroups = [
+  { label: 'COMMODITIES', values: post.data.commodities },
+  { label: 'COMPANIES', values: post.data.companies },
+  { label: 'TICKERS', values: post.data.tickers },
+  { label: 'TAGS', values: post.data.tags.map(tag => `#${tag}`) },
+].filter(group => group.values.length > 0);
 ---
 
 <Base title={`${post.data.title} - Deep Value Research`} description={post.data.summary}>
-  <article class="blog-post">
-    <header class="post-header">
-      <p class="eyebrow">{domainLabels[post.data.domain]}</p>
-      <h1 class="post-title">{post.data.title}</h1>
-      <p class="post-summary">{post.data.summary}</p>
-      <div class="post-meta">
-        <span>{post.data.published_at.toLocaleDateString('zh-CN')}</span>
-        {post.data.updated_at && <span>更新：{post.data.updated_at.toLocaleDateString('zh-CN')}</span>}
-        <span>{post.data.format}</span>
-        <span>{post.data.status}</span>
-        {post.data.confidence && <span>confidence: {post.data.confidence}</span>}
-      </div>
-      {post.data.thesis && (
-        <p class="thesis">{post.data.thesis}</p>
-      )}
-      {post.data.tags.length > 0 && (
-        <div class="post-tags">
-          {post.data.tags.map(tag => <span class="tag">{tag}</span>)}
+  <nav class="back-navigation is-top" aria-label="返回内容索引">
+    <a href={backHref}><span aria-hidden="true">←</span>{backLabel}</a>
+  </nav>
+
+  <article class:list={['research-entry', { 'is-log': isLog }]}>
+    <header class="research-entry-header">
+      <div class="article-header-grid">
+        <aside class="article-rail" aria-label="文章元数据">
+          <div class="format-mark">
+            <p>{isLog ? 'RESEARCH LOG' : 'RESEARCH ARTICLE'}</p>
+            <span>{domainLabels[post.data.domain]}</span>
+          </div>
+
+          <dl class="metadata-grid">
+            {metadata.map(item => (
+              <div>
+                <dt>{item.label}</dt>
+                <dd>{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </aside>
+
+        <div class="article-lead">
+          <p class="article-domain">
+            {domainLabels[post.data.domain]}
+            {post.data.topic && <span> / {post.data.topic}</span>}
+          </p>
+          <h1>{post.data.title}</h1>
+          {post.data.summary && <p class="article-summary">{post.data.summary}</p>}
         </div>
+      </div>
+
+      {post.data.thesis && (
+        <section class="thesis-block" aria-labelledby="thesis-title">
+          <p id="thesis-title">THESIS / 核心判断</p>
+          <p>{post.data.thesis}</p>
+        </section>
+      )}
+
+      {taxonomyGroups.length > 0 && (
+        <dl class="taxonomy-grid">
+          {taxonomyGroups.map(group => (
+            <div>
+              <dt>{group.label}</dt>
+              <dd>
+                {group.values.map(value => <span>{value}</span>)}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
+
+      {post.data.source_title && (
+        <p class="source-note">
+          <span>SOURCE TITLE</span>
+          {post.data.source_url ? (
+            <a href={post.data.source_url} target="_blank" rel="noreferrer">{post.data.source_title}</a>
+          ) : post.data.source_title}
+        </p>
       )}
     </header>
 
-    <div class="post-content">
+    <div class="reading-column">
       <Content />
     </div>
   </article>
 
-  <div class="back-link">
-    <a href="/blog" class="pill-btn">返回研究文章</a>
-  </div>
+  <nav class="back-navigation is-bottom" aria-label="返回内容索引">
+    <a href={backHref}><span aria-hidden="true">←</span>{backLabel}</a>
+    <a href="#main-content">回到顶部<span aria-hidden="true">↑</span></a>
+  </nav>
 </Base>
 
 <style>
-  .blog-post {
-    padding: 72px 0 48px;
+  .back-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.05em;
   }
 
-  .post-header {
+  .back-navigation.is-top {
+    padding: 0 0 var(--space-4);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .back-navigation.is-bottom {
+    margin-top: var(--space-7);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-ink);
+  }
+
+  .back-navigation a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    color: var(--link-primary);
+    border-bottom: 1px solid transparent;
+  }
+
+  .back-navigation a:hover {
+    border-bottom-color: currentColor;
+  }
+
+  .research-entry-header {
+    padding: var(--space-5) 0 var(--space-6);
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .article-header-grid {
     display: grid;
-    gap: 22px;
-    margin-bottom: 64px;
-    padding-bottom: 48px;
-    border-bottom: 1px solid var(--line);
+    grid-template-columns: minmax(10rem, 0.26fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 7vw, 7.5rem);
   }
 
-  .eyebrow,
-  .post-meta {
-    font-family: var(--font-mono);
-    font-size: 11px;
+  .article-rail {
+    display: grid;
+    align-content: start;
+    gap: var(--space-5);
+  }
+
+  .format-mark {
+    display: grid;
+    gap: var(--space-1);
+    padding-top: var(--space-2);
+    border-top: 3px solid var(--color-copper-text);
+    font-family: var(--font-data);
+    font-size: var(--caption);
     letter-spacing: 0.08em;
+  }
+
+  .format-mark p,
+  .format-mark span {
+    margin: 0;
+  }
+
+  .format-mark p {
+    color: var(--text-primary);
+    font-weight: var(--weight-bold);
+  }
+
+  .format-mark span {
     color: var(--metadata-primary);
   }
 
-  .post-title {
-    max-width: 920px;
-    font-size: clamp(40px, 7vw, 86px);
-    font-weight: 500;
-    line-height: 0.98;
-    letter-spacing: 0;
+  .metadata-grid {
+    display: grid;
+    margin: 0;
+    border-top: 1px solid var(--border-subtle);
   }
 
-  .post-summary {
-    max-width: 760px;
-    font-size: 18px;
-    line-height: 1.8;
+  .metadata-grid > div {
+    display: grid;
+    gap: 0.15rem;
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .metadata-grid dt,
+  .metadata-grid dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+    font-family: var(--font-data);
+    font-size: var(--caption);
+  }
+
+  .metadata-grid dt {
+    color: var(--metadata-primary);
+    letter-spacing: 0.08em;
+  }
+
+  .metadata-grid dd {
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .article-lead {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+  }
+
+  .article-domain,
+  .article-lead h1,
+  .article-summary {
+    margin: 0;
+  }
+
+  .article-domain {
+    color: var(--metadata-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .article-domain span {
+    color: var(--link-primary);
+  }
+
+  .article-lead h1 {
+    max-width: 18ch;
+    font-size: var(--step-4);
+    font-weight: var(--weight-medium);
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  .is-log .article-lead h1 {
+    font-size: var(--step-3);
+  }
+
+  .article-summary {
+    max-width: 44rem;
     color: var(--text-secondary);
-  }
-
-  .post-meta,
-  .post-tags {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .thesis {
-    max-width: 860px;
-    padding: 18px 20px;
-    border-left: 2px solid var(--accent-warm);
-    background: color-mix(in srgb, var(--color-copper) 9%, var(--color-paper));
-    color: var(--text-primary);
+    font-size: var(--step-1);
     line-height: 1.8;
   }
 
-  .post-content {
-    max-width: 880px;
-    font-family: var(--font-body);
-    font-size: 17px;
-    line-height: 1.9;
+  .thesis-block {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.26fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 7vw, 7.5rem);
+    margin-top: var(--space-6);
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--color-copper-text);
+    border-bottom: 1px solid var(--color-copper-text);
+    border-radius: 0;
+    background: color-mix(in srgb, var(--color-copper) 8%, var(--color-paper));
+  }
+
+  .thesis-block p {
+    margin: 0;
+  }
+
+  .thesis-block p:first-child {
+    padding-left: var(--space-3);
+    color: var(--link-primary);
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.08em;
+  }
+
+  .thesis-block p:last-child {
+    max-width: 44rem;
+    padding-right: var(--space-3);
+    font-size: var(--step-1);
+    font-weight: var(--weight-medium);
+    line-height: 1.75;
+  }
+
+  .taxonomy-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: var(--space-5) 0 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .taxonomy-grid > div {
+    min-width: 0;
+    padding: var(--space-3) var(--space-3) var(--space-2) 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .taxonomy-grid > div + div {
+    padding-left: var(--space-3);
+    border-left: 1px solid var(--border-subtle);
+  }
+
+  .taxonomy-grid dt,
+  .taxonomy-grid dd {
+    margin: 0;
+    font-family: var(--font-data);
+    font-size: var(--caption);
+  }
+
+  .taxonomy-grid dt {
+    margin-bottom: var(--space-1);
+    color: var(--metadata-primary);
+    letter-spacing: 0.08em;
+  }
+
+  .taxonomy-grid dd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-2);
     color: var(--text-primary);
+    line-height: 1.55;
   }
 
-  .post-content p {
-    margin-bottom: 24px;
+  .taxonomy-grid dd span {
+    padding-bottom: 0.1rem;
+    border-bottom: 1px solid var(--border-subtle);
   }
 
-  .post-content h2 {
-    margin-top: 52px;
-    margin-bottom: 18px;
-    font-size: 30px;
-    font-weight: 500;
-    line-height: 1.2;
-    color: var(--text);
+  .source-note {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-4) 0 0;
+    color: var(--text-secondary);
+    font-size: var(--caption);
   }
 
-  .post-content h3 {
-    margin-top: 36px;
-    margin-bottom: 14px;
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--text);
+  .source-note span,
+  .source-note a {
+    font-family: var(--font-data);
   }
 
-  .post-content ul,
-  .post-content ol {
-    margin-bottom: 24px;
-    padding-left: 24px;
+  .source-note span {
+    color: var(--metadata-primary);
   }
 
-  .post-content li {
-    margin-bottom: 10px;
-  }
-
-  .post-content strong {
-    font-weight: 500;
-    color: var(--text);
-  }
-
-  .post-content a {
+  .source-note a {
     color: var(--link-primary);
     border-bottom: 1px solid currentColor;
   }
 
-  .post-content :global(table) {
-    display: table;
+  .reading-column {
+    width: min(100%, 52rem);
+    margin: var(--space-6) auto 0;
+    color: var(--text-primary);
+    font-size: clamp(1rem, 0.97rem + 0.14vw, 1.08rem);
+    line-height: 1.95;
+  }
+
+  .reading-column :global(> :first-child) {
+    margin-top: 0;
+  }
+
+  .reading-column :global(> :last-child) {
+    margin-bottom: 0;
+  }
+
+  .reading-column :global(p) {
+    margin: 0 0 1.6em;
+  }
+
+  .reading-column :global(h2),
+  .reading-column :global(h3),
+  .reading-column :global(h4) {
+    color: var(--text-primary);
+    font-weight: var(--weight-medium);
+    text-wrap: balance;
+    scroll-margin-top: calc(var(--header-height) + 2rem);
+  }
+
+  .reading-column :global(h2) {
+    margin: 2.4em 0 0.75em;
+    padding-top: 0.55em;
+    border-top: 1px solid var(--border-subtle);
+    font-size: var(--step-2);
+    letter-spacing: -0.015em;
+    line-height: 1.35;
+  }
+
+  .reading-column :global(h3) {
+    margin: 2em 0 0.7em;
+    font-size: var(--step-1);
+    line-height: 1.45;
+  }
+
+  .reading-column :global(h4) {
+    margin: 1.75em 0 0.6em;
+    font-size: var(--step-0);
+  }
+
+  .reading-column :global(ul),
+  .reading-column :global(ol) {
+    margin: 0 0 1.6em;
+    padding-left: 1.5em;
+  }
+
+  .reading-column :global(li) {
+    margin-bottom: 0.55em;
+    padding-left: 0.3em;
+  }
+
+  .reading-column :global(li::marker) {
+    color: var(--color-copper-text);
+    font-family: var(--font-data);
+  }
+
+  .reading-column :global(strong) {
+    font-weight: var(--weight-bold);
+  }
+
+  .reading-column :global(a) {
+    color: var(--link-primary);
+    border-bottom: 1px solid currentColor;
+    text-underline-offset: 0.15em;
+  }
+
+  .reading-column :global(blockquote) {
+    margin: 2rem 0;
+    padding: var(--space-3) var(--space-4);
+    color: var(--text-secondary);
+    border-top: 1px solid var(--color-olive-text);
+    border-bottom: 1px solid var(--color-olive-text);
+    border-left: 3px solid var(--color-olive-text);
+    border-radius: 0;
+    background: color-mix(in srgb, var(--color-olive) 7%, var(--color-paper));
+  }
+
+  .reading-column :global(blockquote > :last-child) {
+    margin-bottom: 0;
+  }
+
+  .reading-column :global(code) {
+    padding: 0.12em 0.35em;
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0;
+    background: var(--surface-secondary);
+    font-family: var(--font-data);
+    font-size: 0.86em;
+  }
+
+  .reading-column :global(pre) {
+    margin: 2rem 0;
+    padding: var(--space-4);
+    overflow-x: auto;
+    color: var(--text-inverse) !important;
+    border: 1px solid var(--border-subtle-inverse);
+    border-radius: 0;
+    background: var(--color-ink) !important;
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  .reading-column :global(pre code) {
+    padding: 0;
+    color: inherit;
+    border: 0;
+    background: transparent;
+  }
+
+  .reading-column :global(table) {
+    display: block;
     width: 100%;
     max-width: 100%;
-    margin: 34px 0;
-    overflow: hidden;
-    border: 1px solid var(--border-subtle);
-    border-radius: 8px;
+    margin: 2.2rem 0;
+    overflow-x: auto;
+    color: var(--text-primary);
+    border-top: 1px solid var(--color-ink);
+    border-bottom: 1px solid var(--color-ink);
+    border-radius: 0;
     border-spacing: 0;
-    border-collapse: separate;
-    background: color-mix(in srgb, var(--color-ink) 2.5%, var(--color-paper));
-    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
-    white-space: normal;
+    border-collapse: collapse;
+    background: transparent;
+    font-size: 0.88rem;
+    line-height: 1.55;
   }
 
-  .post-content :global(thead) {
-    background: color-mix(in srgb, var(--color-ink) 8%, var(--color-paper));
-  }
-
-  .post-content :global(tbody tr:nth-child(even)) {
-    background: color-mix(in srgb, var(--color-ink) 4%, var(--color-paper));
-  }
-
-  .post-content :global(tbody tr:hover) {
-    background: color-mix(in srgb, var(--color-copper) 10%, var(--color-paper));
-  }
-
-  .post-content :global(th),
-  .post-content :global(td) {
-    padding: 14px 16px;
+  .reading-column :global(th),
+  .reading-column :global(td) {
+    min-width: 7rem;
+    padding: 0.75rem 0.8rem;
     border-right: 1px solid var(--border-subtle);
     border-bottom: 1px solid var(--border-subtle);
     text-align: left;
     vertical-align: top;
-    word-break: normal;
     overflow-wrap: anywhere;
   }
 
-  .post-content :global(th:last-child),
-  .post-content :global(td:last-child) {
+  .reading-column :global(th:last-child),
+  .reading-column :global(td:last-child) {
     border-right: 0;
   }
 
-  .post-content :global(tr:last-child td) {
+  .reading-column :global(tbody tr:last-child td) {
     border-bottom: 0;
   }
 
-  .post-content :global(th) {
-    color: var(--text);
-    font-weight: 600;
+  .reading-column :global(th) {
+    color: var(--text-primary);
+    background: color-mix(in srgb, var(--color-ink) 7%, var(--color-paper));
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    font-weight: var(--weight-bold);
     letter-spacing: 0.02em;
   }
 
-  .post-content :global(td) {
-    color: var(--text-secondary);
+  .reading-column :global(tbody tr:nth-child(even)) {
+    background: color-mix(in srgb, var(--color-ink) 3%, var(--color-paper));
   }
 
-  .post-content blockquote {
-    margin: 32px 0;
-    padding-left: 24px;
-    border-left: 2px solid var(--muted);
-    color: var(--text-secondary);
+  .reading-column :global(img) {
+    width: 100%;
+    height: auto;
+    margin: 2.25rem 0;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    object-fit: contain;
   }
 
-  .post-content code {
-    font-family: var(--font-mono);
-    font-size: 0.9em;
-    background: color-mix(in srgb, var(--color-ink) 9%, var(--color-paper));
-    padding: 2px 8px;
-    border-radius: 4px;
+  .reading-column :global(p:first-child > img:only-child) {
+    margin-top: 0;
   }
 
-  .post-content pre {
-    margin: 32px 0;
-    padding: 24px;
-    overflow-x: auto;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: color-mix(in srgb, var(--color-ink) 6%, var(--color-paper));
+  .reading-column :global(hr) {
+    height: 1px;
+    margin: var(--space-6) 0;
+    border: 0;
+    background: var(--border-subtle);
   }
 
-  .post-content pre code {
-    background: none;
-    padding: 0;
-  }
-
-  .back-link {
-    margin-top: 80px;
-    padding-top: 48px;
-    border-top: 1px solid var(--line);
-  }
-
-  @media (max-width: 760px) {
-    .blog-post {
-      padding: 52px 0 32px;
+  @media (max-width: 800px) {
+    .article-header-grid,
+    .thesis-block {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
     }
 
-    .post-header {
-      margin-bottom: 44px;
-      padding-bottom: 34px;
+    .article-rail {
+      grid-template-columns: minmax(0, 0.4fr) minmax(0, 1fr);
+      gap: var(--space-4);
     }
 
-    .post-content {
-      font-size: 16px;
+    .metadata-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .post-content :global(th),
-    .post-content :global(td) {
-      padding: 12px 14px;
+    .metadata-grid > div:nth-child(odd) {
+      padding-right: var(--space-2);
+      border-right: 1px solid var(--border-subtle);
     }
 
-    .post-content :global(table) {
-      display: block;
-      overflow-x: auto;
+    .metadata-grid > div:nth-child(even) {
+      padding-left: var(--space-2);
+    }
+
+    .article-lead h1 {
+      font-size: var(--step-3);
+    }
+
+    .thesis-block p:first-child,
+    .thesis-block p:last-child {
+      padding-right: var(--space-3);
+      padding-left: var(--space-3);
+    }
+
+    .taxonomy-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .taxonomy-grid > div:nth-child(3) {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .research-entry-header {
+      padding-top: var(--space-4);
+    }
+
+    .article-rail {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+
+    .article-summary {
+      font-size: var(--step-0);
+    }
+
+    .taxonomy-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .taxonomy-grid > div,
+    .taxonomy-grid > div + div,
+    .taxonomy-grid > div:nth-child(3) {
+      padding-right: 0;
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .reading-column {
+      margin-top: var(--space-5);
+      font-size: 1rem;
+      line-height: 1.88;
+    }
+
+    .reading-column :global(h2) {
+      font-size: var(--step-1);
+    }
+
+    .reading-column :global(pre) {
+      margin-right: -0.25rem;
+      margin-left: -0.25rem;
+      padding: var(--space-3);
+    }
+
+    .reading-column :global(table) {
       white-space: nowrap;
+    }
+
+    .back-navigation.is-bottom {
+      margin-top: var(--space-6);
     }
   }
 </style>

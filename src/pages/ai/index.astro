@@ -4,12 +4,42 @@ import EntryList from '../../components/EntryList.astro';
 import { getPublishedEntries } from '../../lib/entries.mjs';
 
 const entries = await getPublishedEntries({ domain: 'ai' });
+
+const sections = [
+  { href: '/ai/', label: '全部' },
+  { href: '/ai/?section=applications', label: 'AI 应用' },
+  { href: '/ai/?section=ai-industry', label: '产品与产业' },
+  { href: '/ai/?section=workflows', label: '研究工作流' },
+  { href: '/ai/?section=experiments', label: '实验与实践' },
+];
 ---
 
-<Base title="AI 与技术 - Deep Value Research" description="AI 应用、技术与研究工作流探索">
-  <header class="page-header">
-    <p>AI &amp; TECHNOLOGY</p>
-    <h1>AI 与技术</h1>
+<Base title="AI 与技术 - Deep Value Research" description="AI 应用、技术产业与研究工作流探索">
+  <header class="publication-header">
+    <div class="publication-kicker">
+      <p>AI &amp; TECHNOLOGY</p>
+      <span>02 / SECONDARY DOMAIN</span>
+    </div>
+    <div class="publication-copy">
+      <h1>AI 与技术</h1>
+      <p class="publication-description">
+        记录 AI 应用、产品与产业观察，以及研究工具、工作流和实践实验。重点仍是能力边界、真实用途与可验证结果。
+      </p>
+    </div>
   </header>
-  <EntryList entries={entries} />
+
+  <nav class="section-index" data-section-index aria-label="AI 与技术栏目">
+    <p>SECTION INDEX</p>
+    <ol>
+      {sections.map(section => (
+        <li><a href={section.href}>{section.label}</a></li>
+      ))}
+    </ol>
+  </nav>
+
+  <EntryList
+    entries={entries}
+    emptyText="AI 与技术暂时没有已发布内容；相关研究会在完成验证并发布后出现在这里。"
+    groupByFormat
+  />
 </Base>
