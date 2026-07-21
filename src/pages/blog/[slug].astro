@@ -41,13 +41,23 @@ const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
   day: '2-digit',
 });
 
+const dateTimeFormatter = new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+});
+
 const isLog = post.data.format === 'log';
 const backHref = isLog ? '/research-log/' : '/blog/';
 const backLabel = isLog ? '返回研究日志' : '返回研究文章';
+const metadataDateFormatter = isLog ? dateTimeFormatter : dateFormatter;
 
 const metadata = [
-  { label: 'PUBLISHED', value: dateFormatter.format(post.data.published_at) },
-  post.data.updated_at && { label: 'UPDATED', value: dateFormatter.format(post.data.updated_at) },
+  { label: 'PUBLISHED', value: metadataDateFormatter.format(post.data.published_at) },
+  post.data.updated_at && { label: 'UPDATED', value: metadataDateFormatter.format(post.data.updated_at) },
   post.data.section && { label: 'SECTION', value: post.data.section },
   post.data.topic && { label: 'TOPIC', value: post.data.topic },
   { label: 'SOURCE', value: sourceLabels[post.data.source_type] },
@@ -70,7 +80,7 @@ const taxonomyGroups = [
   <article class:list={['research-entry', { 'is-log': isLog }]}>
     <header class="research-entry-header">
       <div class="article-header-grid">
-        <aside class="article-rail" aria-label="文章元数据">
+        <aside class="article-rail" aria-label={isLog ? '日志元数据' : '文章元数据'}>
           <div class="format-mark">
             <p>{isLog ? 'RESEARCH LOG' : 'RESEARCH ARTICLE'}</p>
             <span>{domainLabels[post.data.domain]}</span>

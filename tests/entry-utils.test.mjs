@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  effectiveEntryDate,
   isPublished,
   selectPublished,
+  sortEntriesByPublishedNewestFirst,
   sortEntriesNewestFirst,
 } from '../src/lib/entry-utils.mjs';
 
@@ -89,5 +91,23 @@ test('sortEntriesNewestFirst uses updated_at before published_at', () => {
   assert.deepEqual(
     sortEntriesNewestFirst(entries).map(item => item.id),
     ['updated', 'newer', 'older'],
+  );
+
+  assert.equal(effectiveEntryDate(entries[1]).toISOString(), '2026-07-03T00:00:00.000Z');
+});
+
+test('sortEntriesByPublishedNewestFirst preserves chronological log time', () => {
+  const entries = [
+    entry('older-updated', {
+      published_at: new Date('2026-07-01T09:30:00Z'),
+      updated_at: new Date('2026-07-04T12:00:00Z'),
+    }),
+    entry('newer', { published_at: new Date('2026-07-03T08:15:00Z') }),
+    entry('middle', { published_at: new Date('2026-07-02T16:45:00Z') }),
+  ];
+
+  assert.deepEqual(
+    sortEntriesByPublishedNewestFirst(entries).map(item => item.id),
+    ['newer', 'middle', 'older-updated'],
   );
 });

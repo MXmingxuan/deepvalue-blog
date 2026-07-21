@@ -2,13 +2,30 @@ export function isPublished(entry) {
   return entry?.data?.status === 'published';
 }
 
+function asDate(value) {
+  return value instanceof Date ? value : new Date(value);
+}
+
+export function effectiveEntryDate(entry) {
+  return asDate(entry.data.updated_at ?? entry.data.published_at);
+}
+
+export function publishedEntryDate(entry) {
+  return asDate(entry.data.published_at);
+}
+
 export function entryTimestamp(entry) {
-  const value = entry.data.updated_at ?? entry.data.published_at;
-  return value instanceof Date ? value.getTime() : new Date(value).getTime();
+  return effectiveEntryDate(entry).getTime();
 }
 
 export function sortEntriesNewestFirst(entries) {
   return [...entries].sort((left, right) => entryTimestamp(right) - entryTimestamp(left));
+}
+
+export function sortEntriesByPublishedNewestFirst(entries) {
+  return [...entries].sort(
+    (left, right) => publishedEntryDate(right).getTime() - publishedEntryDate(left).getTime(),
+  );
 }
 
 export function selectPublished(entries, filters = {}) {

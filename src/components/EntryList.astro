@@ -1,4 +1,6 @@
 ---
+import { effectiveEntryDate } from '../lib/entry-utils.mjs';
+
 const {
   entries,
   emptyText = '暂时没有已发布内容。',
@@ -55,7 +57,7 @@ const groups = groupByFormat
   class:list={['entry-list-shell', { 'is-compact': compact, 'is-grouped': groupByFormat }]}
   data-entry-list
 >
-  {entries.length > 0 ? (
+  {groupByFormat || entries.length > 0 ? (
     <div class="entry-groups">
       {groups.map(group => (
         <section
@@ -84,9 +86,10 @@ const groups = groupByFormat
                   data-topic={entry.data.topic || ''}
                 >
                   <div class="entry-date-rail">
-                    <time datetime={entry.data.published_at.toISOString()}>
-                      {dateFormatter.format(entry.data.published_at)}
+                    <time datetime={effectiveEntryDate(entry).toISOString()}>
+                      {dateFormatter.format(effectiveEntryDate(entry))}
                     </time>
+                    <span>{entry.data.updated_at ? '更新' : '发布'}</span>
                     <span>{entry.data.section || entry.data.topic || 'general'}</span>
                   </div>
 

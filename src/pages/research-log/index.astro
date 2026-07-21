@@ -2,8 +2,11 @@
 import Base from '../../layouts/Base.astro';
 import { render } from 'astro:content';
 import { getPublishedEntries } from '../../lib/entries.mjs';
+import { sortEntriesByPublishedNewestFirst } from '../../lib/entry-utils.mjs';
 
-const entries = await getPublishedEntries({ format: 'log' });
+const entries = sortEntriesByPublishedNewestFirst(
+  await getPublishedEntries({ format: 'log' }),
+);
 const SHORT_LOG_CHARACTER_LIMIT = 520;
 
 const domainLabels = {
@@ -97,6 +100,7 @@ const topics = [...new Set(entries.map(entry => entry.data.topic).filter(Boolean
             data-topic={entry.data.topic || ''}
           >
             <time class="log-timestamp" datetime={entry.data.published_at.toISOString()}>
+              <span class="log-time-label">PUBLISHED / 发布</span>
               <span>{dateFormatter.format(entry.data.published_at)}</span>
               <span>{timeFormatter.format(entry.data.published_at)}</span>
             </time>
@@ -332,6 +336,11 @@ const topics = [...new Set(entries.map(entry => entry.data.topic).filter(Boolean
     font-family: var(--font-data);
     font-size: var(--caption);
     letter-spacing: 0.04em;
+  }
+
+  .log-time-label {
+    color: var(--link-primary);
+    letter-spacing: 0.08em;
   }
 
   .log-entry {
