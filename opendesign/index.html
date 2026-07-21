@@ -113,13 +113,18 @@
     /* File item */
     .file-item {
       display: block;
+      width: 100%;
       padding: 4px 12px 4px 28px;
+      background: transparent;
+      font: inherit;
+      text-align: left;
       color: var(--sidebar-text);
       text-decoration: none;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       cursor: pointer;
+      border: 0;
       border-left: 2px solid transparent;
     }
 
@@ -287,7 +292,7 @@
           html += `<details class="group" open><summary>${esc(group.slug)}</summary>`;
           for (const file of files) {
             // Use data attributes; attach listeners after inserting
-            html += `<span class="file-item" tabindex="0" data-path="${esc(file.path)}" data-label="${esc(file.label)}">${esc(file.label)}</span>`;
+            html += `<button class="file-item" type="button" data-path="${esc(file.path)}" data-label="${esc(file.label)}">${esc(file.label)}</button>`;
           }
           html += `</details>`;
         }
@@ -298,12 +303,6 @@
       // Attach click and keyboard listeners
       sidebar.querySelectorAll('.file-item').forEach(el => {
         el.addEventListener('click', () => loadFile(el.dataset.path, el.dataset.label, el));
-        el.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            loadFile(el.dataset.path, el.dataset.label, el);
-          }
-        });
       });
     }
 
