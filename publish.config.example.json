@@ -1,0 +1,14 @@
+{
+  "vaultRoot": "/absolute/path/to/your/Obsidian/Vault",
+  "entryOutputDir": "src/content/entries",
+  "mediaOutputDir": "public/media",
+  "attachmentRoots": [
+    "Attachments"
+  ],
+  "ignoreFolders": [
+    ".obsidian",
+    ".trash",
+    "Templates"
+  ],
+  "includeInlineHashtags": true
+}

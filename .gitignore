@@ -30,3 +30,10 @@ pnpm-debug.log*
 
 # local isolated worktrees
 .worktrees/
+
+# local Obsidian publisher configuration, state, and transaction data
+publish.config.local.json
+.publish-state.json
+.publish-state.json.*
+.publish-staging/
+.publish-preview/
