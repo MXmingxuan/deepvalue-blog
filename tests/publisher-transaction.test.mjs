@@ -307,6 +307,62 @@ test('createPublicationTransaction stages exact entry and asset bytes outside th
   }
 });
 
+test('createPublicationTransaction safely creates a missing configured media output directory', async () => {
+  const fixture = await createFixture('publisher-missing-media-');
+  const mediaOutputDir = path.join(fixture.repoRoot, 'public/media');
+
+  try {
+    await rm(mediaOutputDir, { recursive: true });
+    const transaction = await createPublicationTransaction({
+      repoRoot: fixture.repoRoot,
+      entryOutputDir: path.join(fixture.repoRoot, 'src/content/entries'),
+      mediaOutputDir,
+      vaultRoot: fixture.vaultRoot,
+      notes: [transformedNote()],
+      state: { version: 1, entries: {} },
+      stagingParent: fixture.stagingParent,
+    });
+
+    assert.equal(await pathExists(mediaOutputDir), true);
+    await cancelPublicationTransaction(transaction);
+  } finally {
+    await cleanup(fixture.root);
+  }
+});
+
+test('transaction creation rejects a staging parent that overlaps the repository or Vault in either direction', async () => {
+  const fixture = await createFixture('publisher-staging-overlap-');
+
+  try {
+    const cases = [
+      fixture.repoRoot,
+      path.join(fixture.repoRoot, 'transactions'),
+      fixture.root,
+      fixture.vaultRoot,
+      path.join(fixture.vaultRoot, 'transactions'),
+    ];
+    await mkdir(cases[1], { recursive: true });
+    await mkdir(cases[4], { recursive: true });
+
+    for (const stagingParent of cases) {
+      await assert.rejects(
+        createPublicationTransaction({
+          repoRoot: fixture.repoRoot,
+          entryOutputDir: path.join(fixture.repoRoot, 'src/content/entries'),
+          mediaOutputDir: path.join(fixture.repoRoot, 'public/media'),
+          vaultRoot: fixture.vaultRoot,
+          notes: [transformedNote()],
+          state: { version: 1, entries: {} },
+          stagingParent,
+        }),
+        /staging parent.*outside.*repository.*Vault/iu,
+      );
+    }
+  } finally {
+    await cleanup(fixture.root);
+  }
+});
+
 test('preview builds from an isolated repository copy and cancel removes staging without live mutations', async () => {
   const fixture = await createFixture('publisher-preview-');
 
@@ -459,6 +515,103 @@ test('applyPublicationTransaction refuses tracked and untracked target conflicts
   }
 });
 
+test('apply refuses a target that appears after approval without overwriting it', async () => {
+  const fixture = await createFixture('publisher-missing-target-race-');
+  const target = path.join(fixture.repoRoot, 'src/content/entries/copper-cycle.md');
+
+  try {
+    await initializeGitRepo(fixture.repoRoot);
+    await writeFile(path.join(fixture.repoRoot, 'package.json'), '{"name":"fixture"}\n');
+    await git(fixture.repoRoot, ['add', '--', 'package.json']);
+    await git(fixture.repoRoot, ['commit', '--quiet', '-m', 'baseline']);
+    const state = { version: 1, entries: {} };
+    const transaction = await createPublicationTransaction({
+      repoRoot: fixture.repoRoot,
+      entryOutputDir: path.join(fixture.repoRoot, 'src/content/entries'),
+      mediaOutputDir: path.join(fixture.repoRoot, 'public/media'),
+      vaultRoot: fixture.vaultRoot,
+      notes: [transformedNote()],
+      state,
+      stagingParent: fixture.stagingParent,
+    });
+    await buildFixturePreview(transaction);
+
+    const race = (async () => {
+      while ((transaction.snapshots?.length ?? 0) === 0) {
+        await new Promise((resolve) => setImmediate(resolve));
+      }
+      await writeFile(target, 'concurrent owner bytes\n', { flag: 'wx' });
+    })();
+    await assert.rejects(
+      applyPublicationTransaction(transaction, {
+        state,
+        runBuild: async () => ({ stdout: '', stderr: '' }),
+      }),
+      (error) => error.code === 'target_changed',
+    );
+    await race;
+    assert.equal(await readFile(target, 'utf8'), 'concurrent owner bytes\n');
+  } finally {
+    await cleanup(fixture.root);
+  }
+});
+
+test('apply refuses replacement of an approved target identity and preserves concurrent bytes', async () => {
+  const fixture = await createFixture('publisher-replaced-target-race-');
+  const targetPath = 'src/content/entries/copper-cycle.md';
+  const target = path.join(fixture.repoRoot, targetPath);
+
+  try {
+    await initializeGitRepo(fixture.repoRoot);
+    await writeFile(path.join(fixture.repoRoot, 'package.json'), '{"name":"fixture"}\n');
+    await git(fixture.repoRoot, ['add', '--', 'package.json']);
+    await git(fixture.repoRoot, ['commit', '--quiet', '-m', 'baseline']);
+    await writeFile(target, 'last publisher bytes\n');
+    await commitPublisherFixture(fixture.repoRoot, targetPath);
+    const state = {
+      version: 1,
+      entries: {
+        'copper-cycle': {
+          sourcePath: 'Research/Copper.md',
+          lastPublishedSourceHash: 'b'.repeat(64),
+          emittedMarkdownPath: targetPath,
+          emittedAssetPaths: [],
+          publishedAt: '2025-04-05T06:07:08.000Z',
+        },
+      },
+    };
+    const transaction = await createPublicationTransaction({
+      repoRoot: fixture.repoRoot,
+      entryOutputDir: path.join(fixture.repoRoot, 'src/content/entries'),
+      mediaOutputDir: path.join(fixture.repoRoot, 'public/media'),
+      vaultRoot: fixture.vaultRoot,
+      notes: [transformedNote({ body: 'new publisher bytes\n' })],
+      state,
+      stagingParent: fixture.stagingParent,
+    });
+    await buildFixturePreview(transaction);
+
+    const race = (async () => {
+      while ((transaction.snapshots?.length ?? 0) === 0) {
+        await new Promise((resolve) => setImmediate(resolve));
+      }
+      await rm(target);
+      await writeFile(target, 'concurrent replacement bytes\n', { flag: 'wx' });
+    })();
+    await assert.rejects(
+      applyPublicationTransaction(transaction, {
+        state,
+        runBuild: async () => ({ stdout: '', stderr: '' }),
+      }),
+      (error) => error.code === 'target_changed',
+    );
+    await race;
+    assert.equal(await readFile(target, 'utf8'), 'concurrent replacement bytes\n');
+  } finally {
+    await cleanup(fixture.root);
+  }
+});
+
 test('applyPublicationTransaction restores every target snapshot when the repository build fails', async () => {
   const fixture = await createFixture('publisher-rollback-');
   const entryTarget = path.join(fixture.repoRoot, 'src/content/entries/copper-cycle.md');
@@ -536,6 +689,80 @@ test('applyPublicationTransaction restores every target snapshot when the reposi
     assert.equal(await pathExists(assetTarget), false);
     assert.equal(await pathExists(path.dirname(assetTarget)), false);
     assert.equal(await readFile(unrelatedTarget, 'utf8'), 'unrelated local edit\n');
+  } finally {
+    await cleanup(fixture.root);
+  }
+});
+
+test('obsolete asset deletion is present in candidates and restored when the build fails', async () => {
+  const fixture = await createFixture('publisher-delete-rollback-');
+  const entryPath = 'src/content/entries/copper-cycle.md';
+  const assetPath = 'public/media/copper-cycle/old-chart.png';
+  const entryTarget = path.join(fixture.repoRoot, ...entryPath.split('/'));
+  const assetTarget = path.join(fixture.repoRoot, ...assetPath.split('/'));
+
+  try {
+    await initializeGitRepo(fixture.repoRoot);
+    await writeFile(path.join(fixture.repoRoot, 'package.json'), '{"name":"fixture"}\n');
+    await mkdir(path.dirname(assetTarget), { recursive: true });
+    await writeFile(entryTarget, 'old entry\n');
+    await writeFile(assetTarget, 'old chart\n');
+    await git(fixture.repoRoot, ['add', '--', 'package.json']);
+    await git(fixture.repoRoot, ['commit', '--quiet', '-m', 'baseline']);
+    await commitPublication({
+      repoRoot: fixture.repoRoot,
+      manifest: {
+        version: 1,
+        files: [
+          { kind: 'entry', publishId: 'copper-cycle', targetPath: entryPath, sha256: sha256('old entry\n') },
+          { kind: 'asset', publishId: 'copper-cycle', targetPath: assetPath, sha256: sha256('old chart\n') },
+        ],
+        publications: [{ publishId: 'copper-cycle', title: 'baseline' }],
+      },
+    });
+    const state = {
+      version: 1,
+      entries: {
+        'copper-cycle': {
+          sourcePath: 'Research/Copper.md',
+          lastPublishedSourceHash: 'b'.repeat(64),
+          emittedMarkdownPath: entryPath,
+          emittedAssetPaths: [assetPath],
+          publishedAt: '2025-04-05T06:07:08.000Z',
+        },
+      },
+    };
+    const transaction = await createPublicationTransaction({
+      repoRoot: fixture.repoRoot,
+      entryOutputDir: path.join(fixture.repoRoot, 'src/content/entries'),
+      mediaOutputDir: path.join(fixture.repoRoot, 'public/media'),
+      vaultRoot: fixture.vaultRoot,
+      notes: [transformedNote({ body: 'replacement entry\n' })],
+      state,
+      stagingParent: fixture.stagingParent,
+    });
+    const deletion = transaction.manifest.files.find(({ operation }) => operation === 'delete');
+    assert.equal(deletion.targetPath, assetPath);
+    await buildTransactionPreview(transaction, {
+      runBuild: async ({ cwd }) => {
+        assert.equal(await pathExists(path.join(cwd, ...assetPath.split('/'))), false);
+        return { stdout: '', stderr: '' };
+      },
+    });
+
+    await assert.rejects(
+      applyPublicationTransaction(transaction, {
+        state,
+        runBuild: async ({ cwd }) => {
+          assert.equal(await pathExists(assetTarget), false);
+          assert.equal(await pathExists(path.join(cwd, ...assetPath.split('/'))), false);
+          throw new Error('build fixture failure');
+        },
+      }),
+      (error) => error.code === 'build_failed',
+    );
+    assert.equal(await readFile(entryTarget, 'utf8'), 'old entry\n');
+    assert.equal(await readFile(assetTarget, 'utf8'), 'old chart\n');
   } finally {
     await cleanup(fixture.root);
   }

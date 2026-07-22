@@ -217,6 +217,47 @@ async function physicalDirectory(candidate, label) {
   return resolved;
 }
 
+async function physicalDirectoryAllowCreate(candidate, {
+  containmentRoot,
+  label,
+} = {}) {
+  try {
+    return await physicalDirectory(candidate, label);
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error;
+  }
+  const resolvedCandidate = await realpathAllowMissing(candidate);
+  if (!isInside(containmentRoot, resolvedCandidate, { allowRoot: false })) {
+    throw new TypeError(`${label} must stay inside the repository`);
+  }
+  const parent = path.dirname(resolvedCandidate);
+  const guard = await createStableDirectoryGuard(parent, {
+    containmentRoot,
+    code: 'target_changed',
+    label: `${label} parent`,
+  });
+  try {
+    await guard.assertStable();
+    await mkdir(resolvedCandidate, { mode: 0o700 });
+    await guard.assertStable();
+    const [resolved, details] = await Promise.all([
+      realpath(resolvedCandidate),
+      lstat(resolvedCandidate),
+    ]);
+    if (
+      resolved !== resolvedCandidate
+      || details.isSymbolicLink()
+      || !details.isDirectory()
+      || !isInside(containmentRoot, resolved, { allowRoot: false })
+    ) {
+      throw new TypeError(`${label} must be a physical directory inside the repository`);
+    }
+    return resolved;
+  } finally {
+    await guard.close().catch(() => {});
+  }
+}
+
 async function realpathAllowMissing(candidate) {
   const suffix = [];
   let current = candidate;
@@ -316,15 +357,28 @@ async function loadManifest(transaction) {
 
 async function verifiedStagedFile(transaction, file) {
   const context = transactionContext(transaction);
-  const stagedPath = safeRelativePath(file?.stagedPath, 'Manifest staged path');
   const targetPath = safeRelativePath(file?.targetPath, 'Manifest target path');
-  if (stagedPath !== path.posix.join('files', targetPath)) {
-    throw new PublicationTransactionError(`Staged path does not match target: ${targetPath}`, {
+  if (typeof file?.sha256 !== 'string' || !/^[a-f0-9]{64}$/u.test(file.sha256)) {
+    throw new PublicationTransactionError(`Manifest hash is invalid for ${targetPath}`, {
       code: 'invalid_manifest',
     });
   }
-  if (typeof file?.sha256 !== 'string' || !/^[a-f0-9]{64}$/u.test(file.sha256)) {
-    throw new PublicationTransactionError(`Manifest hash is invalid for ${targetPath}`, {
+  if (file.operation === 'delete') {
+    if (Object.hasOwn(file, 'stagedPath')) {
+      throw new PublicationTransactionError(`Delete operation must not have staged bytes: ${targetPath}`, {
+        code: 'invalid_manifest',
+      });
+    }
+    return { operation: 'delete', targetPath };
+  }
+  if (file.operation !== undefined && file.operation !== 'write') {
+    throw new PublicationTransactionError(`Manifest operation is invalid for ${targetPath}`, {
+      code: 'invalid_manifest',
+    });
+  }
+  const stagedPath = safeRelativePath(file?.stagedPath, 'Manifest staged path');
+  if (stagedPath !== path.posix.join('files', targetPath)) {
+    throw new PublicationTransactionError(`Staged path does not match target: ${targetPath}`, {
       code: 'invalid_manifest',
     });
   }
@@ -346,7 +400,7 @@ async function verifiedStagedFile(transaction, file) {
     if (!sameFileIdentity(openedStats, afterReadStats) || sha256(bytes) !== file.sha256) {
       throw new Error('staged file bytes or identity changed');
     }
-    return { bytes, stagedPath, targetPath };
+    return { bytes, operation: 'write', stagedPath, targetPath };
   } catch (error) {
     throw new PublicationTransactionError(`Staged file changed or escaped: ${targetPath}`, {
       code: 'staging_changed',
@@ -483,17 +537,34 @@ async function lastPublisherBytes(repoRoot, targetPath) {
       const tree = await runGit(repoRoot, ['ls-tree', '-z', commitSha, '--', changedPath]);
       const record = tree.stdout.toString('utf8').split('\0').find(Boolean);
       const match = record?.match(/^\d+ blob ([a-f0-9]+)\t([\s\S]+)$/u);
-      if (tree.code !== 0 || !match || match[2] !== changedPath) {
+      if (tree.code !== 0) {
         valid = false;
         break;
       }
-      const blob = await runGit(repoRoot, ['cat-file', 'blob', match[1]]);
-      if (blob.code !== 0) {
-        valid = false;
-        break;
+      if (!match) {
+        const previousBlob = await runGit(repoRoot, ['show', `${commitSha}^:${changedPath}`]);
+        if (previousBlob.code !== 0) {
+          valid = false;
+          break;
+        }
+        files.push({
+          operation: 'delete',
+          targetPath: changedPath,
+          sha256: sha256(previousBlob.stdout),
+        });
+      } else {
+        if (match[2] !== changedPath) {
+          valid = false;
+          break;
+        }
+        const blob = await runGit(repoRoot, ['cat-file', 'blob', match[1]]);
+        if (blob.code !== 0) {
+          valid = false;
+          break;
+        }
+        files.push({ targetPath: changedPath, sha256: sha256(blob.stdout) });
+        if (changedPath === targetPath) requestedBytes = blob.stdout;
       }
-      files.push({ targetPath: changedPath, sha256: sha256(blob.stdout) });
-      if (changedPath === targetPath) requestedBytes = blob.stdout;
     }
     if (valid && requestedBytes && publicationFilesDigest(files) === marker) {
       return requestedBytes;
@@ -502,40 +573,53 @@ async function lastPublisherBytes(repoRoot, targetPath) {
   return undefined;
 }
 
-async function targetConflict(transaction, state, file) {
+async function targetConflict(transaction, state, file, guard) {
   const context = transactionContext(transaction);
   const targetPath = safeRelativePath(file.targetPath, 'Manifest target path');
   const destination = path.join(context.repoRoot, ...targetPath.split('/'));
   const physicalDestination = await realpathAllowMissing(destination);
   if (!isInside(context.repoRoot, physicalDestination, { allowRoot: false })) {
-    return 'target resolves outside the repository';
+    return { reason: 'target resolves outside the repository' };
   }
 
-  let details;
+  let current;
   try {
-    details = await lstat(destination);
+    current = await stableFileIfPresent(destination, guard, 'Publication conflict target');
   } catch (error) {
-    if (error?.code !== 'ENOENT') return 'target could not be inspected safely';
+    if (error instanceof PublicationTransactionError) throw error;
+    throw new PublicationTransactionError(`Target could not be bound safely: ${targetPath}`, {
+      code: 'target_changed',
+      cause: error,
+    });
   }
   const tracked = await indexRecord(context.repoRoot, targetPath);
-  if (!details) return tracked ? 'tracked target is missing' : undefined;
-  if (!details.isFile() || details.isSymbolicLink()) return 'target is not a regular file';
-  if (!isOwnedTarget(state, file)) return 'existing target is not recorded in publisher state';
-  if (!tracked) return 'recorded target is untracked';
+  if (!current) {
+    return tracked
+      ? { reason: 'tracked target is missing' }
+      : { approval: { existed: false } };
+  }
+  if (!isOwnedTarget(state, file)) return { reason: 'existing target is not recorded in publisher state' };
+  if (!tracked) return { reason: 'recorded target is untracked' };
 
   const [worktreeDiff, indexDiff, publishedBytes] = await Promise.all([
     runGit(context.repoRoot, ['diff', '--quiet', '--', targetPath]),
     runGit(context.repoRoot, ['diff', '--cached', '--quiet', '--', targetPath]),
     lastPublisherBytes(context.repoRoot, targetPath),
   ]);
-  if (worktreeDiff.code !== 0) return 'working-tree bytes differ from the last committed publication';
-  if (indexDiff.code !== 0) return 'Git index contains an overlapping staged change';
-  if (!publishedBytes) return 'last publisher output could not be established';
-  const currentBytes = await readFile(destination);
-  if (sha256(currentBytes) !== sha256(publishedBytes)) {
-    return 'current hash differs from the last publisher output';
+  if (worktreeDiff.code !== 0) return { reason: 'working-tree bytes differ from the last committed publication' };
+  if (indexDiff.code !== 0) return { reason: 'Git index contains an overlapping staged change' };
+  if (!publishedBytes) return { reason: 'last publisher output could not be established' };
+  const currentHash = sha256(current.bytes);
+  if (currentHash !== sha256(publishedBytes)) {
+    return { reason: 'current hash differs from the last publisher output' };
   }
-  return undefined;
+  return {
+    approval: {
+      existed: true,
+      hash: currentHash,
+      identity: current.identity,
+    },
+  };
 }
 
 function assertAllowedTarget(transaction, file) {
@@ -695,6 +779,50 @@ async function atomicWrite(destination, bytes, mode, guard, snapshot) {
     } catch {
       // Never follow a replaced parent merely to clean up a failed write.
     }
+    if (error?.code === 'EEXIST' || error?.code === 'ENOENT') {
+      throw new PublicationTransactionError('Publication target changed during atomic replacement', {
+        code: 'target_changed',
+        cause: error,
+      });
+    }
+    throw error;
+  }
+}
+
+async function atomicDelete(destination, guard, snapshot) {
+  if (!snapshot.existed) {
+    throw new PublicationTransactionError('A delete target was not present at approval', {
+      code: 'target_changed',
+    });
+  }
+  const quarantinePath = path.join(
+    guard.path,
+    `.${path.basename(destination)}.previous-${randomUUID()}`,
+  );
+  await guard.assertStable();
+  await rename(destination, quarantinePath);
+  snapshot.quarantinePath = quarantinePath;
+  try {
+    const quarantined = await stableReadFile(
+      quarantinePath,
+      guard,
+      'Quarantined publication deletion target',
+    );
+    if (
+      !sameFileIdentity(quarantined.identity, snapshot.originalIdentity)
+      || sha256(quarantined.bytes) !== snapshot.backupHash
+    ) {
+      throw new PublicationTransactionError('Publication deletion target changed before removal', {
+        code: 'target_changed',
+      });
+    }
+  } catch (error) {
+    try {
+      await restoreQuarantinedPath(quarantinePath, destination, guard);
+      snapshot.quarantinePath = undefined;
+    } catch {
+      // Keep the approved bytes quarantined if a concurrent path now blocks restoration.
+    }
     throw error;
   }
 }
@@ -798,6 +926,7 @@ async function restoreSnapshots(transaction) {
   }
   const snapshots = context.snapshots ?? [];
   for (const snapshot of [...snapshots].reverse()) {
+    if (!snapshot.applied) continue;
     const parentRecord = context.mutationGuards.parentGuards.get(path.dirname(snapshot.destination));
     if (!parentRecord) {
       throw new PublicationTransactionError('Publication target parent guard is unavailable', {
@@ -892,6 +1021,40 @@ async function restoreSnapshots(transaction) {
   await removeCreatedTargetParents(context);
 }
 
+async function assertSnapshotStillApproved(snapshot, guard) {
+  let current;
+  try {
+    current = await stableFileIfPresent(
+      snapshot.destination,
+      guard,
+      'Approved publication target',
+    );
+  } catch (error) {
+    if (error instanceof PublicationTransactionError) throw error;
+    throw new PublicationTransactionError('Publication target changed while validating approval', {
+      code: 'target_changed',
+      cause: error,
+    });
+  }
+  if (!snapshot.existed) {
+    if (current) {
+      throw new PublicationTransactionError('A publication target appeared after approval', {
+        code: 'target_changed',
+      });
+    }
+    return;
+  }
+  if (
+    !current
+    || sha256(current.bytes) !== snapshot.backupHash
+    || !sameFileIdentity(current.identity, snapshot.originalIdentity)
+  ) {
+    throw new PublicationTransactionError('Publication target identity or bytes changed after approval', {
+      code: 'target_changed',
+    });
+  }
+}
+
 async function finalizeSnapshots(context) {
   for (const snapshot of context.snapshots ?? []) {
     if (!snapshot.quarantinePath) continue;
@@ -981,8 +1144,20 @@ export async function createPublicationTransaction({
 
   const physicalRepoRoot = await physicalDirectory(repoRoot, 'Repository root');
   const physicalEntryOutputDir = await physicalDirectory(entryOutputDir, 'Entry output directory');
-  const physicalMediaOutputDir = await physicalDirectory(mediaOutputDir, 'Media output directory');
+  const physicalVaultRoot = await physicalDirectory(vaultRoot, 'Vault root');
   const physicalStagingParent = await physicalDirectory(stagingParent, 'Staging parent');
+  if (
+    isInside(physicalRepoRoot, physicalStagingParent)
+    || isInside(physicalStagingParent, physicalRepoRoot)
+    || isInside(physicalVaultRoot, physicalStagingParent)
+    || isInside(physicalStagingParent, physicalVaultRoot)
+  ) {
+    throw new TypeError('Staging parent must be outside the repository and Vault without overlap');
+  }
+  const physicalMediaOutputDir = await physicalDirectoryAllowCreate(mediaOutputDir, {
+    containmentRoot: physicalRepoRoot,
+    label: 'Media output directory',
+  });
   const entryOutputPath = repoRelativePath(
     physicalRepoRoot,
     physicalEntryOutputDir,
@@ -993,13 +1168,6 @@ export async function createPublicationTransaction({
     physicalMediaOutputDir,
     'Media output directory',
   );
-  if (
-    isInside(physicalEntryOutputDir, physicalStagingParent)
-    || isInside(physicalMediaOutputDir, physicalStagingParent)
-  ) {
-    throw new TypeError('Staging parent must be outside tracked output directories');
-  }
-
   const transactionRoot = await mkdtemp(path.join(physicalStagingParent, 'publication-'));
   const filesRoot = path.join(transactionRoot, 'files');
   const transactionId = randomUUID();
@@ -1058,6 +1226,31 @@ export async function createPublicationTransaction({
           sha256: sha256(stagedBytes),
         });
         assetTargets.push(targetPath);
+      }
+
+      for (const previousAssetPath of previousState?.emittedAssetPaths ?? []) {
+        const targetPath = safeRelativePath(previousAssetPath, 'Previously emitted asset path');
+        if (assetTargets.includes(targetPath)) continue;
+        if (!targetPath.startsWith(`${assetTargetDir}/`)) {
+          throw new PublicationTransactionError(
+            `Previously emitted asset is outside its publication directory: ${targetPath}`,
+            { code: 'invalid_publication_metadata' },
+          );
+        }
+        const publishedBytes = await lastPublisherBytes(physicalRepoRoot, targetPath);
+        if (!publishedBytes) {
+          throw new PublicationTransactionError(
+            `Could not establish the last publisher bytes for obsolete asset: ${targetPath}`,
+            { code: 'target_conflict' },
+          );
+        }
+        addFile({
+          kind: 'asset',
+          operation: 'delete',
+          publishId: note.publishId,
+          targetPath,
+          sha256: sha256(publishedBytes),
+        });
       }
 
       publications.push({
@@ -1187,8 +1380,12 @@ async function createExactCandidate(context, {
     }
   }
 
-  for (const { bytes, targetPath } of files) {
-    await writeCandidateFile(candidateRoot, targetPath, bytes);
+  for (const { bytes, operation = 'write', targetPath } of files) {
+    if (operation === 'delete') {
+      await rm(path.join(candidateRoot, ...targetPath.split('/')), { force: true });
+    } else {
+      await writeCandidateFile(candidateRoot, targetPath, bytes);
+    }
   }
   return candidateRoot;
 }
@@ -1254,25 +1451,15 @@ export async function applyPublicationTransaction(transaction, {
 
   const manifest = await loadManifest(transaction);
   const verifiedFiles = [];
-  const conflicts = [];
   for (const file of manifest.files) {
     assertAllowedTarget(transaction, file);
     const verified = await verifiedStagedFile(transaction, file);
     verifiedFiles.push({ file, ...verified });
-    const reason = await targetConflict(transaction, state, file);
-    if (reason) conflicts.push({ targetPath: verified.targetPath, reason });
-  }
-  if (conflicts.length > 0) {
-    throw new PublicationTransactionError(
-      `Publication target conflict: ${conflicts.map(({ targetPath }) => targetPath).join(', ')}`,
-      { code: 'target_conflict', details: { conflicts } },
-    );
   }
   if (
     context.previewManifestHash !== context.manifestHash
-    || (await repositoryBaseline(context.repoRoot)).fingerprint !== context.previewRepoBaseline
   ) {
-    throw new PublicationTransactionError('Repository or manifest changed after preview; rebuild the preview', {
+    throw new PublicationTransactionError('Manifest changed after preview; rebuild the preview', {
       code: 'repository_changed',
     });
   }
@@ -1286,6 +1473,27 @@ export async function applyPublicationTransaction(transaction, {
       transaction,
       verifiedFiles.map(({ file }) => file),
     );
+    const approvals = new Map();
+    const conflicts = [];
+    for (const { file, targetPath } of verifiedFiles) {
+      const destination = path.join(context.repoRoot, ...targetPath.split('/'));
+      const parentRecord = context.mutationGuards.parentGuards.get(path.dirname(destination));
+      const assessment = await targetConflict(transaction, state, file, parentRecord.guard);
+      if (assessment.reason) conflicts.push({ targetPath, reason: assessment.reason });
+      else approvals.set(targetPath, assessment.approval);
+    }
+    if (conflicts.length > 0) {
+      throw new PublicationTransactionError(
+        `Publication target conflict: ${conflicts.map(({ targetPath }) => targetPath).join(', ')}`,
+        { code: 'target_conflict', details: { conflicts } },
+      );
+    }
+    if ((await repositoryBaseline(context.repoRoot)).fingerprint !== context.previewRepoBaseline) {
+      throw new PublicationTransactionError('Repository changed after preview; rebuild the preview', {
+        code: 'repository_changed',
+      });
+    }
+
     for (const { file, targetPath } of verifiedFiles) {
       const destination = path.join(context.repoRoot, ...targetPath.split('/'));
       const parentRecord = context.mutationGuards.parentGuards.get(path.dirname(destination));
@@ -1294,6 +1502,22 @@ export async function applyPublicationTransaction(transaction, {
         parentRecord.guard,
         'Publication target',
       );
+      const approval = approvals.get(targetPath);
+      if (
+        !approval
+        || approval.existed !== Boolean(original)
+        || (
+          original
+          && (
+            approval.hash !== sha256(original.bytes)
+            || !sameFileIdentity(approval.identity, original.identity)
+          )
+        )
+      ) {
+        throw new PublicationTransactionError('Publication target changed after conflict approval', {
+          code: 'target_changed',
+        });
+      }
       if (original) {
         snapshots.push({
           destination,
@@ -1302,9 +1526,10 @@ export async function applyPublicationTransaction(transaction, {
           originalIdentity: original.identity,
           appliedHash: file.sha256,
           mode: original.mode,
+          applied: false,
         });
       } else {
-        snapshots.push({ destination, existed: false, appliedHash: file.sha256 });
+        snapshots.push({ destination, existed: false, appliedHash: file.sha256, applied: false });
       }
     }
     transaction.snapshots = snapshots.map(({ destination, existed }) => ({
@@ -1312,10 +1537,16 @@ export async function applyPublicationTransaction(transaction, {
       existed,
     }));
 
-    for (const [index, { bytes, targetPath }] of verifiedFiles.entries()) {
+    for (const [index, { bytes, operation, targetPath }] of verifiedFiles.entries()) {
       const destination = path.join(context.repoRoot, ...targetPath.split('/'));
       const parentRecord = context.mutationGuards.parentGuards.get(path.dirname(destination));
-      await atomicWrite(destination, bytes, 0o600, parentRecord.guard, snapshots[index]);
+      await assertSnapshotStillApproved(snapshots[index], parentRecord.guard);
+      if (operation === 'delete') {
+        await atomicDelete(destination, parentRecord.guard, snapshots[index]);
+      } else {
+        await atomicWrite(destination, bytes, 0o600, parentRecord.guard, snapshots[index]);
+      }
+      snapshots[index].applied = true;
     }
 
     const candidateRoot = await createExactCandidate(context, {
@@ -1330,6 +1561,7 @@ export async function applyPublicationTransaction(transaction, {
     setTransactionStatus(transaction, context, 'applied');
     return { manifest, build: buildResult };
   } catch (error) {
+    const mutationOccurred = snapshots.some(({ applied }) => applied);
     if (context.mutationGuards) {
       try {
         await restoreSnapshots(transaction);
@@ -1344,7 +1576,11 @@ export async function applyPublicationTransaction(transaction, {
       }
       await closeMutationGuards(context);
     }
-    setTransactionStatus(transaction, context, 'apply_failed');
+    setTransactionStatus(
+      transaction,
+      context,
+      error?.code === 'target_conflict' && !mutationOccurred ? 'previewed' : 'apply_failed',
+    );
     if (error instanceof PublicationTransactionError) throw error;
     throw new PublicationTransactionError('Repository build failed; publication targets were restored', {
       code: 'build_failed',

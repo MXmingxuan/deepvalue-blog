@@ -222,7 +222,13 @@ async function validateManifestTargets(repoRoot, manifest) {
   try {
     for (const file of manifest.files) {
       const targetPath = safeRelativePath(file?.targetPath);
-      if (!targetPath || !SHA256_PATTERN.test(file?.sha256 ?? '') || seen.has(targetPath)) {
+      const operation = file?.operation ?? 'write';
+      if (
+        !targetPath
+        || !['write', 'delete'].includes(operation)
+        || !SHA256_PATTERN.test(file?.sha256 ?? '')
+        || seen.has(targetPath)
+      ) {
         throw new GitPublicationError('Publication manifest contains an invalid target or hash', {
           code: 'invalid_manifest',
         });
@@ -240,7 +246,28 @@ async function validateManifestTargets(repoRoot, manifest) {
         guard = await createTargetParentGuard(repoRoot, parent);
         parentGuards.set(parent, guard);
       }
-      if (sha256(await readGuardedTarget(destination, guard, targetPath)) !== file.sha256) {
+      if (operation === 'delete') {
+        try {
+          await lstat(destination);
+          throw new GitPublicationError(`Deleted publication target reappeared: ${targetPath}`, {
+            code: 'target_changed',
+          });
+        } catch (error) {
+          if (error instanceof GitPublicationError) throw error;
+          if (error?.code !== 'ENOENT') throw error;
+        }
+        await guard.assertStable();
+        const parentBytes = await requireGit(
+          repoRoot,
+          ['show', `HEAD:${targetPath}`],
+          'Reading publication deletion baseline',
+        );
+        if (sha256(parentBytes.stdout) !== file.sha256) {
+          throw new GitPublicationError(`Publication deletion baseline changed: ${targetPath}`, {
+            code: 'target_changed',
+          });
+        }
+      } else if (sha256(await readGuardedTarget(destination, guard, targetPath)) !== file.sha256) {
         throw new GitPublicationError(`Publication target changed after build: ${targetPath}`, {
           code: 'target_changed',
         });
@@ -284,6 +311,14 @@ async function verifyIndexBlobs(repoRoot, manifest, env) {
 
   for (const file of manifest.files) {
     const objectId = records.get(file.targetPath);
+    if (file.operation === 'delete') {
+      if (objectId) {
+        throw new GitPublicationError(`Publication index still contains deleted ${file.targetPath}`, {
+          code: 'staging_mismatch',
+        });
+      }
+      continue;
+    }
     if (!objectId) {
       throw new GitPublicationError(`Publication index is missing ${file.targetPath}`, {
         code: 'staging_mismatch',
@@ -332,7 +367,9 @@ export function publicationCommitMessage(manifest) {
 
 export function publicationFilesDigest(files) {
   const records = files
-    .map(({ targetPath, sha256: fileHash }) => ({ targetPath, sha256: fileHash }))
+    .map(({ operation, targetPath, sha256: fileHash }) => operation === 'delete'
+      ? { operation, targetPath, sha256: fileHash }
+      : { targetPath, sha256: fileHash })
     .sort((left, right) => left.targetPath.localeCompare(right.targetPath));
   return sha256(Buffer.from(JSON.stringify(records), 'utf8'));
 }

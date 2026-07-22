@@ -112,7 +112,16 @@ async function transformedPending(vaultRoot, state) {
   const assetIndex = await buildAssetIndex({ vaultRoot, attachmentRoots: [path.join(vaultRoot, 'Attachments')] });
   const pending = await scanPendingNotes({ vaultRoot, ignoreFolders: ['.obsidian'], state });
   for (const note of pending) assertValidPublicationNote({ filename: note.sourcePath, data: note.data, body: note.body });
-  return Promise.all(pending.map((note) => transformNote({ note, vaultIndex: index, assetIndex })));
+  const publicPublishIds = new Set([
+    ...Object.keys(state?.entries ?? {}),
+    ...pending.map(({ publishId }) => publishId),
+  ]);
+  return Promise.all(pending.map((note) => transformNote({
+    note,
+    vaultIndex: index,
+    assetIndex,
+    publicPublishIds,
+  })));
 }
 
 test('legacy prepare-publish command never edits or moves its input', async (t) => {
@@ -136,6 +145,8 @@ test('legacy prepare-publish command never edits or moves its input', async (t) 
 test('temporary Vault publishes, updates, cancels, builds, and commits only exact targets', { timeout: 180_000 }, async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'publisher-full-e2e-'));
   t.after(() => rm(root, { recursive: true, force: true }));
+  const stagingParent = await mkdtemp(path.join(os.tmpdir(), 'publisher-full-staging-'));
+  t.after(() => rm(stagingParent, { recursive: true, force: true }));
   const repoRoot = path.join(root, 'repo');
   const vaultRoot = path.join(root, 'Private Vault');
   await command('git', ['clone', '--quiet', '--no-local', projectRoot, repoRoot], root);
@@ -169,7 +180,7 @@ test('temporary Vault publishes, updates, cancels, builds, and commits only exac
     vaultRoot,
     notes: firstNotes,
     state: emptyState,
-    stagingParent: root,
+    stagingParent,
   };
   const cancelTransaction = await createPublicationTransaction(transactionOptions);
   const repoBeforeCancel = await command('git', ['status', '--porcelain=v1', '--untracked-files=all'], repoRoot);
@@ -213,5 +224,39 @@ test('temporary Vault publishes, updates, cancels, builds, and commits only exac
   assert.match(updatedEntry, /updated_at:/u);
   assert.deepEqual((await command('git', ['show', '--pretty=', '--name-only', updateResult.commitSha], repoRoot)).stdout.trim().split('\n'), ['src/content/entries/copper-inventory-log.md']);
   assert.deepEqual(await snapshot(vaultRoot), updatedVault);
+
+  await writeFile(
+    path.join(vaultRoot, 'Research', '铜周期.md'),
+    articleMarkdown().replace(/\n!\[\[Attachments\/copper\.png\|库存图\]\]\n/u, '\n'),
+  );
+  const stateBeforeAssetRemoval = await stateStore.readState();
+  const removalNotes = await transformedPending(vaultRoot, stateBeforeAssetRemoval);
+  assert.deepEqual(removalNotes.map(({ publishId }) => publishId), ['copper-cycle']);
+  const removalTransaction = await createPublicationTransaction({
+    ...transactionOptions,
+    notes: removalNotes,
+    state: stateBeforeAssetRemoval,
+  });
+  const deletion = removalTransaction.manifest.files.find(({ operation }) => operation === 'delete');
+  assert.deepEqual(
+    deletion && { kind: deletion.kind, publishId: deletion.publishId, targetPath: deletion.targetPath },
+    {
+      kind: 'asset',
+      publishId: 'copper-cycle',
+      targetPath: `public/media/copper-cycle/${article.assets[0].outputName}`,
+    },
+  );
+  assert.match(deletion.sha256, /^[a-f0-9]{64}$/u);
+  assert.equal(Object.hasOwn(deletion, 'stagedPath'), false);
+  await buildTransactionPreview(removalTransaction, { runBuild: actualBuild });
+  await applyPublicationTransaction(removalTransaction, { state: stateBeforeAssetRemoval, runBuild: actualBuild });
+  const removalResult = await confirmPublicationTransaction(removalTransaction, { stateStore, push: false });
+  assert.equal(await exists(path.join(repoRoot, ...deletion.targetPath.split('/'))), false);
+  assert.deepEqual(
+    (await command('git', ['show', '--pretty=', '--name-only', removalResult.commitSha], repoRoot))
+      .stdout.trim().split('\n').sort(),
+    [deletion.targetPath, 'src/content/entries/copper-cycle.md'].sort(),
+  );
+  assert.deepEqual((await stateStore.readState()).entries['copper-cycle'].emittedAssetPaths, []);
   assert.equal((await command('git', ['status', '--porcelain=v1', '--untracked-files=all'], repoRoot)).stdout.trim(), '?? UNRELATED.local');
 });
