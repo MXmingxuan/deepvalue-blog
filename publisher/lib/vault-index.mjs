@@ -68,6 +68,16 @@ function hashBytes(bytes) {
   return createHash('sha256').update(bytes).digest('hex');
 }
 
+function hasExplicitPublishTrueFrontmatter(source) {
+  if (typeof source !== 'string' || !/^---\r?\n/u.test(source)) return false;
+  const closing = source.match(/\r?\n---(?:\r?\n|$)/u);
+  if (!closing) return false;
+  const frontmatter = source.slice(0, closing.index);
+  const declarations = frontmatter.match(/^publish:.*$/gmu) ?? [];
+  return declarations.length === 1
+    && /^publish:[ \t]*true[ \t]*(?:#.*)?$/u.test(declarations[0]);
+}
+
 function safeVaultRelativePath(value) {
   if (
     typeof value !== 'string'
@@ -221,6 +231,9 @@ async function readNoteRecord({ vaultRoot, sourcePath }) {
   const bytes = await readContainedVaultFile(vaultRoot, sourcePath);
 
   const source = bytes.toString('utf8');
+  // Disabled notes are opaque. Do not parse or retain their private metadata/body.
+  // Publication requires this deliberately simple, unquoted top-level opt-in.
+  if (!hasExplicitPublishTrueFrontmatter(source)) return { sourcePath, eligible: false };
   const parsed = parseNoteMarkdown(source, { filename: sourcePath });
   if (!parsed.eligible) return { sourcePath, eligible: false };
 
@@ -352,6 +365,7 @@ export async function scanCurrentNote({
   sourcePath,
   ignoreFolders = [],
 } = {}) {
+  const lexicalVaultRoot = typeof vaultRoot === 'string' ? path.resolve(vaultRoot) : vaultRoot;
   const physicalVaultRoot = await resolveVaultRoot(vaultRoot);
   if (typeof sourcePath !== 'string' || !path.isAbsolute(sourcePath)) {
     throw new VaultIndexError([
@@ -359,9 +373,23 @@ export async function scanCurrentNote({
     ]);
   }
 
+  const lexicalSource = path.resolve(sourcePath);
+  if (!isInside(lexicalVaultRoot, lexicalSource, { allowRoot: false })) {
+    throw new VaultIndexError([
+      diagnostic('<current-note>', 'source', 'Current note resolves outside the configured Vault', 'source_outside_vault'),
+    ]);
+  }
+
   let physicalSource;
   let sourceStats;
   try {
+    const relativeSegments = path.relative(lexicalVaultRoot, lexicalSource).split(path.sep);
+    let currentPath = lexicalVaultRoot;
+    for (const segment of relativeSegments) {
+      currentPath = path.join(currentPath, segment);
+      const details = await lstat(currentPath);
+      if (details.isSymbolicLink()) throw new Error('current note path contains a symlink');
+    }
     physicalSource = await realpath(sourcePath);
     sourceStats = await stat(physicalSource);
   } catch (error) {

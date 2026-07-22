@@ -83,6 +83,27 @@ test('scanCurrentNote accepts one eligible Markdown note and rejects lexical or 
   }
 });
 
+test('scanCurrentNote refuses an in-Vault symlink instead of silently selecting its target', async () => {
+  const fixture = await createFixture();
+  const target = path.join(fixture.vaultRoot, 'Target.md');
+  const linked = path.join(fixture.vaultRoot, 'Linked.md');
+  try {
+    await writeFile(target, noteSource({ publishId: 'target-note' }), 'utf8');
+    await symlink(target, linked);
+
+    await assert.rejects(
+      scanCurrentNote({ vaultRoot: fixture.vaultRoot, sourcePath: linked }),
+      (error) => {
+        assert.equal(error instanceof VaultIndexError, true);
+        assert.equal(error.diagnostics[0].code, 'invalid_source');
+        return true;
+      },
+    );
+  } finally {
+    await cleanup(fixture.root);
+  }
+});
+
 test('scanCurrentNote returns no selection unless publish is the YAML boolean true', async () => {
   const fixture = await createFixture();
   const quoted = path.join(fixture.vaultRoot, 'quoted.md');
@@ -94,6 +115,54 @@ test('scanCurrentNote returns no selection unless publish is the YAML boolean tr
 
     assert.equal(await scanCurrentNote({ vaultRoot: fixture.vaultRoot, sourcePath: quoted }), null);
     assert.equal(await scanCurrentNote({ vaultRoot: fixture.vaultRoot, sourcePath: disabled }), null);
+  } finally {
+    await cleanup(fixture.root);
+  }
+});
+
+test('Vault indexing treats disabled notes as opaque link identities even when private YAML is malformed', async () => {
+  const fixture = await createFixture();
+  const privateSource = [
+    '---',
+    'publish: false',
+    'title: PRIVATE METADATA MUST NOT LEAK',
+    'broken: [unterminated',
+    '---',
+    'PRIVATE BODY MUST NOT LEAK',
+  ].join('\n');
+
+  try {
+    await mkdir(path.join(fixture.vaultRoot, 'Private'));
+    await writeFile(path.join(fixture.vaultRoot, 'Private', 'Opaque.md'), privateSource, 'utf8');
+
+    const index = await buildVaultIndex({ vaultRoot: fixture.vaultRoot });
+    const record = resolveNoteLink(index, 'Private/Opaque');
+
+    assert.deepEqual(record, { sourcePath: 'Private/Opaque.md', eligible: false });
+    assert.deepEqual(index.eligibleNotes, []);
+    const serialized = JSON.stringify(index);
+    assert.equal(serialized.includes('PRIVATE METADATA MUST NOT LEAK'), false);
+    assert.equal(serialized.includes('PRIVATE BODY MUST NOT LEAK'), false);
+  } finally {
+    await cleanup(fixture.root);
+  }
+});
+
+test('Vault eligibility fails closed when frontmatter declares publish more than once', async () => {
+  const fixture = await createFixture();
+  try {
+    await writeFile(path.join(fixture.vaultRoot, 'Ambiguous.md'), [
+      '---',
+      'publish: false',
+      'publish: true',
+      'private: DO NOT PARSE OR RETAIN',
+      '---',
+      'PRIVATE BODY',
+    ].join('\n'), 'utf8');
+
+    const index = await buildVaultIndex({ vaultRoot: fixture.vaultRoot });
+    assert.deepEqual(index.notes, [{ sourcePath: 'Ambiguous.md', eligible: false }]);
+    assert.equal(JSON.stringify(index).includes('DO NOT PARSE OR RETAIN'), false);
   } finally {
     await cleanup(fixture.root);
   }

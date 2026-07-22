@@ -6,6 +6,7 @@ import {
   readFile,
   readdir,
   realpath,
+  rename,
   rm,
   symlink,
   writeFile,
@@ -534,6 +535,27 @@ test('validatePublicationNote checks publish_id, body, optional strings, and str
   );
 });
 
+test('validatePublicationNote accepts only HTTP(S) source URLs', () => {
+  for (const source_url of ['https://example.com/report', 'http://example.com/report']) {
+    assert.deepEqual(validatePublicationNote({
+      filename: '研究/来源.md',
+      data: validArticleData({ source_url }),
+      body: '# 正文\n',
+    }), []);
+  }
+
+  for (const source_url of ['ftp://example.com/report', 'file:///Users/private/note.md', 'javascript:alert(1)']) {
+    const diagnostics = validatePublicationNote({
+      filename: '研究/来源.md',
+      data: validArticleData({ source_url }),
+      body: '# 正文\n',
+    });
+    assert.deepEqual(diagnostics.map(({ field, code }) => ({ field, code })), [
+      { field: 'source_url', code: 'invalid_url' },
+    ]);
+  }
+});
+
 test('assertValidPublicationNote throws structured diagnostics', () => {
   assert.throws(
     () => assertValidPublicationNote({
@@ -744,6 +766,79 @@ test('state store rejects a custom state path that escapes through a repository 
       },
     );
     assert.deepEqual(await readdir(outside), []);
+  } finally {
+    await removeFixture(fixture.root);
+  }
+});
+
+test('state store refuses a symlink at the state target instead of replacing it', async () => {
+  const fixture = await createFixture('publisher-state-');
+  const target = path.join(fixture.repoRoot, 'other-state.json');
+  try {
+    await writeFile(target, 'TARGET MUST NOT CHANGE', 'utf8');
+    const store = createStateStore({ repoRoot: fixture.repoRoot });
+    await symlink(target, store.statePath);
+
+    await assert.rejects(
+      store.writeState({ version: 1, entries: {} }),
+      (error) => {
+        assert.equal(error instanceof StateValidationError, true);
+        assert.equal(error.diagnostics[0].code, 'unsafe_path');
+        return true;
+      },
+    );
+    assert.equal(await readFile(target, 'utf8'), 'TARGET MUST NOT CHANGE');
+  } finally {
+    await removeFixture(fixture.root);
+  }
+});
+
+test('state store detects a parent-directory swap between an update read and write', async () => {
+  const fixture = await createFixture('publisher-state-');
+  const stateParent = path.join(fixture.repoRoot, 'publisher-data');
+  const displacedParent = path.join(fixture.repoRoot, 'publisher-data-original');
+  const statePath = path.join(stateParent, 'state.json');
+  try {
+    await mkdir(stateParent);
+    const store = createStateStore({ repoRoot: fixture.repoRoot, statePath });
+    await store.writeState({ version: 1, entries: {} });
+
+    await assert.rejects(
+      store.updateState(async (state) => {
+        await rename(stateParent, displacedParent);
+        await mkdir(stateParent);
+        return { ...state, entries: { leaked: { sourcePath: 'Private.md' } } };
+      }),
+      (error) => {
+        assert.equal(error instanceof StateValidationError, true);
+        assert.equal(error.diagnostics[0].code, 'unsafe_path');
+        return true;
+      },
+    );
+    assert.deepEqual(await readdir(stateParent), []);
+    assert.equal((await readFile(path.join(displacedParent, 'state.json'), 'utf8')).includes('leaked'), false);
+  } finally {
+    await removeFixture(fixture.root);
+  }
+});
+
+test('state store binds repository identity when constructed and rejects a root swap before first write', async () => {
+  const fixture = await createFixture('publisher-state-');
+  const displacedRepo = path.join(fixture.root, 'repo-original');
+  try {
+    const store = createStateStore({ repoRoot: fixture.repoRoot });
+    await rename(fixture.repoRoot, displacedRepo);
+    await mkdir(fixture.repoRoot);
+
+    await assert.rejects(
+      store.writeState({ version: 1, entries: {} }),
+      (error) => {
+        assert.equal(error instanceof StateValidationError, true);
+        assert.equal(error.diagnostics[0].code, 'unsafe_path');
+        return true;
+      },
+    );
+    assert.deepEqual(await readdir(fixture.repoRoot), []);
   } finally {
     await removeFixture(fixture.root);
   }

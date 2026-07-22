@@ -48,9 +48,11 @@ function validateUrl(diagnostics, filename, value) {
 
   try {
     const parsed = new URL(value);
-    if (!parsed.protocol || !parsed.hostname) throw new Error('URL must be absolute');
+    if (!['http:', 'https:'].includes(parsed.protocol) || !parsed.hostname) {
+      throw new Error('URL must use HTTP or HTTPS');
+    }
   } catch {
-    diagnostics.push(diagnostic(filename, 'source_url', 'source_url must be a valid absolute URL', 'invalid_url'));
+    diagnostics.push(diagnostic(filename, 'source_url', 'source_url must be an absolute HTTP(S) URL', 'invalid_url'));
   }
 }
 

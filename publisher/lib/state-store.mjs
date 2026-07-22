@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { mkdir, readFile, realpath, rename, rm, writeFile } from 'node:fs/promises';
+import { constants, lstatSync, realpathSync } from 'node:fs';
+import { lstat, mkdir, open, realpath, rename, rm } from 'node:fs/promises';
 import path from 'node:path';
 
 const STATE_VERSION = 1;
@@ -184,18 +185,92 @@ function sanitizeState(state, filename) {
   return { version: STATE_VERSION, entries };
 }
 
-async function writeAtomically(statePath, state) {
-  await mkdir(path.dirname(statePath), { recursive: true });
+function sameIdentity(left, right) {
+  return left?.dev === right?.dev && left?.ino === right?.ino;
+}
+
+async function assertSafeTarget(targetPath, { allowMissing = true } = {}) {
+  try {
+    const details = await lstat(targetPath);
+    if (details.isSymbolicLink() || !details.isFile()) {
+      throw new StateValidationError([
+        diagnostic(targetPath, '<root>', 'State target must be a regular file, never a symlink', 'unsafe_path'),
+      ]);
+    }
+    return details;
+  } catch (error) {
+    if (allowMissing && error?.code === 'ENOENT') return undefined;
+    throw error;
+  }
+}
+
+async function writeAtomically(statePath, state, guard) {
+  await guard.assertStable();
+  const expectedTarget = await assertSafeTarget(statePath);
   const tempPath = path.join(
     path.dirname(statePath),
     `${path.basename(statePath)}.tmp-${process.pid}-${Date.now()}-${randomUUID()}`,
   );
 
+  let handle;
+  let tempIdentity;
   try {
-    await writeFile(tempPath, `${JSON.stringify(state, null, 2)}\n`, { encoding: 'utf8', mode: 0o600 });
+    handle = await open(
+      tempPath,
+      constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | (constants.O_NOFOLLOW ?? 0),
+      0o600,
+    );
+    const openedStats = await handle.stat();
+    tempIdentity = { dev: openedStats.dev, ino: openedStats.ino };
+    const [pathStats, resolvedTemp] = await Promise.all([lstat(tempPath), realpath(tempPath)]);
+    if (
+      !openedStats.isFile()
+      || pathStats.isSymbolicLink()
+      || !sameIdentity(openedStats, pathStats)
+      || !isInside(guard.physicalRepoRoot, resolvedTemp, { allowRoot: false })
+      || path.dirname(resolvedTemp) !== guard.physicalParent
+    ) {
+      throw new StateValidationError([
+        diagnostic(statePath, '<root>', 'State temporary file escaped its stable repository parent', 'unsafe_path'),
+      ]);
+    }
+    await guard.assertStable();
+    await handle.writeFile(`${JSON.stringify(state, null, 2)}\n`, { encoding: 'utf8' });
+    await handle.sync();
+    await handle.close();
+    handle = undefined;
+    await guard.assertStable();
+    const currentTarget = await assertSafeTarget(statePath);
+    if (
+      Boolean(expectedTarget) !== Boolean(currentTarget)
+      || (expectedTarget && !sameIdentity(expectedTarget, currentTarget))
+    ) {
+      throw new StateValidationError([
+        diagnostic(statePath, '<root>', 'State target changed before atomic replacement', 'unsafe_path'),
+      ]);
+    }
     await rename(tempPath, statePath);
+    await guard.assertStable();
+    const finalTarget = await assertSafeTarget(statePath, { allowMissing: false });
+    if (!sameIdentity(tempIdentity, finalTarget)) {
+      throw new StateValidationError([
+        diagnostic(statePath, '<root>', 'State target identity changed during atomic replacement', 'unsafe_path'),
+      ]);
+    }
   } catch (error) {
-    await rm(tempPath, { force: true });
+    if (handle) await handle.close().catch(() => {});
+    try {
+      await guard.assertStable();
+      const remainingTemp = await lstat(tempPath).catch((inspectionError) => {
+        if (inspectionError?.code === 'ENOENT') return undefined;
+        throw inspectionError;
+      });
+      if (remainingTemp && tempIdentity && sameIdentity(tempIdentity, remainingTemp)) {
+        await rm(tempPath, { force: true });
+      }
+    } catch {
+      // Never resolve a cleanup path through a replaced state parent.
+    }
     throw error;
   }
 }
@@ -212,6 +287,18 @@ export class StateValidationError extends Error {
 
 export function createStateStore({ repoRoot = process.cwd(), statePath } = {}) {
   const normalizedRepoRoot = path.resolve(repoRoot);
+  let initialPhysicalRepoRoot;
+  let initialRepoIdentity;
+  try {
+    initialPhysicalRepoRoot = realpathSync(normalizedRepoRoot);
+    const details = lstatSync(initialPhysicalRepoRoot);
+    if (!details.isDirectory() || details.isSymbolicLink()) throw new Error('repository root is not a physical directory');
+    initialRepoIdentity = { dev: details.dev, ino: details.ino };
+  } catch (error) {
+    throw new StateValidationError([
+      diagnostic(normalizedRepoRoot, '<root>', 'Repository root must be a stable physical directory', 'unsafe_path'),
+    ], error);
+  }
   const normalizedStatePath = path.resolve(statePath ?? path.join(normalizedRepoRoot, '.publish-state.json'));
   const relativeStatePath = path.relative(normalizedRepoRoot, normalizedStatePath);
   if (
@@ -224,76 +311,162 @@ export function createStateStore({ repoRoot = process.cwd(), statePath } = {}) {
     ]);
   }
   const key = queueKey(normalizedStatePath);
+  let boundParentIdentity;
 
-  async function assertPhysicalContainment() {
+  async function openParentGuard() {
     let physicalRepoRoot;
-    let physicalStatePath;
+    let physicalParent;
+    let parentHandle;
     try {
-      [physicalRepoRoot, physicalStatePath] = await Promise.all([
-        realpath(normalizedRepoRoot),
-        realpathAllowMissing(normalizedStatePath),
-      ]);
+      physicalRepoRoot = await realpath(normalizedRepoRoot);
+      const repoStats = await lstat(physicalRepoRoot);
+      if (
+        physicalRepoRoot !== initialPhysicalRepoRoot
+        || repoStats.isSymbolicLink()
+        || !repoStats.isDirectory()
+        || !sameIdentity(initialRepoIdentity, repoStats)
+      ) {
+        throw new Error('repository root identity changed');
+      }
+      const prospectiveParent = await realpathAllowMissing(path.dirname(normalizedStatePath));
+      if (!isInside(physicalRepoRoot, prospectiveParent)) throw new Error('parent resolves outside repository');
+      await mkdir(path.dirname(normalizedStatePath), { recursive: true });
+      physicalParent = await realpath(path.dirname(normalizedStatePath));
+      if (!isInside(physicalRepoRoot, physicalParent)) throw new Error('parent resolves outside repository');
+      const pathStats = await lstat(physicalParent);
+      if (!pathStats.isDirectory() || pathStats.isSymbolicLink()) throw new Error('parent is not a physical directory');
+      parentHandle = await open(
+        physicalParent,
+        constants.O_RDONLY | (constants.O_DIRECTORY ?? 0) | (constants.O_NOFOLLOW ?? 0),
+      );
+      const handleStats = await parentHandle.stat();
+      if (!handleStats.isDirectory() || !sameIdentity(handleStats, pathStats)) {
+        throw new Error('parent identity changed while opening');
+      }
+      if (boundParentIdentity && !sameIdentity(boundParentIdentity, handleStats)) {
+        throw new Error('state parent was replaced after the store was bound');
+      }
+      boundParentIdentity ??= { dev: handleStats.dev, ino: handleStats.ino };
     } catch (error) {
+      if (parentHandle) await parentHandle.close().catch(() => {});
       throw new StateValidationError([
         diagnostic(
           normalizedStatePath,
           '<root>',
           `State path could not be resolved safely: ${error.message}`,
-          'path_error',
+          'unsafe_path',
         ),
       ], error);
     }
 
-    if (!isInside(physicalRepoRoot, physicalStatePath, { allowRoot: false })) {
-      throw new StateValidationError([
-        diagnostic(
-          normalizedStatePath,
-          '<root>',
-          'State file resolves outside the repository through a symlink',
-          'unsafe_path',
-        ),
-      ]);
-    }
+    let closed = false;
+    return {
+      physicalRepoRoot,
+      physicalParent,
+      async assertStable() {
+        if (closed) throw new Error('state parent guard is closed');
+        try {
+          const [resolvedNow, pathStats, handleStats] = await Promise.all([
+            realpath(path.dirname(normalizedStatePath)),
+            lstat(path.dirname(normalizedStatePath)),
+            parentHandle.stat(),
+          ]);
+          if (
+            resolvedNow !== physicalParent
+            || pathStats.isSymbolicLink()
+            || !pathStats.isDirectory()
+            || !sameIdentity(boundParentIdentity, pathStats)
+            || !sameIdentity(boundParentIdentity, handleStats)
+          ) {
+            throw new Error('state parent identity changed');
+          }
+        } catch (error) {
+          throw new StateValidationError([
+            diagnostic(
+              normalizedStatePath,
+              '<root>',
+              'State parent was replaced during the operation',
+              'unsafe_path',
+            ),
+          ], error);
+        }
+      },
+      async close() {
+        if (closed) return;
+        closed = true;
+        await parentHandle.close();
+      },
+    };
   }
 
-  async function recoverCorruptState(raw, error) {
+  async function recoverCorruptState(raw, error, guard, expectedTarget) {
+    await guard.assertStable();
+    const currentTarget = await assertSafeTarget(normalizedStatePath, { allowMissing: false });
+    if (!sameIdentity(expectedTarget, currentTarget)) {
+      throw new StateValidationError([
+        diagnostic(normalizedStatePath, '<root>', 'State target changed before corrupt-state recovery', 'unsafe_path'),
+      ]);
+    }
     const backupPath = `${normalizedStatePath}.corrupt-${Date.now()}-${randomUUID()}.bak`;
     await rename(normalizedStatePath, backupPath);
+    await guard.assertStable();
     const recovered = structuredClone(DEFAULT_STATE);
-    await writeAtomically(normalizedStatePath, recovered);
+    await writeAtomically(normalizedStatePath, recovered, guard);
     return { state: recovered, backupPath, error, raw };
   }
 
   async function readState() {
-    await assertPhysicalContainment();
-    let raw;
+    const guard = await openParentGuard();
+    let handle;
     try {
-      raw = await readFile(normalizedStatePath, 'utf8');
+      await guard.assertStable();
+      const targetStats = await assertSafeTarget(normalizedStatePath);
+      if (!targetStats) return structuredClone(DEFAULT_STATE);
+      handle = await open(normalizedStatePath, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0));
+      const openedStats = await handle.stat();
+      const pathStats = await lstat(normalizedStatePath);
+      if (!openedStats.isFile() || pathStats.isSymbolicLink() || !sameIdentity(openedStats, pathStats)) {
+        throw new StateValidationError([
+          diagnostic(normalizedStatePath, '<root>', 'State target identity changed while opening', 'unsafe_path'),
+        ]);
+      }
+      await guard.assertStable();
+      const raw = await handle.readFile('utf8');
+      await handle.close();
+      handle = undefined;
+      await guard.assertStable();
+
+      try {
+        return sanitizeState(JSON.parse(raw), normalizedStatePath);
+      } catch (error) {
+        if (!(error instanceof SyntaxError) && !(error instanceof StateValidationError)) throw error;
+        if (
+          error instanceof StateValidationError
+          && error.diagnostics.some(({ code }) => code === 'unsupported_version')
+        ) {
+          throw error;
+        }
+        const recovery = await recoverCorruptState(raw, error, guard, openedStats);
+        return recovery.state;
+      }
     } catch (error) {
       if (error?.code === 'ENOENT') return structuredClone(DEFAULT_STATE);
       throw error;
-    }
-
-    try {
-      return sanitizeState(JSON.parse(raw), normalizedStatePath);
-    } catch (error) {
-      if (!(error instanceof SyntaxError) && !(error instanceof StateValidationError)) throw error;
-      if (
-        error instanceof StateValidationError
-        && error.diagnostics.some(({ code }) => code === 'unsupported_version')
-      ) {
-        throw error;
-      }
-      const recovery = await recoverCorruptState(raw, error);
-      return recovery.state;
+    } finally {
+      if (handle) await handle.close().catch(() => {});
+      await guard.close().catch(() => {});
     }
   }
 
   async function writeState(state) {
-    await assertPhysicalContainment();
     const safeState = sanitizeState(state, normalizedStatePath);
-    await writeAtomically(normalizedStatePath, safeState);
-    return safeState;
+    const guard = await openParentGuard();
+    try {
+      await writeAtomically(normalizedStatePath, safeState, guard);
+      return safeState;
+    } finally {
+      await guard.close().catch(() => {});
+    }
   }
 
   async function updateState(updater) {

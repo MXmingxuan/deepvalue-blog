@@ -18,7 +18,6 @@ export const SUPPORTED_IMAGE_EXTENSIONS = Object.freeze([
   '.gif',
   '.webp',
   '.avif',
-  '.svg',
 ]);
 
 const SUPPORTED_IMAGE_EXTENSION_SET = new Set(SUPPORTED_IMAGE_EXTENSIONS);

@@ -189,7 +189,7 @@ async function replaceWikiSyntax(segment, context) {
         throw toTransformError(error, context.filename, target);
       }
       const label = escapeMarkdownText(visibleWikiLabel(target, alias));
-      result += resolved?.eligible
+      result += resolved?.eligible && context.publicPublishIds.has(resolved.publishId)
         ? `[${label}](/blog/${encodeUrlSegment(resolved.publishId)}/)`
         : label;
     }
@@ -246,6 +246,7 @@ export async function transformNote({
   vaultIndex,
   assetIndex,
   includeInlineHashtags = true,
+  publicPublishIds = [],
 } = {}) {
   if (!note || typeof note !== 'object' || typeof note.body !== 'string') {
     throw new TypeError('A parsed Vault note is required for transformation');
@@ -261,6 +262,9 @@ export async function transformNote({
   if (typeof includeInlineHashtags !== 'boolean') {
     throw new TypeError('includeInlineHashtags must be a boolean');
   }
+  if (!Array.isArray(publicPublishIds) && !(publicPublishIds instanceof Set)) {
+    throw new TypeError('publicPublishIds must be an array or Set of confirmed publish IDs');
+  }
 
   const identity = note.publishId
     ? { publishId: note.publishId }
@@ -271,6 +275,7 @@ export async function transformNote({
     vaultIndex,
     assetIndex,
     includeInlineHashtags,
+    publicPublishIds: new Set(publicPublishIds),
     inlineTags: [],
     assets: [],
     assetsByOutputName: new Map(),

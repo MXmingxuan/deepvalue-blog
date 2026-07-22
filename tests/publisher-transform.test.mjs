@@ -67,7 +67,7 @@ async function buildIndexes(fixture) {
   return { vaultIndex, assetIndex };
 }
 
-test('transformNote resolves exact published links and renders unpublished or missing links as path-free text', async () => {
+test('transformNote emits links only for confirmed state or current-transaction publish IDs', async () => {
   const fixture = await createFixture();
 
   try {
@@ -82,6 +82,9 @@ test('transformNote resolves exact published links and renders unpublished or mi
     await writeNote(fixture.vaultRoot, 'Research/Copper.md', {
       publishId: 'copper-cycle',
     });
+    await writeNote(fixture.vaultRoot, 'Research/Unconfirmed.md', {
+      publishId: 'unconfirmed-note',
+    });
     await writeNote(fixture.vaultRoot, 'Private/Meeting Notes.md', {
       publish: false,
       publishId: 'must-never-be-linked',
@@ -89,11 +92,19 @@ test('transformNote resolves exact published links and renders unpublished or mi
 
     const { vaultIndex, assetIndex } = await buildIndexes(fixture);
     const original = vaultIndex.byRelativePath.get('Research/Current.md');
-    const transformed = await transformNote({ note: original, vaultIndex, assetIndex });
+    original.body += '\nUnconfirmed: [[Research/Unconfirmed|未发布研究]]。';
+    const transformed = await transformNote({
+      note: original,
+      vaultIndex,
+      assetIndex,
+      publicPublishIds: new Set(['current-note', 'copper-cycle']),
+    });
 
     assert.match(transformed.body, /\[铜研究\]\(\/blog\/copper-cycle\/\)/);
     assert.match(transformed.body, /Private: Meeting Notes。/);
     assert.match(transformed.body, /Missing: Hidden Strategy。/);
+    assert.match(transformed.body, /Unconfirmed: 未发布研究。/);
+    assert.equal(transformed.body.includes('/blog/unconfirmed-note/'), false);
     assert.equal(transformed.body.includes('Private/'), false);
     assert.equal(transformed.body.includes('Plans/'), false);
     assert.equal(transformed.body.includes('must-never-be-linked'), false);
@@ -138,7 +149,15 @@ test('transformNote aborts ambiguous basename links but exact Vault-relative lin
       body: 'Exact [[Research/Copper]].\n',
     };
     const transformed = await transformNote({ note: exactOnly, vaultIndex, assetIndex });
-    assert.equal(transformed.body, 'Exact [Copper](/blog/research-copper/).\n');
+    assert.equal(transformed.body, 'Exact Copper.\n');
+
+    const confirmed = await transformNote({
+      note: exactOnly,
+      vaultIndex,
+      assetIndex,
+      publicPublishIds: ['research-copper'],
+    });
+    assert.equal(confirmed.body, 'Exact [Copper](/blog/research-copper/).\n');
   } finally {
     await cleanup(fixture.root);
   }
@@ -181,6 +200,7 @@ test('callouts become stable blockquote labels while ordinary Markdown and code 
       note: vaultIndex.byRelativePath.get('Current.md'),
       vaultIndex,
       assetIndex,
+      publicPublishIds: new Set(['target']),
     });
 
     assert.match(transformed.body, /^\| 指标 \| 结论 \|\n\| --- \| --- \|\n\| TC \| 下行 \|/);
@@ -317,6 +337,7 @@ test('missing, case-mismatched, ambiguous, and unsupported embeds abort with act
     await writeFile(path.join(fixture.attachmentRoot, 'One', 'Duplicate.png'), Buffer.from('one'));
     await writeFile(path.join(fixture.attachmentRoot, 'Two', 'Duplicate.png'), Buffer.from('two'));
     await writeFile(path.join(fixture.attachmentRoot, 'Report.pdf'), Buffer.from('%PDF'));
+    await writeFile(path.join(fixture.attachmentRoot, 'Vector.svg'), Buffer.from('<svg><script>alert(1)</script></svg>'));
     await writeNote(fixture.vaultRoot, 'Current.md', { publishId: 'current' });
 
     const { vaultIndex, assetIndex } = await buildIndexes(fixture);
@@ -326,6 +347,7 @@ test('missing, case-mismatched, ambiguous, and unsupported embeds abort with act
       { reference: 'chart.png', code: 'asset_case_mismatch' },
       { reference: 'Duplicate.png', code: 'ambiguous_asset' },
       { reference: 'Report.pdf', code: 'unsupported_asset_type' },
+      { reference: 'Vector.svg', code: 'unsupported_asset_type' },
       { reference: 'recording.mp3', code: 'unsupported_asset_type' },
       { reference: 'Board.canvas', code: 'unsupported_asset_type' },
     ];
