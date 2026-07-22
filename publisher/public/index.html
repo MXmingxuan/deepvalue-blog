@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark light">
+    <title>Deep Value · 发布预览</title>
+    <link rel="stylesheet" href="/_publisher/ui/styles.css">
+  </head>
+  <body>
+    <main class="publisher-shell">
+      <aside class="control-panel" aria-labelledby="publisher-title">
+        <header class="masthead">
+          <p class="eyebrow">DEEP VALUE / LOCAL PUBLISHER</p>
+          <h1 id="publisher-title">发布前最后核对</h1>
+          <p class="lede">此页面只在本机回环地址可用。确认前，博客仓库不会写入发布文件。</p>
+        </header>
+
+        <section class="manifest-section" aria-labelledby="notes-heading">
+          <div class="section-heading">
+            <h2 id="notes-heading">待发布笔记</h2>
+            <span id="publication-count" class="count"></span>
+          </div>
+          <ol id="publication-list" class="publication-list"></ol>
+        </section>
+
+        <section class="manifest-section" aria-labelledby="files-heading">
+          <div class="section-heading">
+            <h2 id="files-heading">文件与差异清单</h2>
+            <span id="file-count" class="count"></span>
+          </div>
+          <ol id="file-list" class="file-list"></ol>
+        </section>
+
+        <section class="decision-panel" aria-labelledby="decision-heading">
+          <p id="decision-heading" class="eyebrow">CONFIRMATION</p>
+          <p id="publisher-status" class="status" role="status" aria-live="polite">等待你的明确选择。</p>
+          <div class="actions">
+            <button type="button" class="action action-primary" data-action="confirm-push">
+              确认并推送
+            </button>
+            <button type="button" class="action" data-action="confirm-local">
+              仅确认，不推送
+            </button>
+            <button type="button" class="action action-cancel" data-action="cancel">
+              取消发布
+            </button>
+          </div>
+          <p class="recovery">若操作失败，请回到终端查看精确错误与恢复指引；不要重复运行确认请求。</p>
+        </section>
+      </aside>
+
+      <section class="preview-panel" aria-labelledby="preview-heading">
+        <header class="preview-heading">
+          <div>
+            <p class="eyebrow">BUILT TARGET</p>
+            <h2 id="preview-heading">真实目标路由</h2>
+          </div>
+          <code id="target-route"></code>
+        </header>
+        <iframe id="target-preview" title="发布后页面预览" sandbox></iframe>
+      </section>
+    </main>
+
+    <script id="publisher-data" type="application/json">__PUBLISHER_DATA__</script>
+    <script src="/_publisher/ui/app.js" defer></script>
+  </body>
+</html>
