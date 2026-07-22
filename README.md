@@ -11,6 +11,38 @@ npm run build
 npm run preview
 ```
 
+## Publish from Obsidian
+
+The Obsidian Vault and this repository stay completely separate. The Vault is
+treated as read-only: publication scans only Markdown with the YAML boolean
+`publish: true`, copies supported images, builds an isolated preview, and changes
+the repository only after explicit confirmation.
+
+One-time setup:
+
+```bash
+cp publish.config.example.json publish.config.local.json
+# Edit vaultRoot and attachmentRoots; this local file is Git-ignored.
+```
+
+Publish the active note (the path must be absolute):
+
+```bash
+npm run publish:current -- --source "/absolute/path/to/Vault/note.md"
+```
+
+Review all eligible new or changed notes:
+
+```bash
+npm run publish:pending
+```
+
+Both commands normally open a localhost confirmation page. Choose **Confirm &
+Push**, **Confirm without Push**, or **Cancel**. For intentional automation, use
+`--yes --no-push`; without `--yes`, publication cannot apply non-interactively.
+See [publisher/README.md](publisher/README.md) for frontmatter, recovery, privacy,
+and Obsidian shell-command setup.
+
 ## Content
 
 Published articles and research logs live in:
@@ -41,6 +73,14 @@ tickers: []
 ```
 
 Only `status: published` entries appear in lists or receive `/blog/<publish_id>/` routes. Draft and archived entries remain in the content collection but are not public.
+
+The public taxonomy is deliberately two-dimensional:
+
+- `domain`: `investment`, `ai`, or `beyond` (what the note is about)
+- `format`: `article` or `log` (whether it is a finished argument or a dated research record)
+
+Books, podcasts, reports, news, and original work belong in `source_type`; they
+are sources rather than navigation categories.
 
 ## Routes
 
