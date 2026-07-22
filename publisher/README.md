@@ -93,8 +93,9 @@ The subject taxonomy is MECE at the top level:
 - Inline hashtags are merged into public frontmatter tags, except inside code
   fences, inline code, and URLs.
 
-Ambiguous links, missing or case-mismatched images, and unsupported PDF, audio,
-or canvas embeds stop publication with a diagnostic. Tables, footnotes, code
+Ambiguous links, missing or case-mismatched images, and unsupported SVG, PDF,
+audio, or canvas embeds stop publication with a diagnostic. SVG is disabled in
+V1 because it can contain active same-origin content. Tables, footnotes, code
 fences, lists, blockquotes, and ordinary Markdown are preserved.
 
 ## 4. Publish and confirm

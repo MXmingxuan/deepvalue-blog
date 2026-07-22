@@ -253,6 +253,10 @@ export async function runPublishingWorkflow(options, overrides = {}) {
     vaultRoot: config.vaultRoot,
     attachmentRoots: config.attachmentRoots,
   });
+  const publicPublishIds = new Set([
+    ...Object.keys(state.entries ?? {}),
+    ...selectedNotes.map((note) => note.publishId),
+  ]);
   const transformedNotes = [];
   for (const note of selectedNotes) {
     transformedNotes.push(await dependencies.transformNote({
@@ -260,6 +264,7 @@ export async function runPublishingWorkflow(options, overrides = {}) {
       vaultIndex,
       assetIndex,
       includeInlineHashtags: config.includeInlineHashtags,
+      publicPublishIds,
     }));
   }
 

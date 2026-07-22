@@ -224,7 +224,10 @@ test('current-note workflow stages exactly the requested note and waits for brow
       return candidate;
     },
     buildAssetIndex: async () => ({}),
-    transformNote: async ({ note: selected }) => ({ ...selected, assets: [] }),
+    transformNote: async ({ note: selected, publicPublishIds }) => {
+      calls.push(['public-ids', [...publicPublishIds].sort()]);
+      return { ...selected, assets: [] };
+    },
     createPublicationTransaction: async (options) => {
       calls.push(['stage', options.notes.map(({ publishId }) => publishId)]);
       return transaction;
@@ -250,6 +253,7 @@ test('current-note workflow stages exactly the requested note and waits for brow
 
   assert.deepEqual(calls[0], ['scan-current', source]);
   assert.ok(calls.some(([name, value]) => name === 'stage' && value[0] === 'alpha'));
+  assert.ok(calls.some(([name, value]) => name === 'public-ids' && value.join(',') === 'alpha'));
   assert.ok(calls.some(([name]) => name === 'cancel'));
   assert.ok(calls.some(([name]) => name === 'open'));
   assert.ok(calls.some(([name]) => name === 'close'));
@@ -280,8 +284,8 @@ test('pending workflow stages every changed note and --yes applies without a ser
   const transaction = { manifest, status: 'previewed' };
   const calls = [];
   const stateStore = {
-    readState: async () => ({ version: 1, entries: {} }),
-    updateState: async () => ({ version: 1, entries: {} }),
+    readState: async () => ({ version: 1, entries: { existing: {} } }),
+    updateState: async () => ({ version: 1, entries: { existing: {} } }),
   };
 
   const result = await runPublishingWorkflow({
@@ -308,7 +312,10 @@ test('pending workflow stages every changed note and --yes applies without a ser
     scanPendingNotes: async () => notes,
     assertValidPublicationNote: (candidate) => candidate,
     buildAssetIndex: async () => ({}),
-    transformNote: async ({ note }) => ({ ...note, assets: [] }),
+    transformNote: async ({ note, publicPublishIds }) => {
+      calls.push(['public-ids', [...publicPublishIds].sort()]);
+      return { ...note, assets: [] };
+    },
     createPublicationTransaction: async (options) => {
       calls.push(['stage', options.notes.map(({ publishId }) => publishId)]);
       return transaction;
@@ -328,9 +335,11 @@ test('pending workflow stages every changed note and --yes applies without a ser
     openBrowser: async () => assert.fail('--yes must not open a browser'),
   });
 
-  assert.deepEqual(calls[0], ['stage', ['alpha', 'beta']]);
-  assert.equal(calls[1][0], 'apply');
-  assert.deepEqual(calls[2], ['confirm', transaction, false]);
+  assert.deepEqual(calls[0], ['public-ids', ['alpha', 'beta', 'existing']]);
+  assert.deepEqual(calls[1], ['public-ids', ['alpha', 'beta', 'existing']]);
+  assert.deepEqual(calls[2], ['stage', ['alpha', 'beta']]);
+  assert.equal(calls[3][0], 'apply');
+  assert.deepEqual(calls[4], ['confirm', transaction, false]);
   assert.deepEqual(result, {
     action: 'confirm',
     push: false,
