@@ -32,7 +32,7 @@ Headlines are compact and slightly tight. Body copy uses generous line height an
 
 Suitable imagery includes ports, bulk carriers, mines, storage, energy infrastructure, geological formations, archival textures, and restrained cartography. It should connect physical systems rather than celebrate abstract finance.
 
-Use only original or licensed production assets. The user-provided temporary reference is a mood reference only: never include it, trace it, crop it, or submit it as an image-generation reference. For the current homepage, use only `public/images/brand/commodities-macro-hero.png`, copied unchanged from the approved original panorama.
+Use only original or licensed production assets. The user-provided temporary reference is a mood reference only: never include it, trace it, crop it, or submit it as an image-generation reference. For the current homepage, use only `public/images/brand/commodities-macro-hero.avif`, encoded from the approved original panorama.
 
 Images are concentrated in hero and topic-cover contexts. Article bodies remain visually quiet unless a source image materially supports the research.
 

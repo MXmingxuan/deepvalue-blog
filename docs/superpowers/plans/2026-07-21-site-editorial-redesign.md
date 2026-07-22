@@ -14,7 +14,12 @@
 - Palette: deep charcoal, warm paper, oxidized copper, muted olive.
 - Typography: Chinese serif for display and reading; Space Mono for metadata.
 - The user-supplied reference image must never be copied, shipped, traced, or used as an image-generation input.
-- Use the original generated commodities panorama from `/Users/matt/.codex/generated_images/019f8284-6b7e-7931-9206-20bd95c637bb/exec-b7070c3a-0b04-44e3-8909-7385357d58e2.png` as the production hero for this iteration.
+- Use the approved original generated commodities panorama as the source for the
+  production hero. The repository derivative is
+  `public/images/brand/commodities-macro-hero.avif` (source PNG SHA-256:
+  `ea97f6ebe3fa7503171aa0974f0e6a0832a6c05fa7d742fd47b93956e38a3c64`;
+  production AVIF SHA-256:
+  `822acb297d3c4dead2de9dd0391cb845f6246d58c4da34ef86043439ba7763f3`).
 - Preserve published-only collection access, existing 滨化 URL, Vercel redirects, and all approved routes.
 - Do not invent content, prices, statistics, articles, or logs.
 - Research logs may be long; short logs render fully in lists and long logs link to the same permanent detail route.
@@ -32,12 +37,14 @@
 - Create: `opendesign/design-systems/deep-value-editorial/brand/voice-and-tone.md`
 - Create: `opendesign/mockups/deep-value-editorial/homepage.html`
 - Modify: `opendesign/manifest.json`
-- Create: `public/images/brand/commodities-macro-hero.png`
+- Create: `public/images/brand/commodities-macro-hero.avif`
 
 **Interfaces:**
 - Produces production CSS variables named `--color-ink`, `--color-paper`, `--color-copper`, `--color-olive`, `--font-editorial`, `--font-data`, and type-scale variables `--step--1` through `--step-5`.
 
-- [ ] Copy the approved original image to `public/images/brand/commodities-macro-hero.png`; do not modify or copy the user's reference image.
+- [ ] Encode the approved original image as the production-ready
+  `public/images/brand/commodities-macro-hero.avif`; do not modify or copy the
+  user's reference image.
 - [ ] Write canonical raw and semantic tokens to the required OpenDesign token path. Use `#0b0c0b` ink, `#d8cfbd` paper, `#a46743` copper, `#777b68` olive, and low-contrast border colors derived with `color-mix`.
 - [ ] Document the macro/commodities mood, imagery restrictions, serif/mono pairing, square editorial rules, minimal radii, restrained motion, and factual voice.
 - [ ] Create one high-fidelity static homepage mockup using the real hero asset and the existing 滨化 article title; do not add fake research entries.
@@ -54,7 +61,7 @@
 - Modify: `src/pages/index.astro`
 
 **Interfaces:**
-- Consumes tokens and `/images/brand/commodities-macro-hero.png` from Task 1.
+- Consumes tokens and `/images/brand/commodities-macro-hero.avif` from Task 1.
 - Preserves the existing `Base` props: `title` and optional `description`.
 
 - [ ] Replace the current black-grid shell with a two-surface system: charcoal header/hero context and warm-paper reading surface.

@@ -8,7 +8,7 @@ Deep Value is a professional personal publication centered on investment, tradin
 - `docs/superpowers/plans/2026-07-21-site-editorial-redesign.md` for production interfaces, palette values, typography, content constraints, and the approved original hero path.
 - `src/pages/index.astro` and `src/layouts/Base.astro` for the current site structure and existing navigation.
 - `src/content/entries/滨化股份-g5-级电子级氢氟酸真业务小体量与第二曲线验证.md` for the only published research content represented in the mockup.
-- `public/images/brand/commodities-macro-hero.png` for the approved, original generated commodities panorama (SHA-256 `ea97f6ebe3fa7503171aa0974f0e6a0832a6c05fa7d742fd47b93956e38a3c64`).
+- `public/images/brand/commodities-macro-hero.avif` for the web-optimized derivative of the approved, original generated commodities panorama (source PNG SHA-256 `ea97f6ebe3fa7503171aa0974f0e6a0832a6c05fa7d742fd47b93956e38a3c64`; production AVIF SHA-256 `822acb297d3c4dead2de9dd0391cb845f6246d58c4da34ef86043439ba7763f3`).
 
 The user's temporary reference image was not consulted as production imagery, copied, traced, or included.
 

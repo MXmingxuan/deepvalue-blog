@@ -83,6 +83,8 @@ const navItems = [
     --color-ink: #0b0c0b;
     --color-paper: #d8cfbd;
     --color-copper: #a46743;
+    /* 5.50:1 against --color-ink; reserved for small text on dark surfaces. */
+    --color-copper-on-ink: #b87953;
     --color-olive: #777b68;
     --color-copper-text: #673e29;
     --color-olive-text: #484c3a;
@@ -466,7 +468,7 @@ const navItems = [
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    color: var(--color-copper);
+    color: var(--color-copper-on-ink);
     transition: color var(--duration-fast) linear;
   }
 

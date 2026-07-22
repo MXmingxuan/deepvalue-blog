@@ -72,8 +72,9 @@ Vault. Add that suggestion to the note before relying on a permanent URL.
 The subject taxonomy is MECE at the top level:
 
 - `investment`: industries, commodities, companies, markets, and trading.
-  Its `section` is one of `commodities`, `industries`, `companies`, `macro`, or
-  `trading`.
+  Its canonical `section` is one of `commodities`, `industries-companies`,
+  `macro-cycles`, or `markets-trading`. These values match the public Investment
+  Research filters exactly.
 - `ai`: AI applications, tools, systems, and observations.
 - `beyond`: exploration outside the two professional domains, including life.
 

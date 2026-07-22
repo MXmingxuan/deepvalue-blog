@@ -33,7 +33,7 @@ Use this system for Deep Value publication pages, article surfaces, research-log
 
 - Use original, compositionally distinct imagery of resources, industry, transport, power, infrastructure, geology, or archival cartography.
 - Never ship, trace, crop, or use the user-provided temporary reference image as an image-generation input.
-- The approved homepage hero for this iteration is `public/images/brand/commodities-macro-hero.png`.
+- The approved homepage hero for this iteration is `public/images/brand/commodities-macro-hero.avif`.
 - Motion is restrained: one entrance sequence or one clear state transition, 140–700ms, with `prefers-reduced-motion` support.
 
 Read `README.md`, `brand/style-notes.md`, and `brand/voice-and-tone.md` before extending the system.

@@ -37,9 +37,88 @@ const sections = [
     </ol>
   </nav>
 
+  <aside class="project-directory" aria-labelledby="project-directory-title">
+    <div>
+      <p>PROJECTS &amp; TOOLS</p>
+      <h2 id="project-directory-title">项目与工具</h2>
+      <span>独立浏览投资分析工具、交易研究系统与 AI 应用实践。</span>
+    </div>
+    <a href="/projects/">进入项目目录 <span aria-hidden="true">→</span></a>
+  </aside>
+
   <EntryList
     entries={entries}
     emptyText="边界之外暂时没有已发布内容；相关记录会在发布后出现在这里。"
     groupByFormat
   />
 </Base>
+
+<style>
+  .project-directory {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: var(--space-4);
+    margin: var(--space-5) 0 var(--space-6);
+    padding: var(--space-4);
+    color: var(--text-inverse);
+    background: var(--surface-inverse);
+    border-top: 3px solid var(--color-copper-on-ink);
+  }
+
+  .project-directory div {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .project-directory p,
+  .project-directory h2,
+  .project-directory span {
+    margin: 0;
+  }
+
+  .project-directory p,
+  .project-directory a {
+    font-family: var(--font-data);
+    font-size: var(--caption);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .project-directory p,
+  .project-directory a {
+    color: var(--color-copper-on-ink);
+  }
+
+  .project-directory h2 {
+    font-size: var(--step-2);
+    font-weight: var(--weight-medium);
+  }
+
+  .project-directory div > span {
+    color: var(--text-inverse-muted);
+  }
+
+  .project-directory a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .project-directory a:hover {
+    color: var(--text-inverse);
+  }
+
+  @media (max-width: 640px) {
+    .project-directory {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .project-directory a {
+      justify-self: start;
+    }
+  }
+</style>
